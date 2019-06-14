@@ -3330,9 +3330,6 @@ void* picture_decision_kernel(void *input_ptr)
     uint32_t                           mini_gop_index;
     uint32_t                           pictureIndex;
 
-    // Initialization
-    uint32_t                           picture_width_in_sb;
-
     EbBool                          windowAvail, framePasseThru;
     uint32_t                           windowIndex;
     uint32_t                           entryIndex;
@@ -4167,7 +4164,7 @@ void* picture_decision_kernel(void *input_ptr)
                                 int altref_nframes = picture_control_set_ptr->sequence_control_set_ptr->static_config.altref_nframes;
                                 int num_past_pics = altref_nframes / 2;
                                 int num_future_pics = altref_nframes - num_past_pics - 1;
-                                ASSERT(num_future_pics >= 0);
+                                assert(altref_nframes <= ALTREF_MAX_NFRAMES);
 
                                 //initilize list
                                 for (int pic_itr = 0; pic_itr < ALTREF_MAX_NFRAMES; pic_itr++)
@@ -4184,11 +4181,11 @@ void* picture_decision_kernel(void *input_ptr)
 
                                 int pic_i;
                                 //search reord-queue to get the future pictures
-                                for (pic_i = 0; pic_i < num_future_pics; pic_i++) {
-                                    int32_t q_index = QUEUE_GET_NEXT_SPOT(picture_control_set_ptr->pic_decision_reorder_queue_idx, pic_i + 1);
+                                for (pic_i = num_past_pics + 1; pic_i < altref_nframes; pic_i++) {
+                                    int32_t q_index = QUEUE_GET_NEXT_SPOT(picture_control_set_ptr->pic_decision_reorder_queue_idx, pic_i - num_past_pics);
                                     if (encode_context_ptr->picture_decision_reorder_queue[q_index]->parent_pcs_wrapper_ptr != NULL) {
                                         PictureParentControlSet* pcs_itr = (PictureParentControlSet *)encode_context_ptr->picture_decision_reorder_queue[q_index]->parent_pcs_wrapper_ptr->object_ptr;
-                                        picture_control_set_ptr->temp_filt_pcs_list[pic_i + num_past_pics + 1] = pcs_itr;
+                                        picture_control_set_ptr->temp_filt_pcs_list[pic_i] = pcs_itr;
                                     }
                                     else
                                         break;
@@ -4208,9 +4205,9 @@ void* picture_decision_kernel(void *input_ptr)
                                 }
 
                                 //get actual number of future pictures stored
-                                for(pic_i=0; pic_i<num_future_pics; pic_i++){
+                                for(pic_i = num_past_pics + 1; pic_i < ALTREF_MAX_NFRAMES; pic_i++){
 
-                                    if(picture_control_set_ptr->temp_filt_pcs_list[pic_i + num_past_pics + 1] != NULL)
+                                    if(picture_control_set_ptr->temp_filt_pcs_list[pic_i] != NULL)
                                         actual_future_pics++;
 
                                 }

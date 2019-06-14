@@ -1571,7 +1571,6 @@ EbErrorType av1_tu_estimate_coeff_bits(
 #endif
     PictureControlSet                  *picture_control_set_ptr,
     struct ModeDecisionCandidateBuffer *candidate_buffer_ptr,
-    CodingUnit                         *cu_ptr,
     uint32_t                            tu_origin_index,
     uint32_t                            tu_chroma_origin_index,
     EntropyCoder                       *entropy_coder_ptr,
