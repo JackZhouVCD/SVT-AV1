@@ -809,9 +809,9 @@ void av1_compute_stats_c(int32_t wiener_win, const uint8_t *dgd, const uint8_t *
 // 12|                                               12x12 12x22 |(Btm Row)
 // 22|                                                     22x22 |
 //   -------------------------------------------------------------
-// kiXlj means the multiply–accumulate must be calculated from scratch, and
+// kiXlj means the multiplyï¿½accumulate must be calculated from scratch, and
 // starts from a[k * a_stride + i] * b[l * b_stride + j].
-// kixlj means the multiply–accumulate could be derived from a neighbor.
+// kixlj means the multiplyï¿½accumulate could be derived from a neighbor.
 
 static INLINE void sub_avg_block(const uint8_t *src, const int32_t src_stride,
                                  const uint8_t avg, const int32_t width,
@@ -1266,9 +1266,9 @@ static void update_a_sep_sym(int32_t wiener_win, int64_t **Mc, int64_t **Hc,
     }
     // Normalization enforcement in the system of equations itself
     assert(wiener_halfwin1 <= WIENER_HALFWIN1);
+    int64_t A_halfwin1 = A[wiener_halfwin1 - 1];
     for (i = 0; i < wiener_halfwin1 - 1; ++i) {
-        A[i] -=
-            A[wiener_halfwin1 - 1] * 2 +
+        A[i] -= A_halfwin1 * 2 +
             B[i * wiener_halfwin1 + wiener_halfwin1 - 1] -
             2 * B[(wiener_halfwin1 - 1) * wiener_halfwin1 + (wiener_halfwin1 - 1)];
     }
@@ -1322,10 +1322,9 @@ static void update_b_sep_sym(int32_t wiener_win, int64_t **Mc, int64_t **Hc,
         }
     }
     // Normalization enforcement in the system of equations itself
-    assert(wiener_halfwin1 <= WIENER_HALFWIN1 );
+    int64_t A_halfwin1 = A[wiener_halfwin1 - 1];
     for (i = 0; i < wiener_halfwin1 - 1; ++i) {
-        A[i] -=
-            A[wiener_halfwin1 - 1] * 2 +
+        A[i] -= A_halfwin1 * 2 +
             B[i * wiener_halfwin1 + wiener_halfwin1 - 1] -
             2 * B[(wiener_halfwin1 - 1) * wiener_halfwin1 + (wiener_halfwin1 - 1)];
     }
