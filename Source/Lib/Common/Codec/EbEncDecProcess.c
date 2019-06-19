@@ -1339,6 +1339,12 @@ EbErrorType signal_derivation_enc_dec_kernel_oq(
             CHROMA_MODE_2 :
             CHROMA_MODE_3 ;
 
+#if UNSET_M0_1
+    if (picture_control_set_ptr->temporal_layer_index == 0)
+        context_ptr->chroma_level = CHROMA_MODE_0;
+          
+#endif
+
     // Set fast loop method
     // 1 fast loop: SSD_SEARCH not supported
     // Level                Settings
@@ -1440,11 +1446,20 @@ EbErrorType signal_derivation_enc_dec_kernel_oq(
     else
         context_ptr->new_nearest_near_comb_injection = 0;
 #endif
+
+#if UNSET_M0_2
+    context_ptr->new_nearest_near_comb_injection = 1;
+#endif
+
 #if ENHANCED_Nx4_4xN_NEW_MV
     if (picture_control_set_ptr->enc_mode == ENC_M0)
         context_ptr->nx4_4xn_parent_mv_injection = 1;
     else
         context_ptr->nx4_4xn_parent_mv_injection = 0;
+#endif
+
+#if UNSET_M0_3
+    context_ptr->nx4_4xn_parent_mv_injection = 0;
 #endif
 #if M9_NEAR_INJECTION
     // Set NEAR injection
@@ -1614,6 +1629,10 @@ EbErrorType signal_derivation_enc_dec_kernel_oq(
         context_ptr->trellis_quant_coeff_optimization = EB_TRUE;
     else
         context_ptr->trellis_quant_coeff_optimization = EB_FALSE;
+
+#if UNSET_M0_13
+    context_ptr->trellis_quant_coeff_optimization = EB_TRUE;
+#endif
 
 #if NEW_PRESETS
     // Derive redundant block

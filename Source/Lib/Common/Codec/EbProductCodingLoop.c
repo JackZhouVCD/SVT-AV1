@@ -5755,6 +5755,11 @@ void md_encode_block(
         picture_control_set_ptr->parent_pcs_ptr->nsq_search_level < NSQ_SEARCH_FULL) ? EB_TRUE : EB_FALSE;
 #if DISABLE_NSQ_TABLE_FOR_M0
     is_nsq_table_used = picture_control_set_ptr->enc_mode == ENC_M0 ?  EB_FALSE : is_nsq_table_used;
+
+#if UNSET_M0_10
+    is_nsq_table_used - EB_FALSE;
+#endif
+
 #endif
     if (is_nsq_table_used) {
         if (context_ptr->blk_geom->shape == PART_N) {

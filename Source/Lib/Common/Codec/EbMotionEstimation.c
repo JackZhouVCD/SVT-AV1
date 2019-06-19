@@ -13739,7 +13739,12 @@ EbErrorType motion_estimate_lcu(
             : EB_FALSE;
 
 #if DISABLE_NSQ_TABLE_FOR_M0
-    is_nsq_table_used = picture_control_set_ptr->enc_mode == ENC_M0 ?  EB_FALSE : is_nsq_table_used;
+    is_nsq_table_used = (picture_control_set_ptr->enc_mode == ENC_M0) ?  EB_FALSE : is_nsq_table_used;
+
+#if UNSET_M0_5
+    is_nsq_table_used = EB_FALSE;
+#endif
+
 #endif
 
 #if !MRP_ME
