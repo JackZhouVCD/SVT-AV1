@@ -20,3 +20,6 @@
 #define UNSET_M0_10      0
 #define UNSET_M0_11      0
 #define UNSET_M0_12      0
+
+#define SET_M0_PEL_M1   0
+#define SET_M0_ATB_M1   1

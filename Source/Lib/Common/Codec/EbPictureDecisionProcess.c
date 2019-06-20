@@ -1170,10 +1170,10 @@ EbErrorType signal_derivation_multi_processes_oq(
 #endif
         else
             picture_control_set_ptr->loop_filter_mode = 0;
+    else
 #if UNSET_M0_6
         picture_control_set_ptr->loop_filter_mode = 3;
 #endif
-    else
 
 #endif
 #if LOOP_FILTER_FIX
@@ -1591,6 +1591,9 @@ EbErrorType signal_derivation_multi_processes_oq(
         // 1                 Fast: perform transform partitioning for sensitive block sizes
         // 2                 Full: perform transform partitioning for all block sizes
 
+#if SET_M0_ATB_M1
+        picture_control_set_ptr->atb_mode = 0;
+#else
         if (picture_control_set_ptr->enc_mode == ENC_M0 && sequence_control_set_ptr->static_config.encoder_bit_depth == EB_8BIT)
 #if SHUT_ATB
             picture_control_set_ptr->atb_mode = 0;
@@ -1603,6 +1606,9 @@ EbErrorType signal_derivation_multi_processes_oq(
 #if UNSET_M0_9
         if ( sequence_control_set_ptr->static_config.encoder_bit_depth == EB_8BIT)
             picture_control_set_ptr->atb_mode = 1;
+#endif
+
+
 #endif
 
 #endif
@@ -3974,6 +3980,22 @@ void* picture_decision_kernel(void *input_ptr)
                                     picture_control_set_ptr->use_subpel_flag = 1;
 #endif
 #if IMPROVED_SUBPEL_SEARCH
+
+#if SET_M0_PEL_M1
+                                if (MR_MODE) {
+                                    picture_control_set_ptr->half_pel_mode =
+                                        EX_HP_MODE;
+                                    picture_control_set_ptr->quarter_pel_mode =
+                                        EX_QP_MODE;
+                                }
+                                else {
+                                    picture_control_set_ptr->half_pel_mode =
+                                        REFINMENT_HP_MODE;
+                                    picture_control_set_ptr->quarter_pel_mode =
+                                        REFINMENT_QP_MODE;
+                                }
+
+#else
                                 if (MR_MODE) {
                                     picture_control_set_ptr->half_pel_mode =
                                         EX_HP_MODE;
@@ -3991,6 +4013,7 @@ void* picture_decision_kernel(void *input_ptr)
                                     picture_control_set_ptr->quarter_pel_mode =
                                         REFINMENT_QP_MODE;
                                 }
+#endif
 #if UNSET_M0_9
                                 picture_control_set_ptr->half_pel_mode =
                                     EX_HP_MODE;
