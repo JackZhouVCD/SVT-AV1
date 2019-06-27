@@ -11,6 +11,11 @@
 #include "EbIntraPrediction_AVX2.h"
 #include "lpf_common_sse2.h"
 #include "aom_dsp_rtcd.h"
+#if AVX2_XPOSE
+#include "transpose_avx2.h"
+#include "transpose_sse2.h"
+#endif
+
 #ifndef _mm256_setr_m128i
 #define _mm256_setr_m128i(/* __m128i */ lo, /* __m128i */ hi) \
     _mm256_insertf128_si256(_mm256_castsi128_si256(lo), (hi), 0x1)
@@ -6851,7 +6856,8 @@ static INLINE void transpose16x32_avx2(__m256i *x, __m256i *d) {
     d[14] = _mm256_unpacklo_epi64(w7, w15);
     d[15] = _mm256_unpackhi_epi64(w7, w15);
 }
-
+#if AVX2_XPOSE
+#else
 static INLINE void transpose16x16_sse2(__m128i *x, __m128i *d) {
     __m128i w0, w1, w2, w3, w4, w5, w6, w7, w8, w9;
     __m128i w10, w11, w12, w13, w14, w15;
@@ -6941,7 +6947,7 @@ static INLINE void transpose16x16_sse2(__m128i *x, __m128i *d) {
     d[14] = _mm_unpacklo_epi64(w7, w15);
     d[15] = _mm_unpackhi_epi64(w7, w15);
 }
-
+#endif
 static void transpose_TX_8X8(const uint8_t *src, ptrdiff_t pitchSrc,
     uint8_t *dst, ptrdiff_t pitchDst) {
     __m128i r0, r1, r2, r3, r4, r5, r6, r7;
@@ -7152,7 +7158,11 @@ static void dr_prediction_z3_16x16_avx2(uint8_t *dst, ptrdiff_t stride,
     __m128i dstvec[16], d[16];
 
     dr_prediction_z1_16xN_internal_avx2(16, dstvec, left, upsample_left, dy);
+#if AVX2_XPOSE
+    transpose_8bit_16x16_reg128bit_avx2(dstvec, d);
+#else
     transpose16x16_sse2(dstvec, d);
+#endif
 
     for (int32_t i = 0; i < 16; i++)
         _mm_storeu_si128((__m128i *)(dst + i * stride), d[i]);
@@ -7211,7 +7221,11 @@ static void dr_prediction_z3_32x16_avx2(uint8_t *dst, ptrdiff_t stride,
 
     dr_prediction_z1_16xN_internal_avx2(32, dstvec, left, upsample_left, dy);
     for (int32_t i = 0; i < 32; i += 16) {
+#if AVX2_XPOSE
+        transpose_8bit_16x16_reg128bit_avx2(dstvec + i, d);
+#else
         transpose16x16_sse2((dstvec + i), d);
+#endif
         for (int32_t j = 0; j < 16; j++)
             _mm_storeu_si128((__m128i *)(dst + j * stride + i), d[j]);
     }
@@ -7249,7 +7263,11 @@ static void dr_prediction_z3_64x16_avx2(uint8_t *dst, ptrdiff_t stride,
 
     dr_prediction_z1_16xN_internal_avx2(64, dstvec, left, upsample_left, dy);
     for (int32_t i = 0; i < 64; i += 16) {
+#if AVX2_XPOSE
+        transpose_8bit_16x16_reg128bit_avx2(dstvec + i, d);
+#else
         transpose16x16_sse2((dstvec + i), d);
+#endif
         for (int32_t j = 0; j < 16; j++)
             _mm_storeu_si128((__m128i *)(dst + j * stride + i), d[j]);
     }

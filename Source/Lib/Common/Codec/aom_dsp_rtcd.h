@@ -20,10 +20,6 @@
 
 #include "EbDefinitions.h"
 
-//#if AVX2_WARP
-//#include "EbWarpedMotion.h"
-//#endif
-
 #ifdef RTCD_C
 #define RTCD_EXTERN                //CHKN RTCD call in effect. declare the function pointers in  encHandle.
 #else
