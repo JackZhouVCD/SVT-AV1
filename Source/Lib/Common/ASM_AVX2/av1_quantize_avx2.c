@@ -151,7 +151,7 @@ void av1_quantize_fp_avx2(const TranLow *coeff_ptr, intptr_t n_coeffs,
     __m256i eob = _mm256_setzero_si256();
     quantize(&thr, qp, &coeff, iscan_ptr, qcoeff_ptr, dqcoeff_ptr, &eob);
 
-    coeff_ptr += step;
+    coeff_ptr += step;  
     qcoeff_ptr += step;
     dqcoeff_ptr += step;
     iscan_ptr += step;

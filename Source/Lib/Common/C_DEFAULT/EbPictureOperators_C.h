@@ -19,7 +19,11 @@ extern "C" {
         uint32_t area_height,
         uint32_t bytes_per_sample);
 
+#if AVX2_DIST
+    uint64_t spatial_full_distortion_kernel_c(
+#else
     uint64_t spatial_full_distortion_kernel(
+#endif
         uint8_t *input,
         uint32_t input_stride,
         uint8_t *recon,

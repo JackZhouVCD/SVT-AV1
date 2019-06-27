@@ -37,7 +37,11 @@ void picture_copy_kernel(
 
 // C equivalents
 
+#if AVX2_DIST
+uint64_t spatial_full_distortion_kernel_c(
+#else
 uint64_t spatial_full_distortion_kernel(
+#endif
     uint8_t   *input,
     uint32_t   input_stride,
     uint8_t   *recon,
