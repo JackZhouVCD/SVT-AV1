@@ -13,12 +13,20 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
+#include "avx2_macros.h"
+#if AVX2_WARP
+#include "aom_dsp_rtcd.h"
+#endif
 #include "EbWarpedMotion.h"
 
 #define WARP_ERROR_BLOCK 32
 
 /* clang-format off */
+#if AVX2_WARP
+const int error_measure_lut[512] = {
+#else
 static const int error_measure_lut[512] = {
+#endif
   // pow 0.7
   16384, 16339, 16294, 16249, 16204, 16158, 16113, 16068,
   16022, 15977, 15932, 15886, 15840, 15795, 15749, 15703,
@@ -572,9 +580,12 @@ static int64_t highbd_warp_error(
   return gm_sumerr;
 }
 
+#if AVX2_WARP
+#else
 static INLINE int error_measure(int err) {
   return error_measure_lut[255 + err];
 }
+#endif
 
 /* The warp filter for ROTZOOM and AFFINE models works as follows:
    * Split the input into 8x8 blocks
@@ -801,14 +812,23 @@ static void warp_plane(EbWarpedMotionParams *wm, const uint8_t *const ref,
   const int16_t beta = wm->beta;
   const int16_t gamma = wm->gamma;
   const int16_t delta = wm->delta;
+#if AVX2_WARP
+  av1_warp_affine(mat, ref, width, height, stride, pred, p_col, p_row, p_width,
+#else
   av1_warp_affine_c(mat, ref, width, height, stride, pred, p_col, p_row, p_width,
+#endif
                   p_height, p_stride, subsampling_x, subsampling_y, conv_params,
                   alpha, beta, gamma, delta);
 }
 
+#if AVX2_WARP
+int64_t av1_calc_frame_error_c(const uint8_t *const ref, int stride,
+    const uint8_t *const dst, int p_width, int p_height, int p_stride) {
+#else
 static int64_t frame_error(const uint8_t *const ref, int stride,
                            const uint8_t *const dst, int p_width, int p_height,
                            int p_stride) {
+#endif
   int64_t sum_error = 0;
   for (int i = 0; i < p_height; ++i) {
     for (int j = 0; j < p_width; ++j) {
@@ -842,7 +862,11 @@ static int64_t warp_error(EbWarpedMotionParams *wm, const uint8_t *const ref,
       warp_plane(wm, ref, width, height, stride, tmp, j, i, warp_w, warp_h,
                  WARP_ERROR_BLOCK, subsampling_x, subsampling_y, &conv_params);
 
+#if AVX2_WARP
+      gm_sumerr += av1_calc_frame_error(tmp, WARP_ERROR_BLOCK, dst + j + i * p_stride,
+#else
       gm_sumerr += frame_error(tmp, WARP_ERROR_BLOCK, dst + j + i * p_stride,
+#endif
                                warp_w, warp_h, p_stride);
       if (gm_sumerr > best_error) return gm_sumerr;
     }
@@ -857,7 +881,11 @@ int64_t av1_frame_error(int use_hbd, int bd, const uint8_t *ref, int stride,
                               CONVERT_TO_SHORTPTR(dst), p_width, p_height,
                               p_stride, bd);
   }
+#if AVX2_WARP
+  return av1_calc_frame_error(ref, stride, dst, p_width, p_height, p_stride);
+#else
   return frame_error(ref, stride, dst, p_width, p_height, p_stride);
+#endif
 }
 
 int64_t av1_warp_error(EbWarpedMotionParams *wm, int use_hbd, int bd,
