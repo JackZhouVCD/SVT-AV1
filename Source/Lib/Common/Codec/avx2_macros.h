@@ -1,0 +1,1 @@
+#define AVX2_ADD        1

@@ -14,6 +14,8 @@
 * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
 */
 
+#include "avx2_macros.h"
+
 #ifndef EbDefinitions_h
 #define EbDefinitions_h
 #include <stdint.h>
