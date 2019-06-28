@@ -12,11 +12,17 @@
 #define AV1_COMMON_X86_AV1_INV_TXFM_AVX2_H_
 
 #include <immintrin.h>
-
+#if AVX2_ADD
+#include "EbDefinitions.h"
+#include "aom_dsp_rtcd.h"
+#include "txfm_common_avx2.h"
+#endif
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#if AVX2_ADD
+#else
 #define NewSqrt2Bits ((int32_t)12)
     // 2^12 * sqrt(2)
     static const int32_t NewSqrt2 = 5793;
@@ -96,6 +102,7 @@ static INLINE void av1_round_shift_array_32_avx2(__m256i *input,
     out0 = _mm256_packs_epi32(c0, c1);                \
     out1 = _mm256_packs_epi32(d0, d1);                \
   }
+#endif
 
     // half input is zero
 #define btf_16_w16_0_avx2(w0, w1, in, out0, out1)  \
@@ -106,7 +113,8 @@ static INLINE void av1_round_shift_array_32_avx2(__m256i *input,
     out0 = _mm256_mulhrs_epi16(_in, _w0);          \
     out1 = _mm256_mulhrs_epi16(_in, _w1);          \
   }
-
+#if AVX2_ADD
+#else
 #define btf_16_adds_subs_avx2(in0, in1)  \
   {                                      \
     const __m256i _in0 = in0;            \
@@ -209,19 +217,20 @@ static INLINE void av1_round_shift_array_32_avx2(__m256i *input,
                 in[i] = _mm256_slli_epi16(in[i], bit);
         }
     }
-
+#endif
     static INLINE void round_shift_avx2(const __m256i *input, __m256i *output,
         int32_t size) {
         const __m256i scale = _mm256_set1_epi16(NewInvSqrt2 * 8);
         for (int32_t i = 0; i < size; ++i)
             output[i] = _mm256_mulhrs_epi16(input[i], scale);
     }
-
+#if AVX2_ADD
+#else
     static INLINE void flip_buf_av2(__m256i *in, __m256i *out, int32_t size) {
         for (int32_t i = 0; i < size; ++i)
             out[size - i - 1] = in[i];
     }
-
+#endif
     static INLINE void write_recon_w16_avx2(__m256i res, uint8_t *output) {
         __m128i pred = _mm_loadu_si128((__m128i const *)(output));
         __m256i u = _mm256_adds_epi16(_mm256_cvtepu8_epi16(pred), res);
@@ -238,13 +247,15 @@ static INLINE void av1_round_shift_array_32_avx2(__m256i *input,
         for (int32_t i = 0; i < height; ++i, j += step)
             write_recon_w16_avx2(in[j], output + i * stride);
     }
-
+#if AVX2_ADD
+#else
     typedef void(*transform_1d_avx2)(__m256i *in, __m256i *out, int32_t bit,
         int32_t do_cols, int32_t bd, int32_t out_shift);
 
     void av1_lowbd_inv_txfm2d_add_avx2(const int32_t *input, uint8_t *output,
         int32_t stride, TxType tx_type, TxSize tx_size,
         int32_t eob);
+#endif
 #ifdef __cplusplus
 }
 #endif

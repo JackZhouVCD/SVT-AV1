@@ -19,8 +19,11 @@
 void get_flip_cfg(TxType tx_type, int32_t *ud_flip, int32_t *lr_flip);
 int32_t get_rect_tx_log_ratio(int32_t col, int32_t row);
 
+#if AVX2_ADD
+#else
 const int32_t *sinpi_arr(int32_t n);
 const int32_t *cospi_arr(int32_t n);
+#endif
 extern const int8_t *inv_txfm_shift_ls[];
 
 static INLINE void highbd_clamp_epi32(__m256i *x, int32_t bd) {
@@ -6140,7 +6143,10 @@ static void idct64_avx2(__m256i *in, __m256i *out, int32_t bit, int32_t do_cols,
         }
     }
 }
-
+#if AVX2_ADD
+typedef void(*transform_1d_avx2)(__m256i *in, __m256i *out, int32_t bit,
+    int32_t do_cols, int32_t bd, int32_t out_shift);
+#endif
 static const transform_1d_avx2
 highbd_txfm_all_1d_zeros_w8_arr[TX_SIZES][ITX_TYPES_1D][4] = {
     {

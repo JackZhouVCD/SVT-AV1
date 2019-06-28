@@ -13,19 +13,24 @@
 #include "aom_dsp_rtcd.h"
 #include <tmmintrin.h>
 #include "EbTransforms.h"
+#if AVX2_ADD
+#else
 static const int32_t NewSqrt2Bits = 12;
 // 2^12 * sqrt(2)
 static const int32_t NewSqrt2 = 5793;
 // 2^12 / sqrt(2)
 static const int32_t NewInvSqrt2 = 2896;
-
+#endif
 #include "av1_inv_txfm_ssse3.h"
 #include "txfm_common_sse2.h"
 #include "av1_txfm_sse2.h"
 #include "transpose_sse2.h"
 
+#if AVX2_ADD
+#else
 const int32_t *cospi_arr(int32_t n);
 const int32_t *sinpi_arr(int32_t n);
+#endif
 extern const int8_t *inv_txfm_shift_ls[];
 int32_t get_rect_tx_log_ratio(int32_t col, int32_t row);
 void get_flip_cfg(TxType tx_type, int32_t *ud_flip, int32_t *lr_flip);

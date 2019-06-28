@@ -27,11 +27,14 @@ const int32_t *cospi_arr(int32_t n);
 const int32_t *sinpi_arr(int32_t n);
 extern const int8_t *inv_txfm_shift_ls[];
 
+#if AVX2_ADD
+#else
 #define NewSqrt2Bits ((int32_t)12)
 // 2^12 * sqrt(2)
 static const int32_t NewSqrt2 = 5793;
 // 2^12 / sqrt(2)
 static const int32_t NewInvSqrt2 = 2896;
+#endif
 
 typedef enum ATTRIBUTE_PACKED {
     IDCT_1D,

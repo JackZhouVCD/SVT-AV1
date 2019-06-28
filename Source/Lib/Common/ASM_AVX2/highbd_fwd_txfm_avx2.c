@@ -21,12 +21,18 @@
 #include <immintrin.h>
 #include "txfm_common_sse2.h"
 
-const int32_t *cospi_arr(int32_t n);
+#if AVX2_ADD
+#else
 const int32_t *sinpi_arr(int32_t n);
+const int32_t *cospi_arr(int32_t n);
+#endif
+
+#if AVX2_ADD
+#else
 static const int32_t NewSqrt2Bits = 12;
 // 2^12 * sqrt(2)
 static const int32_t NewSqrt2 = 5793;
-
+#endif
 void get_flip_cfg(TxType tx_type, int32_t *ud_flip, int32_t *lr_flip);
 void Av1TransformConfig(
     TxType tx_type,
