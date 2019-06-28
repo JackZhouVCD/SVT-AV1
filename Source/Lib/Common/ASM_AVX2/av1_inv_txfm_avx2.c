@@ -16,6 +16,8 @@
 #include "av1_inv_txfm_ssse3.h"
 #include "EbTransforms.h"
 
+#if AVX2_ADD
+
 static INLINE void idct16_stage5_avx2(__m256i *x1, const int32_t *cospi,
     const __m256i _r, int8_t cos_bit) {
     const __m256i cospi_m32_p32 = pair_set_w16_epi16(-cospi[32], cospi[32]);
@@ -1936,3 +1938,4 @@ void av1_inv_txfm_add_avx2(const TranLow *dqcoeff, uint8_t *dst, int32_t stride,
     else
         av1_inv_txfm_add_c(dqcoeff, dst, stride, txfm_param);
 }
+#endif
