@@ -39,11 +39,14 @@
 extern "C" {
 #endif
 
+// Internal Marcos
+#define NON_AVX512_SUPPORT
 
 #define INCOMPLETE_SB_FIX                 1 // Handle the incomplete SBs properly based on the standard and consider all allowed blocks
 #define QPS_TUNING                        1 // Tune the QPS algorithm to consider ALR_REF filtering and movement of the pictures
                                             // Update to a more accurate QPS complexity metric
 #define CDEF_AVX_OPT                      1
+#define ENABLE_CDF_UPDATE                 1 // Add the support for end of frame CDF update
 #define MR_MODE                           0
 #define EIGTH_PEL_MV                      0
 #define ALTREF_TF_EIGHTH_PEL_SEARCH       1 // Add 1/8 sub-pel search/compensation @ Temporal Filtering
@@ -425,7 +428,7 @@ static INLINE uint16_t clip_pixel_highbd(int32_t val, int32_t bd) {
 #endif
 #endif /* ATTRIBUTE_PACKED */
 
-typedef enum ATTRIBUTE_PACKED
+typedef enum
 {
     EIGHTTAP_REGULAR,
     EIGHTTAP_SMOOTH,
@@ -2127,7 +2130,7 @@ typedef EbErrorType(*EbCreator)(
     EbPtr *object_dbl_ptr,
     EbPtr object_init_data_ptr);
 
-#define INVALID_MV            0xFFFFFFFF    //ICOPY They changed this to 0x80008000
+#define INVALID_MV            0x80008000 //0xFFFFFFFF    //ICOPY They changed this to 0x80008000
 #define BLKSIZE 64
 
 /***************************************
