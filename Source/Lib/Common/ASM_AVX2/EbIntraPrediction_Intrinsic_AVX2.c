@@ -7133,7 +7133,7 @@ static void dr_prediction_z3_32x16_avx2(uint8_t *dst, ptrdiff_t stride,
 static void dr_prediction_z3_32x64_avx2(uint8_t *dst, ptrdiff_t stride,
     const uint8_t *left, int32_t upsample_left,
     int32_t dy) {
-    EB_ALIGN(32) uint8_t dstT[64 * 32];
+    uint8_t dstT[64 * 32];
     dr_prediction_z1_64xN_avx2(32, dstT, 64, left, upsample_left, dy);
     transpose(dstT, 64, dst, stride, 32, 64);
 }
@@ -7141,7 +7141,7 @@ static void dr_prediction_z3_32x64_avx2(uint8_t *dst, ptrdiff_t stride,
 static void dr_prediction_z3_64x32_avx2(uint8_t *dst, ptrdiff_t stride,
     const uint8_t *left, int32_t upsample_left,
     int32_t dy) {
-    EB_ALIGN(32) uint8_t dstT[32 * 64];
+    uint8_t dstT[32 * 64];
     dr_prediction_z1_32xN_avx2(64, dstT, 32, left, upsample_left, dy);
     transpose(dstT, 32, dst, stride, 64, 32);
     return;
@@ -7150,7 +7150,7 @@ static void dr_prediction_z3_64x32_avx2(uint8_t *dst, ptrdiff_t stride,
 static void dr_prediction_z3_16x64_avx2(uint8_t *dst, ptrdiff_t stride,
     const uint8_t *left, int32_t upsample_left,
     int32_t dy) {
-    EB_ALIGN(32) uint8_t dstT[64 * 16];
+    uint8_t dstT[64 * 16];
     dr_prediction_z1_64xN_avx2(16, dstT, 64, left, upsample_left, dy);
     transpose(dstT, 64, dst, stride, 16, 64);
 }
