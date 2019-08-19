@@ -22,10 +22,6 @@
 extern "C" {
 #endif
 
-#include "EbTransforms_C.h"
-#include "EbTransforms_SSE2.h"
-#include "EbTransforms_SSSE3.h"
-#include "EbTransforms_SSE4_1.h"
 #include "EbTransforms_AVX2.h"
 #include "EbSequenceControlSet.h"
 #include "EbPictureControlSet.h"

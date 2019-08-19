@@ -6,9 +6,6 @@
 #ifndef EbIntraPrediction_h
 #define EbIntraPrediction_h
 
-#include "EbIntraPrediction_SSE2.h"
-#include "EbIntraPrediction_SSSE3.h"
-#include "EbIntraPrediction_SSE4_1.h"
 #include "EbIntraPrediction_AVX2.h"
 
 #include "EbDefinitions.h"
