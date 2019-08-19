@@ -207,10 +207,6 @@ static INLINE void highbd_transpose16x16_avx2(__m256i *x, __m256i *d) {
             _mm256_extracti128_si256(dd[i], 1), 0);
     }
 }
-static void _mm_storeh_epi64(__m128i * p, __m128i x)
-{
-    _mm_storeh_pd((double *)p, _mm_castsi128_pd(x));
-}
 
 // TODO(luoyi) The following two functions are shared with intrapred_sse2.c.
 // Use a header file, intrapred_common_x86.h
