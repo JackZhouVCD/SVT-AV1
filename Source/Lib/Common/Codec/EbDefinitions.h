@@ -41,16 +41,16 @@ extern "C" {
 
 #define II_COMP_FLAG 1
 
-// Internal Marcos
-#define NON_AVX512_SUPPORT
-
-#define INCOMPLETE_SB_FIX                 1 // Handle the incomplete SBs properly based on the standard and consider all allowed blocks
-#define QPS_TUNING                        1 // Tune the QPS algorithm to consider ALR_REF filtering and movement of the pictures
-                                            // Update to a more accurate QPS complexity metric
-#define CDEF_AVX_OPT                      1
-#define ENABLE_CDF_UPDATE                 1 // Add the support for end of frame CDF update
 #define MR_MODE                           0
 #define EIGTH_PEL_MV                      0
+
+#define NON_AVX512_SUPPORT
+
+    // MACROS TO REMOVE
+#define INCOMPLETE_SB_FIX                 1 // Handle the incomplete SBs properly based on the standard and consider all allowed blocks
+#define QPS_TUNING                        1 // Tune the QPS algorithm to consider ALR_REF filtering and movement of the pictures
+#define CDEF_AVX_OPT                      1
+#define ENABLE_CDF_UPDATE                 1 // Add the support for end of frame CDF update
 #define ALTREF_TF_EIGHTH_PEL_SEARCH       1 // Add 1/8 sub-pel search/compensation @ Temporal Filtering
 #define ALTREF_TF_ADAPTIVE_WINDOW_SIZE    1 // Add the ability to use dynamic/asymmetric window for AltRef temporal filtering, add the ability to derive the activity within past and future frames @ picture decision, and add a logic to derive window size from activity
 #define TF_KEY                            1 // Temporal Filtering  for Key frames. OFF for Screen Content.
@@ -65,19 +65,14 @@ extern "C" {
 #define HME_ME_TUNING                     1 // HME/ME tuning
 #define QPM                               1 // Change the QP of each SB using deltaq to improve efficiency (Only active in Intra frames)
 #define MFMV_SUPPORT                      1// Temporal mvp support. aka. MFMV
-
-
-// Lossy optimizations -
-// Opt 0
 #define APPLY_3X3_FOR_BEST_ME             1 // Use the top 4 ME candidates @ 3x3 Unipred and 3x3 Bipred
-// Opt 1
 #define COEFF_BASED_SKIP_ATB              1 // Skip ATB if parent block does not have coeff
-// Opt 2
 #define EDGE_BASED_SKIP_ANGULAR_INTRA     1 // Use edge detection to bypass some angular modes
-// Opt 3
 #define PRUNE_REF_FRAME_AT_ME             1 // Bipred candidates reduction @ ME
-// Opt 4
 #define PRUNE_REF_FRAME_FRO_REC_PARTITION 1 // MD candidates reduction @ MD
+                                            // Update to a more accurate QPS complexity metric
+
+
 
 
 //FOR DEBUGGING - Do not remove
