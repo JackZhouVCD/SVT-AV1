@@ -13,10 +13,8 @@ static void mode_decision_context_dctor(EbPtr p)
 {
     ModeDecisionContext* obj = (ModeDecisionContext*)p;
 
-#if PRUNE_REF_FRAME_FRO_REC_PARTITION
     EB_FREE_ARRAY(obj->ref_best_ref_sq_table);
     EB_FREE_ARRAY(obj->ref_best_cost_sq_table);
-#endif
 
 #if NO_ENCDEC //SB128_TODO to upgrade
     int codedLeafIndex;
@@ -219,10 +217,8 @@ EbErrorType mode_decision_context_ctor(
         }
 #endif
     }
-#if PRUNE_REF_FRAME_FRO_REC_PARTITION
     EB_MALLOC_ARRAY(context_ptr->ref_best_cost_sq_table, MAX_REF_TYPE_CAND);
     EB_MALLOC_ARRAY(context_ptr->ref_best_ref_sq_table, MAX_REF_TYPE_CAND);
-#endif
     return EB_ErrorNone;
 }
 

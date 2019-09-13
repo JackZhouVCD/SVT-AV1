@@ -65,12 +65,6 @@ extern "C" {
 #define HME_ME_TUNING                     1 // HME/ME tuning
 #define QPM                               1 // Change the QP of each SB using deltaq to improve efficiency (Only active in Intra frames)
 #define MFMV_SUPPORT                      1// Temporal mvp support. aka. MFMV
-#define APPLY_3X3_FOR_BEST_ME             1 // Use the top 4 ME candidates @ 3x3 Unipred and 3x3 Bipred
-#define COEFF_BASED_SKIP_ATB              1 // Skip ATB if parent block does not have coeff
-#define EDGE_BASED_SKIP_ANGULAR_INTRA     1 // Use edge detection to bypass some angular modes
-#define PRUNE_REF_FRAME_AT_ME             1 // Bipred candidates reduction @ ME
-#define PRUNE_REF_FRAME_FRO_REC_PARTITION 1 // MD candidates reduction @ MD
-                                            // Update to a more accurate QPS complexity metric
 
 
 
@@ -505,16 +499,10 @@ typedef enum MD_STAGE {
 
 #endif
 
-#if APPLY_3X3_FOR_BEST_ME
 #define BEST_CANDIDATE_COUNT 4
-#endif
-#if PRUNE_REF_FRAME_FRO_REC_PARTITION
 #define MAX_REF_TYPE_CAND   30
 #define PRUNE_REC_TH         5
-#endif
-#if PRUNE_REF_FRAME_AT_ME
 #define PRUNE_REF_ME_TH      2
-#endif
 
 #define MD_EXIT_THSL         0 // MD_EXIT_THSL -->0 is lossless 100 is maximum. Increase with a step of 10-20.
 

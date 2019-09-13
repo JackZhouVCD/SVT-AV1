@@ -37,9 +37,7 @@
 #if II_COMP_FLAG
 #include "EbRateDistortionCost.h"
 #endif
-#if EDGE_BASED_SKIP_ANGULAR_INTRA
 #include "aom_dsp_rtcd.h"
-#endif
 #define  INCRMENT_CAND_TOTAL_COUNT(cnt) cnt++; if(cnt>=MODE_DECISION_CANDIDATE_MAX_COUNT) printf(" ERROR: reaching limit for MODE_DECISION_CANDIDATE_MAX_COUNT %i\n",cnt);
 int8_t av1_ref_frame_type(const MvReferenceFrame *const rf);
 
@@ -778,7 +776,6 @@ EbErrorType mode_decision_candidate_buffer_ctor(
     buffer_ptr->full_cost_merge_ptr = full_cost_merge_ptr;
     return EB_ErrorNone;
 }
-#if PRUNE_REF_FRAME_FRO_REC_PARTITION
 uint8_t check_ref_beackout(
     struct ModeDecisionContext *context_ptr,
     uint8_t                     ref_frame_type,
@@ -802,7 +799,6 @@ uint8_t check_ref_beackout(
     }
     return skip_candidate;
 }
-#endif
 /***************************************
 * return true if the MV candidate is already injected
 ***************************************/
@@ -1038,9 +1034,7 @@ void Unipred3x3CandidatesInjection(
 
     // (8 Best_L0 neighbors)
     //const MeLcuResults_t *meResults = pictureControlSetPtr->ParentPcsPtr->meResultsPtr[lcuAddr];
-#if APPLY_3X3_FOR_BEST_ME
     total_me_cnt = MIN(total_me_cnt, BEST_CANDIDATE_COUNT);
-#endif
     for (uint8_t me_candidate_index = 0; me_candidate_index < total_me_cnt; ++me_candidate_index)
     {
         const MeCandidate *me_block_results_ptr = &me_block_results[me_candidate_index];
@@ -1060,16 +1054,13 @@ void Unipred3x3CandidatesInjection(
         int16_t to_inject_mv_x = use_close_loop_me ? (inloop_me_context->inloop_me_mv[0][0][close_loop_me_index][0] + BIPRED_3x3_X_POS[bipredIndex]) << 1 : (me_results->me_mv_array[context_ptr->me_block_offset][list0_ref_index].x_mv + BIPRED_3x3_X_POS[bipredIndex]) << 1;
         int16_t to_inject_mv_y = use_close_loop_me ? (inloop_me_context->inloop_me_mv[0][0][close_loop_me_index][1] + BIPRED_3x3_Y_POS[bipredIndex]) << 1 : (me_results->me_mv_array[context_ptr->me_block_offset][list0_ref_index].y_mv + BIPRED_3x3_Y_POS[bipredIndex]) << 1;
         uint8_t to_inject_ref_type = svt_get_ref_frame_type(REF_LIST_0, list0_ref_index);
-#if PRUNE_REF_FRAME_FRO_REC_PARTITION
         uint8_t skip_cand = check_ref_beackout(
             context_ptr,
             to_inject_ref_type,
             context_ptr->blk_geom->shape);
 
         if (!skip_cand && (context_ptr->injected_mv_count_l0 == 0 || mrp_is_already_injected_mv_l0(context_ptr, to_inject_mv_x, to_inject_mv_y, to_inject_ref_type) == EB_FALSE)) {
-#else
-        if (context_ptr->injected_mv_count_l0 == 0 || mrp_is_already_injected_mv_l0(context_ptr, to_inject_mv_x, to_inject_mv_y, to_inject_ref_type) == EB_FALSE) {
-#endif
+
 #if II_COMP_FLAG // 3x3  L0
              //MvReferenceFrame rf[2];
              //rf[0] = to_inject_ref_type;
@@ -1172,9 +1163,7 @@ void Unipred3x3CandidatesInjection(
 
     // (8 Best_L1 neighbors)
 //const MeLcuResults_t *meResults = pictureControlSetPtr->ParentPcsPtr->meResultsPtr[lcuAddr];
-#if APPLY_3X3_FOR_BEST_ME
     total_me_cnt = MIN(total_me_cnt, BEST_CANDIDATE_COUNT);
-#endif
     for (uint8_t me_candidate_index = 0; me_candidate_index < total_me_cnt; ++me_candidate_index)
     {
         const MeCandidate *me_block_results_ptr = &me_block_results[me_candidate_index];
@@ -1194,16 +1183,12 @@ void Unipred3x3CandidatesInjection(
             int16_t to_inject_mv_x = use_close_loop_me ? (inloop_me_context->inloop_me_mv[1][0][close_loop_me_index][0] + BIPRED_3x3_X_POS[bipredIndex]) << 1 : (me_results->me_mv_array[context_ptr->me_block_offset][((sequence_control_set_ptr->mrp_mode == 0) ? 4 : 2) + list1_ref_index].x_mv + BIPRED_3x3_X_POS[bipredIndex]) << 1;
             int16_t to_inject_mv_y = use_close_loop_me ? (inloop_me_context->inloop_me_mv[1][0][close_loop_me_index][1] + BIPRED_3x3_Y_POS[bipredIndex]) << 1 : (me_results->me_mv_array[context_ptr->me_block_offset][((sequence_control_set_ptr->mrp_mode == 0) ? 4 : 2) + list1_ref_index].y_mv + BIPRED_3x3_Y_POS[bipredIndex]) << 1;
             uint8_t to_inject_ref_type = svt_get_ref_frame_type(REF_LIST_1, list1_ref_index);
-#if PRUNE_REF_FRAME_FRO_REC_PARTITION
             uint8_t skip_cand = check_ref_beackout(
                 context_ptr,
                 to_inject_ref_type,
                 context_ptr->blk_geom->shape);
 
             if (!skip_cand && (context_ptr->injected_mv_count_l1 == 0 || mrp_is_already_injected_mv_l1(context_ptr, to_inject_mv_x, to_inject_mv_y, to_inject_ref_type) == EB_FALSE)) {
-#else
-            if (context_ptr->injected_mv_count_l1 == 0 || mrp_is_already_injected_mv_l1(context_ptr, to_inject_mv_x, to_inject_mv_y, to_inject_ref_type) == EB_FALSE) {
-#endif
 #if II_COMP_FLAG // 3x3  L1
              //MvReferenceFrame rf[2];
              //rf[0] = to_inject_ref_type;
@@ -1335,9 +1320,7 @@ void Bipred3x3CandidatesInjection(
        NEW_NEWMV
        ************* */
        //const MeLcuResults_t *meResults = pictureControlSetPtr->ParentPcsPtr->meResultsPtr[lcuAddr];
-#if APPLY_3X3_FOR_BEST_ME
         total_me_cnt = MIN(total_me_cnt, BEST_CANDIDATE_COUNT);
-#endif
         for (uint8_t me_candidate_index = 0; me_candidate_index < total_me_cnt; ++me_candidate_index)
         {
             const MeCandidate *me_block_results_ptr = &me_block_results[me_candidate_index];
@@ -1362,16 +1345,12 @@ void Bipred3x3CandidatesInjection(
         rf[0] = svt_get_ref_frame_type(me_block_results_ptr->ref0_list, list0_ref_index);
         rf[1] = svt_get_ref_frame_type(me_block_results_ptr->ref1_list, list1_ref_index);
         uint8_t to_inject_ref_type = av1_ref_frame_type(rf);
-#if PRUNE_REF_FRAME_FRO_REC_PARTITION
         uint8_t skip_cand = check_ref_beackout(
             context_ptr,
             to_inject_ref_type,
             context_ptr->blk_geom->shape);
 
         if (!skip_cand && (context_ptr->injected_mv_count_bipred == 0 || mrp_is_already_injected_mv_bipred(context_ptr, to_inject_mv_x_l0, to_inject_mv_y_l0, to_inject_mv_x_l1, to_inject_mv_y_l1, to_inject_ref_type) == EB_FALSE)) {
-#else
-        if (context_ptr->injected_mv_count_bipred == 0 || mrp_is_already_injected_mv_bipred(context_ptr, to_inject_mv_x_l0, to_inject_mv_y_l0, to_inject_mv_x_l1, to_inject_mv_y_l1, to_inject_ref_type) == EB_FALSE) {
-#endif
 #if COMP_MODE
             context_ptr->variance_ready = 0;
             for (cur_type = MD_COMP_AVG; cur_type <= tot_comp_types; cur_type++)
@@ -1472,16 +1451,12 @@ void Bipred3x3CandidatesInjection(
             rf[0] = svt_get_ref_frame_type(me_block_results_ptr->ref0_list, list0_ref_index);
             rf[1] = svt_get_ref_frame_type(me_block_results_ptr->ref1_list, list1_ref_index);
             uint8_t to_inject_ref_type = av1_ref_frame_type(rf);
-#if PRUNE_REF_FRAME_FRO_REC_PARTITION
             uint8_t skip_cand = check_ref_beackout(
                 context_ptr,
                 to_inject_ref_type,
                 context_ptr->blk_geom->shape);
 
             if (!skip_cand && (context_ptr->injected_mv_count_bipred == 0 || mrp_is_already_injected_mv_bipred(context_ptr, to_inject_mv_x_l0, to_inject_mv_y_l0, to_inject_mv_x_l1, to_inject_mv_y_l1, to_inject_ref_type) == EB_FALSE)) {
-#else
-            if (context_ptr->injected_mv_count_bipred == 0 || mrp_is_already_injected_mv_bipred(context_ptr, to_inject_mv_x_l0, to_inject_mv_y_l0, to_inject_mv_x_l1, to_inject_mv_y_l1, to_inject_ref_type) == EB_FALSE) {
-#endif
 #if COMP_MODE
                 context_ptr->variance_ready = 0;
                 for (cur_type = MD_COMP_AVG; cur_type <= tot_comp_types; cur_type++)
@@ -2834,16 +2809,12 @@ void inject_new_candidates(
             int16_t to_inject_mv_x = use_close_loop_me ? inloop_me_context->inloop_me_mv[0][0][close_loop_me_index][0] << 1 : me_results->me_mv_array[me_block_offset][list0_ref_index].x_mv << 1;
             int16_t to_inject_mv_y = use_close_loop_me ? inloop_me_context->inloop_me_mv[0][0][close_loop_me_index][1] << 1 : me_results->me_mv_array[me_block_offset][list0_ref_index].y_mv << 1;
             uint8_t to_inject_ref_type = svt_get_ref_frame_type(REF_LIST_0, list0_ref_index);
-#if PRUNE_REF_FRAME_FRO_REC_PARTITION
             uint8_t skip_cand = check_ref_beackout(
                 context_ptr,
                 to_inject_ref_type,
                 context_ptr->blk_geom->shape);
 
             if (!skip_cand && (context_ptr->injected_mv_count_l0 == 0 || mrp_is_already_injected_mv_l0(context_ptr, to_inject_mv_x, to_inject_mv_y, to_inject_ref_type) == EB_FALSE)) {
-#else
-            if (context_ptr->injected_mv_count_l0 == 0 || mrp_is_already_injected_mv_l0(context_ptr, to_inject_mv_x, to_inject_mv_y, to_inject_ref_type) == EB_FALSE) {
-#endif
 
 #if II_COMP_FLAG    // NEWMV L0
              MvReferenceFrame rf[2];
@@ -2954,16 +2925,12 @@ void inject_new_candidates(
                 int16_t to_inject_mv_x = use_close_loop_me ? inloop_me_context->inloop_me_mv[1][0][close_loop_me_index][0] << 1 : me_results->me_mv_array[me_block_offset][((sequence_control_set_ptr->mrp_mode == 0) ? 4 : 2) + list1_ref_index].x_mv << 1;
                 int16_t to_inject_mv_y = use_close_loop_me ? inloop_me_context->inloop_me_mv[1][0][close_loop_me_index][1] << 1 : me_results->me_mv_array[me_block_offset][((sequence_control_set_ptr->mrp_mode == 0) ? 4 : 2) + list1_ref_index].y_mv << 1;
                 uint8_t to_inject_ref_type = svt_get_ref_frame_type(REF_LIST_1, list1_ref_index);
-#if PRUNE_REF_FRAME_FRO_REC_PARTITION
                 uint8_t skip_cand = check_ref_beackout(
                     context_ptr,
                     to_inject_ref_type,
                     context_ptr->blk_geom->shape);
 
                 if (!skip_cand && (context_ptr->injected_mv_count_l1 == 0 || mrp_is_already_injected_mv_l1(context_ptr, to_inject_mv_x, to_inject_mv_y, to_inject_ref_type) == EB_FALSE)) {
-#else
-                if (context_ptr->injected_mv_count_l1 == 0 || mrp_is_already_injected_mv_l1(context_ptr, to_inject_mv_x, to_inject_mv_y, to_inject_ref_type) == EB_FALSE) {
-#endif
   #if II_COMP_FLAG // NEWMV L1
              MvReferenceFrame rf[2];
              rf[0] = to_inject_ref_type;
@@ -3077,16 +3044,12 @@ void inject_new_candidates(
                     rf[0] = svt_get_ref_frame_type(me_block_results_ptr->ref0_list, list0_ref_index);
                     rf[1] = svt_get_ref_frame_type(me_block_results_ptr->ref1_list, list1_ref_index);
                     uint8_t to_inject_ref_type = av1_ref_frame_type(rf);
-#if PRUNE_REF_FRAME_FRO_REC_PARTITION
                     uint8_t skip_cand = check_ref_beackout(
                         context_ptr,
                         to_inject_ref_type,
                         context_ptr->blk_geom->shape);
 
                     if (!skip_cand && (context_ptr->injected_mv_count_bipred == 0 || mrp_is_already_injected_mv_bipred(context_ptr, to_inject_mv_x_l0, to_inject_mv_y_l0, to_inject_mv_x_l1, to_inject_mv_y_l1, to_inject_ref_type) == EB_FALSE)) {
-#else
-                    if (context_ptr->injected_mv_count_bipred == 0 || mrp_is_already_injected_mv_bipred(context_ptr, to_inject_mv_x_l0, to_inject_mv_y_l0, to_inject_mv_x_l1, to_inject_mv_y_l1, to_inject_ref_type) == EB_FALSE) {
-#endif
 #if COMP_MODE
                         context_ptr->variance_ready = 0;
                         for (cur_type = MD_COMP_AVG; cur_type <= tot_comp_types; cur_type++)
@@ -4446,7 +4409,6 @@ void  inject_intra_bc_candidates(
         INCRMENT_CAND_TOTAL_COUNT( (*cand_cnt) );
     }
 }
-#if EDGE_BASED_SKIP_ANGULAR_INTRA
 // Indices are sign, integer, and fractional part of the gradient value
 static const uint8_t gradient_to_angle_bin[2][7][16] = {
   {
@@ -4537,7 +4499,6 @@ static void angle_estimation(
         }
     }
 }
-#endif
 // END of Function Declarations
 void  inject_intra_candidates(
     PictureControlSet            *picture_control_set_ptr,
@@ -4562,7 +4523,6 @@ void  inject_intra_candidates(
     uint8_t                     disable_z2_prediction;
     uint8_t                     disable_angle_refinement;
     uint8_t                     disable_angle_prediction;
-#if EDGE_BASED_SKIP_ANGULAR_INTRA
     uint8_t directional_mode_skip_mask[INTRA_MODES] = { 0 };
 
     if (context_ptr->edge_based_skip_angle_intra && use_angle_delta)
@@ -4573,7 +4533,6 @@ void  inject_intra_candidates(
         const int cols = block_size_wide[context_ptr->blk_geom->bsize];
         angle_estimation(src_buf, src_pic->stride_y, rows, cols, /*context_ptr->blk_geom->bsize,*/directional_mode_skip_mask);
     }
-#endif
     uint8_t     angle_delta_shift = 1;
     if (picture_control_set_ptr->parent_pcs_ptr->intra_pred_mode == 4) {
         if (picture_control_set_ptr->slice_type == I_SLICE) {
@@ -4625,12 +4584,8 @@ void  inject_intra_candidates(
 #endif
     for (openLoopIntraCandidate = intra_mode_start; openLoopIntraCandidate <= intra_mode_end ; ++openLoopIntraCandidate) {
         if (av1_is_directional_mode((PredictionMode)openLoopIntraCandidate)) {
-#if EDGE_BASED_SKIP_ANGULAR_INTRA
             if (!disable_angle_prediction &&
                 directional_mode_skip_mask[(PredictionMode)openLoopIntraCandidate] == 0) {
-#else
-            if (!disable_angle_prediction) {
-#endif
                 for (angleDeltaCounter = 0; angleDeltaCounter < angleDeltaCandidateCount; ++angleDeltaCounter) {
                     int32_t angle_delta = CLIP( angle_delta_shift * (angleDeltaCandidateCount == 1 ? 0 : angleDeltaCounter - (angleDeltaCandidateCount >> 1)), -3 , 3);
                     int32_t  p_angle = mode_to_angle_map[(PredictionMode)openLoopIntraCandidate] + angle_delta * ANGLE_STEP;
@@ -4921,16 +4876,13 @@ uint32_t product_full_mode_decision(
     ModeDecisionCandidateBuffer **buffer_ptr_array,
     uint32_t                      candidate_total_count,
     uint32_t                     *best_candidate_index_array,
-#if PRUNE_REF_FRAME_FRO_REC_PARTITION
     uint8_t                       prune_ref_frame_for_rec_partitions,
-#endif
     uint32_t                     *best_intra_mode)
 {
     uint32_t                  candidateIndex;
     uint64_t                  lowestCost = 0xFFFFFFFFFFFFFFFFull;
     uint64_t                  lowestIntraCost = 0xFFFFFFFFFFFFFFFFull;
     uint32_t                  lowestCostIndex = 0;
-#if PRUNE_REF_FRAME_FRO_REC_PARTITION
     if (prune_ref_frame_for_rec_partitions) {
         if (context_ptr->blk_geom->shape == PART_N) {
             for (uint32_t i = 0; i < candidate_total_count; ++i) {
@@ -4961,7 +4913,6 @@ uint32_t product_full_mode_decision(
             }
         }
     }
-#endif
 #else
 uint8_t product_full_mode_decision(
     struct ModeDecisionContext   *context_ptr,

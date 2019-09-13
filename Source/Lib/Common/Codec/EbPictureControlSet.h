@@ -14269,12 +14269,8 @@ extern "C" {
         MD_COMP_TYPE                          compound_types_to_try;
         uint8_t                               compound_mode;
 #endif
-#if PRUNE_REF_FRAME_AT_ME
         uint8_t                               prune_unipred_at_me;
-#endif
-#if COEFF_BASED_SKIP_ATB
         uint8_t                              coeff_based_skip_atb;
-#endif
 #if II_COMP_FLAG
         uint8_t                              enable_inter_intra;
 #endif
