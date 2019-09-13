@@ -990,7 +990,6 @@ EbErrorType picture_control_set_ctor(
     EB_CREATE_MUTEX(object_ptr->rest_search_mutex);
 
     //the granularity is 4x4
-#if INCOMPLETE_SB_FIX
     EB_MALLOC_ARRAY(object_ptr->mi_grid_base, all_sb*(initDataPtr->sb_size_pix >> MI_SIZE_LOG2)*(initDataPtr->sb_size_pix >> MI_SIZE_LOG2));
 
     EB_MALLOC_ARRAY(object_ptr->mip, all_sb*(initDataPtr->sb_size_pix >> MI_SIZE_LOG2)*(initDataPtr->sb_size_pix >> MI_SIZE_LOG2));
@@ -1001,19 +1000,6 @@ EbErrorType picture_control_set_ctor(
     for (miIdx = 0; miIdx < all_sb*(initDataPtr->sb_size_pix >> MI_SIZE_LOG2)*(initDataPtr->sb_size_pix >> MI_SIZE_LOG2); ++miIdx)
         object_ptr->mi_grid_base[miIdx] = object_ptr->mip + miIdx;
     object_ptr->mi_stride = picture_sb_w * (initDataPtr->sb_size_pix >> MI_SIZE_LOG2);
-#else
-    //the granularity is 4x4
-    EB_MALLOC_ARRAY(object_ptr->mi_grid_base, object_ptr->sb_total_count*(BLOCK_SIZE_64 / 4)*(BLOCK_SIZE_64 / 4));
-    EB_MALLOC_ARRAY(object_ptr->mip, object_ptr->sb_total_count*(BLOCK_SIZE_64 / 4)*(BLOCK_SIZE_64 / 4));
-
-    memset(object_ptr->mip, 0, sizeof(ModeInfo) * object_ptr->sb_total_count*(BLOCK_SIZE_64 / 4)*(BLOCK_SIZE_64 / 4));
-    // pictureLcuWidth * pictureLcuHeight
-
-    uint32_t miIdx;
-    for (miIdx = 0; miIdx < object_ptr->sb_total_count*(BLOCK_SIZE_64 >> MI_SIZE_LOG2)*(BLOCK_SIZE_64 >> MI_SIZE_LOG2); ++miIdx)
-        object_ptr->mi_grid_base[miIdx] = object_ptr->mip + miIdx;
-    object_ptr->mi_stride = pictureLcuWidth * (BLOCK_SIZE_64 / 4);
-#endif
     if (initDataPtr->mfmv)
     {
         //MFMV: map is 8x8 based.

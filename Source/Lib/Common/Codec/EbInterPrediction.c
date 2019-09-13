@@ -2941,11 +2941,7 @@ EbErrorType av1_inter_prediction(
         uint32_t mi_y = pu_origin_y;
 
         MacroBlockD  *xd = cu_ptr->av1xd;
-#if INCOMPLETE_SB_FIX
         xd->mi_stride = picture_control_set_ptr->mi_stride;
-#else
-        xd->mi_stride = picture_control_set_ptr->parent_pcs_ptr->sequence_control_set_ptr->picture_width_in_sb*(BLOCK_SIZE_64 / 4);
-#endif
         const int32_t offset = (mi_y >> MI_SIZE_LOG2) * xd->mi_stride + (mi_x >> MI_SIZE_LOG2);
         xd->mi = picture_control_set_ptr->mi_grid_base + offset;
 
@@ -3593,11 +3589,7 @@ EbErrorType av1_inter_prediction_hbd(
         uint32_t mi_y = pu_origin_y;
 
         MacroBlockD  *xd = cu_ptr->av1xd;
-#if INCOMPLETE_SB_FIX
         xd->mi_stride = picture_control_set_ptr->mi_stride;
-#else
-        xd->mi_stride = picture_control_set_ptr->parent_pcs_ptr->sequence_control_set_ptr->picture_width_in_sb*(BLOCK_SIZE_64 / 4);
-#endif
         const int32_t offset = (mi_y >> MI_SIZE_LOG2) * xd->mi_stride + (mi_x >> MI_SIZE_LOG2);
         xd->mi = picture_control_set_ptr->mi_grid_base + offset;
 

@@ -3652,9 +3652,7 @@ void perform_intra_tx_partitioning(
             context_ptr->luma_txb_skip_context = 0;
             context_ptr->luma_dc_sign_context = 0;
             get_txb_ctx(
-#if INCOMPLETE_SB_FIX
                 sequence_control_set_ptr,
-#endif
                 COMPONENT_LUMA,
                 context_ptr->tx_search_luma_dc_sign_level_coeff_neighbor_array,
                 context_ptr->sb_origin_x + tx_org_x,
@@ -4058,9 +4056,7 @@ void perform_intra_tx_partitioning(
             context_ptr->luma_txb_skip_context = 0;
             context_ptr->luma_dc_sign_context = 0;
             get_txb_ctx(
-#if INCOMPLETE_SB_FIX
                 sequence_control_set_ptr,
-#endif
                 COMPONENT_LUMA,
                 picture_control_set_ptr->md_luma_dc_sign_level_coeff_neighbor_array[MD_NEIGHBOR_ARRAY_INDEX],
                 context_ptr->sb_origin_x + tx_org_x,
@@ -4313,7 +4309,6 @@ void full_loop_core(
         candidate_ptr->transform_type[2] = DCT_DCT;
         candidate_ptr->transform_type[3] = DCT_DCT;
 
-#if INCOMPLETE_SB_FIX
         uint8_t end_tx_depth = 0;
         // end_tx_depth set to zero for blocks which go beyond the picture boundaries
         if ((context_ptr->sb_origin_x + context_ptr->blk_geom->origin_x + context_ptr->blk_geom->bwidth < picture_control_set_ptr->parent_pcs_ptr->sequence_control_set_ptr->seq_header.max_frame_width &&
@@ -4321,9 +4316,6 @@ void full_loop_core(
             end_tx_depth = get_end_tx_depth(context_ptr->blk_geom->bsize, candidate_buffer->candidate_ptr->type);
         else
             end_tx_depth = 0;
-#else
-        uint8_t end_tx_depth = get_end_tx_depth(context_ptr, picture_control_set_ptr->parent_pcs_ptr->atb_mode, candidate_ptr, context_ptr->blk_geom->bsize, candidate_buffer->candidate_ptr->type);
-#endif
         // Transform partitioning path (INTRA Luma)
         if (picture_control_set_ptr->parent_pcs_ptr->atb_mode && context_ptr->md_staging_skip_atb == EB_FALSE && end_tx_depth && candidate_buffer->candidate_ptr->type == INTRA_MODE && candidate_buffer->candidate_ptr->use_intrabc == 0) {
 
@@ -6437,7 +6429,6 @@ EB_EXTERN EbErrorType mode_decision_sb(
         else
         // Initialize tx_depth
         cu_ptr->tx_depth = 0;
-#if  INCOMPLETE_SB_FIX
         if (blk_geom->quadi > 0 && blk_geom->shape == PART_N) {
 
             uint32_t blk_mds = context_ptr->blk_geom->sqi_mds;
@@ -6502,17 +6493,7 @@ EB_EXTERN EbErrorType mode_decision_sb(
             else
                 context_ptr->md_local_cu_unit[context_ptr->cu_ptr->mds_idx].cost = 0;
         }
-#else
-        md_encode_block(
-            sequence_control_set_ptr,
-            picture_control_set_ptr,
-            context_ptr,
-            input_picture_ptr,
-            ss_mecontext,
-            &skip_sub_blocks,
-            lcuAddr,
-            bestcandidate_buffers);
-#endif
+
         skip_next_nsq = 0;
         if (blk_geom->nsi + 1 == blk_geom->totns)
             d1_non_square_block_decision(context_ptr);

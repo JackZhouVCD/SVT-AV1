@@ -1918,14 +1918,6 @@ void SetParamBasedOnInput(SequenceControlSet *sequence_control_set_ptr)
     sequence_control_set_ptr->max_input_chroma_width = sequence_control_set_ptr->max_input_luma_width >> subsampling_x;
     sequence_control_set_ptr->max_input_chroma_height = sequence_control_set_ptr->max_input_luma_height >> subsampling_y;
 
-    // Configure the padding
-#if !INCOMPLETE_SB_FIX
-    sequence_control_set_ptr->left_padding  = BLOCK_SIZE_64 + 4;
-    sequence_control_set_ptr->top_padding = BLOCK_SIZE_64 + 4;
-    sequence_control_set_ptr->right_padding = BLOCK_SIZE_64 + 4;
-    sequence_control_set_ptr->bot_padding = BLOCK_SIZE_64 + 4;
-#endif
-
     sequence_control_set_ptr->chroma_width = sequence_control_set_ptr->max_input_luma_width >> subsampling_x;
     sequence_control_set_ptr->chroma_height = sequence_control_set_ptr->max_input_luma_height >> subsampling_y;
     sequence_control_set_ptr->seq_header.max_frame_width = sequence_control_set_ptr->max_input_luma_width;
@@ -1943,13 +1935,11 @@ void SetParamBasedOnInput(SequenceControlSet *sequence_control_set_ptr)
 
     sequence_control_set_ptr->static_config.super_block_size = (sequence_control_set_ptr->static_config.rate_control_mode > 1) ? 64 : sequence_control_set_ptr->static_config.super_block_size;
    // sequence_control_set_ptr->static_config.hierarchical_levels = (sequence_control_set_ptr->static_config.rate_control_mode > 1) ? 3 : sequence_control_set_ptr->static_config.hierarchical_levels;
-#if INCOMPLETE_SB_FIX
     // Configure the padding
     sequence_control_set_ptr->left_padding = BLOCK_SIZE_64 + 4;
     sequence_control_set_ptr->top_padding = BLOCK_SIZE_64 + 4;
     sequence_control_set_ptr->right_padding = BLOCK_SIZE_64 + 4;
     sequence_control_set_ptr->bot_padding = sequence_control_set_ptr->static_config.super_block_size + 4;
-#endif
     sequence_control_set_ptr->static_config.enable_overlays = sequence_control_set_ptr->static_config.enable_altrefs == EB_FALSE ||
         (sequence_control_set_ptr->static_config.altref_nframes <= 1) ||
         (sequence_control_set_ptr->static_config.rate_control_mode > 0) ||
@@ -1974,7 +1964,6 @@ void SetParamBasedOnInput(SequenceControlSet *sequence_control_set_ptr)
         sequence_control_set_ptr->down_sampling_method_me_search = ME_FILTERED_DOWNSAMPLED;
     else
         sequence_control_set_ptr->down_sampling_method_me_search = ME_DECIMATED_DOWNSAMPLED;
-#if INCOMPLETE_SB_FIX
     // Set over_boundary_block_mode     Settings
     // 0                            0: not allowed
     // 1                            1: allowed
@@ -1982,7 +1971,6 @@ void SetParamBasedOnInput(SequenceControlSet *sequence_control_set_ptr)
         sequence_control_set_ptr->over_boundary_block_mode = 1;
     else
         sequence_control_set_ptr->over_boundary_block_mode = 0;
-#endif
     sequence_control_set_ptr->mfmv_enabled = (uint8_t)(sequence_control_set_ptr->static_config.enc_mode == ENC_M0) ? 1 : 0;
 }
 

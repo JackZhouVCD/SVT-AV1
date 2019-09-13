@@ -13876,9 +13876,6 @@ extern "C" {
         uint8_t   height;
         uint8_t   is_complete_sb;
         EbBool    raster_scan_cu_validity[CU_MAX_COUNT];
-#if !INCOMPLETE_SB_FIX
-        EbBool    block_is_inside_md_scan[BLOCK_MAX_COUNT_SB_128];
-#endif
         uint8_t   potential_logo_sb;
         uint8_t   is_edge_sb;
     } SbParams;
@@ -13893,9 +13890,7 @@ extern "C" {
         uint8_t    height;
         uint8_t    is_complete_sb;
         EbBool     block_is_inside_md_scan[BLOCK_MAX_COUNT_SB_128];
-#if INCOMPLETE_SB_FIX
         EbBool     block_is_allowed[BLOCK_MAX_COUNT_SB_128];
-#endif
     } SbGeom;
 
     typedef struct CuStat
@@ -14237,11 +14232,9 @@ extern "C" {
         uint8_t                               past_altref_nframes;
         uint8_t                               future_altref_nframes;
         EbBool                                temporal_filtering_on;
-#if QPS_TUNING
         uint64_t                              filtered_sse; // the normalized SSE between filtered and original alt_ref with 8 bit precision.
                                                             // I Slice has the value of the next ALT_REF picture
         uint64_t                              filtered_sse_uv;
-#endif
         FrameHeader                           frm_hdr;
         MD_COMP_TYPE                          compound_types_to_try;
         uint8_t                               compound_mode;
@@ -14280,9 +14273,7 @@ extern "C" {
         uint8_t                            mrp_mode;
         uint8_t                            cdf_mode;
         uint8_t                            nsq_present;
-#if INCOMPLETE_SB_FIX
         uint8_t                            over_boundary_block_mode;
-#endif
         uint8_t                            mfmv;
     } PictureControlSetInitData;
 
