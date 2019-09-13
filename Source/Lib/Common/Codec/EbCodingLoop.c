@@ -2572,10 +2572,8 @@ EB_EXTERN void av1_encode_pass(
                                     cu_ptr->prediction_unit_array->ref_frame_type,
                                     &context_ptr->mv_unit,
                                     1,// use_intrabc,
-#if COMP_MODE
                                     1,
                                     &cu_ptr->interinter_comp,
-#endif
 #if II_COMP_FLAG
                                     &sb_ptr->tile_info,
                                     ep_luma_recon_neighbor_array,
@@ -3068,10 +3066,8 @@ EB_EXTERN void av1_encode_pass(
                                     cu_ptr->prediction_unit_array->ref_frame_type,
                                     &context_ptr->mv_unit,
                                     0,//use_intrabc,
-#if COMP_MODE
                                     cu_ptr->compound_idx,
                                     &cu_ptr->interinter_comp,
-#endif
 #if II_COMP_FLAG
                                     &sb_ptr->tile_info,
                                     ep_luma_recon_neighbor_array,

@@ -1184,7 +1184,6 @@ static INLINE int16_t Av1ModeContextAnalyzer(
         newmv_ctx, COMP_NEWMV_CTXS - 1)];
     return comp_ctx;
 }
-#if COMP_MODE
 
 int get_comp_index_context_enc(
     PictureParentControlSet   *pcs_ptr,
@@ -1274,7 +1273,6 @@ uint32_t get_compound_mode_rate(
 
     return comp_rate;
 }
-#endif
     #if II_COMP_FLAG
 int is_interintra_wedge_used(BlockSize sb_type);
 int svt_is_interintra_allowed(
@@ -1552,7 +1550,6 @@ uint64_t av1_inter_fast_cost(
             interModeBitsNum += candidate_ptr->md_rate_estimation_ptr->motion_mode_fac_bits[bsize][motion_mode_rd];
         }
     }
-#if COMP_MODE
     //this func return 0 if masked=0 and distance=0
     interModeBitsNum += get_compound_mode_rate(
         md_pass,
@@ -1563,7 +1560,6 @@ uint64_t av1_inter_fast_cost(
         picture_control_set_ptr->parent_pcs_ptr->sequence_control_set_ptr,
         picture_control_set_ptr
     );
-#endif
     // NM - To be added when the overlappable mode is adopted
     //    read_compound_type(is_compound)
     // NM - To be added when switchable filter is adopted

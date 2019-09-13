@@ -26,9 +26,7 @@
 /************************************************
  * Defines
  ************************************************/
-#if TFK_ALTREF_DYNAMIC_WINDOW
 #define DYNAMIC_WINDOW_TH   50
-#endif
 
 #define  LAY0_OFF  0
 #define  LAY1_OFF  3
@@ -217,11 +215,7 @@ uint8_t  circ_inc(uint8_t max, uint8_t off, uint8_t input)
                                                              (((int32_t) (base)) + ((int32_t) (offset)) < 0)                           ? ((base) + (offset) + (1 << (bits))) : \
                                                                                                                                        */((base) + (offset)))
 
-#if TF_KEY
 #define FUTURE_WINDOW_WIDTH                 6
-#else
-#define FUTURE_WINDOW_WIDTH                 4
-#endif
 #define FLASH_TH                            5
 #define FADE_TH                             3
 #define SCENE_TH                            3000
@@ -1197,7 +1191,6 @@ EbErrorType signal_derivation_multi_processes_oq(
         else
             picture_control_set_ptr->coeff_based_skip_atb = 1;
 
-#if COMP_MODE
         // Set Wedge mode      Settings
         // 0                 FULL: Full search
         // 1                 Fast: If two predictors are very similar, skip wedge compound mode search
@@ -1229,7 +1222,6 @@ EbErrorType signal_derivation_multi_processes_oq(
             picture_control_set_ptr->compound_types_to_try = picture_control_set_ptr->compound_mode == 1 ? MD_COMP_DIFF0 : MD_COMP_WEDGE;
         else
             picture_control_set_ptr->compound_types_to_try = MD_COMP_AVG;
-#endif
 
 #if ENABLE_CDF_UPDATE
         // Set frame end cdf update mode      Settings
@@ -2737,38 +2729,21 @@ void* picture_decision_kernel(void *input_ptr)
         queueEntryPtr = encode_context_ptr->picture_decision_reorder_queue[encode_context_ptr->picture_decision_reorder_queue_head_index];
 
         while (queueEntryPtr->parent_pcs_wrapper_ptr != EB_NULL) {
-#if TF_KEY
             if (((PictureParentControlSet *)(queueEntryPtr->parent_pcs_wrapper_ptr->object_ptr))->end_of_sequence_flag == EB_TRUE) {
                 framePasseThru = EB_TRUE;
             }
             else
                 framePasseThru = EB_FALSE;
-#else
-            if (queueEntryPtr->picture_number == 0 ||
-                ((PictureParentControlSet *)(queueEntryPtr->parent_pcs_wrapper_ptr->object_ptr))->end_of_sequence_flag == EB_TRUE){
-                framePasseThru = EB_TRUE;
-            }
-            else
-                framePasseThru = EB_FALSE;
-#endif
             windowAvail = EB_TRUE;
             previousEntryIndex = QUEUE_GET_PREVIOUS_SPOT(encode_context_ptr->picture_decision_reorder_queue_head_index);
 
             ParentPcsWindow[0] = ParentPcsWindow[1] = ParentPcsWindow[2] = ParentPcsWindow[3] = ParentPcsWindow[4] = ParentPcsWindow[5] = NULL;
-#if TF_KEY
             //for poc 0, ignore previous frame check
             if (queueEntryPtr->picture_number > 0 && encode_context_ptr->picture_decision_reorder_queue[previousEntryIndex]->parent_pcs_wrapper_ptr == NULL)
-#else
-            if (encode_context_ptr->picture_decision_reorder_queue[previousEntryIndex]->parent_pcs_wrapper_ptr == NULL)
-#endif
                 windowAvail = EB_FALSE;
             else {
 
-#if TF_KEY
                 ParentPcsWindow[0] = queueEntryPtr->picture_number > 0 ? (PictureParentControlSet *)encode_context_ptr->picture_decision_reorder_queue[previousEntryIndex]->parent_pcs_wrapper_ptr->object_ptr : NULL;
-#else
-                ParentPcsWindow[0] = (PictureParentControlSet *)encode_context_ptr->picture_decision_reorder_queue[previousEntryIndex]->parent_pcs_wrapper_ptr->object_ptr;
-#endif
                 ParentPcsWindow[1] = (PictureParentControlSet *)encode_context_ptr->picture_decision_reorder_queue[encode_context_ptr->picture_decision_reorder_queue_head_index]->parent_pcs_wrapper_ptr->object_ptr;
                 for (windowIndex = 0; windowIndex < FUTURE_WINDOW_WIDTH; windowIndex++) {
                     entryIndex = QUEUE_GET_NEXT_SPOT(encode_context_ptr->picture_decision_reorder_queue_head_index, windowIndex + 1);
@@ -2793,11 +2768,7 @@ void* picture_decision_kernel(void *input_ptr)
             picture_control_set_ptr->fade_in_to_black = 0;
             if (picture_control_set_ptr->idr_flag == EB_TRUE)
                 context_ptr->last_solid_color_frame_poc = 0xFFFFFFFF;
-#if TF_KEY
             if (windowAvail == EB_TRUE && queueEntryPtr->picture_number > 0) {
-#else
-            if (windowAvail == EB_TRUE) {
-#endif
                 if (sequence_control_set_ptr->static_config.scene_change_detection) {
                     picture_control_set_ptr->scene_change_flag = SceneTransitionDetector(
                         context_ptr,
@@ -3338,17 +3309,10 @@ void* picture_decision_kernel(void *input_ptr)
                             }
                             picture_control_set_ptr = cur_picture_control_set_ptr;
 
-
-#if TF_KEY
                             if( sequence_control_set_ptr->enable_altrefs == EB_TRUE &&
                                 ( (picture_control_set_ptr->idr_flag && picture_control_set_ptr->sc_content_detected == 0) ||
                                   (picture_control_set_ptr->slice_type != I_SLICE && picture_control_set_ptr->temporal_layer_index == 0) ) ) {
-#else
-                            if ( sequence_control_set_ptr->enable_altrefs == EB_TRUE &&
-                                 picture_control_set_ptr->slice_type != I_SLICE && picture_control_set_ptr->temporal_layer_index == 0) {
-#endif
                                 int altref_nframes = picture_control_set_ptr->sequence_control_set_ptr->static_config.altref_nframes;
-#if TF_KEY
                                 if (picture_control_set_ptr->idr_flag) {
 
                                     //initilize list
@@ -3374,7 +3338,6 @@ void* picture_decision_kernel(void *input_ptr)
 
                                     picture_control_set_ptr->past_altref_nframes = 0;
                                     picture_control_set_ptr->future_altref_nframes = pic_i;
-#if TFK_ALTREF_DYNAMIC_WINDOW
                                     int index_center = 0;
                                     uint32_t actual_future_pics = picture_control_set_ptr->future_altref_nframes;
                                     int pic_itr, ahd;
@@ -3399,11 +3362,9 @@ void* picture_decision_kernel(void *input_ptr)
                                     }
                                     picture_control_set_ptr->future_altref_nframes = pic_itr - index_center;
                                     //printf("\nPOC %d\t PAST %d\t FUTURE %d\n", picture_control_set_ptr->picture_number, picture_control_set_ptr->past_altref_nframes, picture_control_set_ptr->future_altref_nframes);
-#endif
                                 }
                                 else
                                 {
-#endif
                                 int num_past_pics = altref_nframes / 2;
                                 int num_future_pics = altref_nframes - num_past_pics - 1;
                                 assert(altref_nframes <= ALTREF_MAX_NFRAMES);
@@ -3513,9 +3474,7 @@ void* picture_decision_kernel(void *input_ptr)
                                     }
 
                                 }
-#if TF_KEY
                                 }
-#endif
 
                                 picture_control_set_ptr->temp_filt_prep_done = 0;
 

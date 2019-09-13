@@ -4669,14 +4669,12 @@ void move_cu_data(
     CodingUnit *src_cu,
     CodingUnit *dst_cu)
 {
-#if COMP_MODE
     dst_cu->interinter_comp.type = src_cu->interinter_comp.type;
     dst_cu->interinter_comp.mask_type = src_cu->interinter_comp.mask_type;
     dst_cu->interinter_comp.wedge_index = src_cu->interinter_comp.wedge_index;
     dst_cu->interinter_comp.wedge_sign = src_cu->interinter_comp.wedge_sign;
     dst_cu->compound_idx = src_cu->compound_idx;
     dst_cu->comp_group_idx = src_cu->comp_group_idx;
-#endif
 
 #if II_COMP_FLAG
        dst_cu->is_interintra_used      = src_cu->is_interintra_used          ;
@@ -4782,14 +4780,12 @@ void move_cu_data_redund(
     CodingUnit *src_cu,
     CodingUnit *dst_cu){
 
-#if COMP_MODE
     dst_cu->interinter_comp.type = src_cu->interinter_comp.type;
     dst_cu->interinter_comp.mask_type = src_cu->interinter_comp.mask_type;
     dst_cu->interinter_comp.wedge_index = src_cu->interinter_comp.wedge_index;
     dst_cu->interinter_comp.wedge_sign = src_cu->interinter_comp.wedge_sign;
     dst_cu->compound_idx = src_cu->compound_idx;
     dst_cu->comp_group_idx = src_cu->comp_group_idx;
-#endif
 #if II_COMP_FLAG
        dst_cu->is_interintra_used      = src_cu->is_interintra_used          ;
        dst_cu->interintra_mode         = src_cu->interintra_mode             ;

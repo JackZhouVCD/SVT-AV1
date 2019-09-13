@@ -73,7 +73,6 @@ enum COEFF_SCAN_TYPE
 
 extern void av1_set_ref_frame(MvReferenceFrame *rf,
     int8_t ref_frame_type);
-#if COMP_MODE
 int get_relative_dist_enc(SeqHeader *seq_header, int ref_hint, int order_hint);
 int get_comp_index_context_enc(
     PictureParentControlSet   *pcs_ptr,
@@ -151,7 +150,6 @@ int is_any_masked_compound_used(BlockSize sb_type) {
     }
     return 0;
 }
-#endif
 /************************************************
 * CABAC Encoder Constructor
 ************************************************/
@@ -6379,7 +6377,6 @@ assert(bsize < BlockSizeS_ALL);
                         cu_ptr,
                         picture_control_set_ptr);
                 }
-#if COMP_MODE
                 // First write idx to indicate current compound inter prediction mode group
                 // Group A (0): dist_wtd_comp, compound_average
                 // Group B (1): interintra, compound_diffwtd, wedge
@@ -6445,10 +6442,6 @@ assert(bsize < BlockSizeS_ALL);
                         }
                     }
                 }
-#else
-                if (sequence_control_set_ptr->seq_header.enable_masked_compound || sequence_control_set_ptr->seq_header.order_hint_info.enable_jnt_comp)
-                    printf("ERROR[AN]: masked_compound_used and enable_jnt_comp not supported\n");
-#endif
                 // No filter for Global MV
                 write_mb_interp_filter(
                     ref_frame_type_neighbor_array,

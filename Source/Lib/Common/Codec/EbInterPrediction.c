@@ -28,9 +28,7 @@
 
 #include "convolve.h"
 #include "aom_dsp_rtcd.h"
-#if COMP_MODE
 #include "EbRateDistortionCost.h"
-#endif
 #define SCALE_REF_FRAME 0 //TODO: Add Support for scaling of reference frame
 
 #define MVBOUNDLOW    36    //  (80-71)<<2 // 80 = ReferencePadding ; minus 71 is derived from the expression -64 + 1 - 8, and plus 7 is derived from expression -1 + 8
@@ -211,7 +209,6 @@ sub_pel_filters_4[SUBPEL_SHIFTS]) = {
 };
 
 #define MAX_FILTER_TAP 8
-#if COMP_MODE
 int get_relative_dist_enc(SeqHeader *seq_header, int ref_hint, int order_hint)
 {
     int diff, m;
@@ -277,7 +274,6 @@ void av1_dist_wtd_comp_weight_assign(
     *fwd_offset = quant_dist_lookup_table[order_idx][i][order];
     *bck_offset = quant_dist_lookup_table[order_idx][i][1 - order];
 }
-#endif
 void eb_av1_convolve_2d_sr_c(const uint8_t *src, int32_t src_stride, uint8_t *dst,
     int32_t dst_stride, int32_t w, int32_t h,
     InterpFilterParams *filter_params_x,
@@ -1230,7 +1226,6 @@ void svt_highbd_inter_predictor(const uint16_t *src, int32_t src_stride,
             &filter_params_y, sp.subpel_x, sp.subpel_y, conv_params, bd);
     }
 }
-#if COMP_MODE
 #define USE_PRECOMPUTED_WEDGE_SIGN 1
 #define USE_PRECOMPUTED_WEDGE_MASK 1
 
@@ -2453,10 +2448,8 @@ void search_compound_diff_wedge(
             candidate_ptr->ref_frame_type,
             &mv_unit,
             0,//use_intrabc,
-#if COMP_MODE
             1,//compound_idx not used
             NULL,// interinter_comp not used
-#endif
 #if II_COMP_FLAG
             NULL,
             NULL,
@@ -2491,10 +2484,8 @@ void search_compound_diff_wedge(
             candidate_ptr->ref_frame_type,
             &mv_unit,
             0,//use_intrabc,
-#if COMP_MODE
             1,//compound_idx not used
             NULL,// interinter_comp not used
-#endif
 #if II_COMP_FLAG
             NULL,
             NULL,
@@ -2697,10 +2688,8 @@ void search_compound_avg_dist(
             candidate_ptr->ref_frame_type,
             &mv_unit,
             0,//use_intrabc,
-#if COMP_MODE
             candidate_ptr->compound_idx,
             &candidate_ptr->interinter_comp,
-#endif
 #if II_COMP_FLAG
             NULL,
             NULL,
@@ -2750,7 +2739,6 @@ void search_compound_avg_dist(
     }
 
 }
-#endif
 
 #if II_COMP_FLAG
 // Blending with alpha mask. Mask values come from the range [0, 64],
@@ -2889,10 +2877,8 @@ EbErrorType av1_inter_prediction(
     uint8_t                                 ref_frame_type,
     MvUnit                               *mv_unit,
     uint8_t                                  use_intrabc,
-#if COMP_MODE
     uint8_t                                compound_idx,
     INTERINTER_COMPOUND_DATA               *interinter_comp,
-#endif
 #if II_COMP_FLAG
     TileInfo                                * tile,
     NeighborArrayUnit                       *luma_recon_neighbor_array,
@@ -3146,10 +3132,8 @@ EbErrorType av1_inter_prediction(
         }
     }
 
-#if COMP_MODE
     MvReferenceFrame rf[2];
     av1_set_ref_frame(rf, ref_frame_type);
-#endif
     if (mv_unit->pred_direction == UNI_PRED_LIST_0 || mv_unit->pred_direction == BI_PRED) {
         //List0-Y
         mv.col = mv_unit->mv[REF_LIST_0].x;
@@ -3263,7 +3247,6 @@ EbErrorType av1_inter_prediction(
         av1_get_convolve_filter_params(interp_filters, &filter_params_x,
             &filter_params_y, bwidth, bheight);
 
-#if COMP_MODE
         //the luma data is applied to chroma below
         av1_dist_wtd_comp_weight_assign(
             picture_control_set_ptr,
@@ -3297,7 +3280,6 @@ EbErrorType av1_inter_prediction(
                 );
         }
         else
-#endif
         convolve[subpel_x != 0][subpel_y != 0][is_compound](
             src_ptr,
             src_stride,
@@ -3322,7 +3304,6 @@ EbErrorType av1_inter_prediction(
             subpel_y = mv_q4.row & SUBPEL_MASK;
             src_ptr = src_ptr + (mv_q4.row >> SUBPEL_BITS) * src_stride + (mv_q4.col >> SUBPEL_BITS);
             conv_params = get_conv_params_no_round(0, (mv_unit->pred_direction == BI_PRED) ? 1 : 0, 0, tmp_dstCb, 64, is_compound, EB_8BIT);
-#if COMP_MODE
             av1_dist_wtd_comp_weight_assign(
                 picture_control_set_ptr,
                 picture_control_set_ptr->parent_pcs_ptr->cur_order_hint,// cur_frame_index,
@@ -3333,11 +3314,9 @@ EbErrorType av1_inter_prediction(
                 &conv_params.fwd_offset, &conv_params.bck_offset,
                 &conv_params.use_dist_wtd_comp_avg, is_compound);
             conv_params.use_jnt_comp_avg = conv_params.use_dist_wtd_comp_avg;
-#endif
             av1_get_convolve_filter_params(interp_filters, &filter_params_x,
                 &filter_params_y, blk_geom->bwidth_uv, blk_geom->bheight_uv);
 
-#if COMP_MODE
             if (is_compound && is_masked_compound_type(interinter_comp->type)) {
                 conv_params.do_average = 0;
                 av1_make_masked_inter_predictor(
@@ -3359,7 +3338,6 @@ EbErrorType av1_inter_prediction(
                 );
             }
             else
-#endif
             convolve[subpel_x != 0][subpel_y != 0][is_compound](
                 src_ptr,
                 src_stride,
@@ -3384,7 +3362,6 @@ EbErrorType av1_inter_prediction(
             subpel_y = mv_q4.row & SUBPEL_MASK;
             src_ptr = src_ptr + (mv_q4.row >> SUBPEL_BITS) * src_stride + (mv_q4.col >> SUBPEL_BITS);
             conv_params = get_conv_params_no_round(0, (mv_unit->pred_direction == BI_PRED) ? 1 : 0, 0, tmp_dstCr, 64, is_compound, EB_8BIT);
-#if COMP_MODE
             av1_dist_wtd_comp_weight_assign(
                 picture_control_set_ptr,
                 picture_control_set_ptr->parent_pcs_ptr->cur_order_hint,// cur_frame_index,
@@ -3417,7 +3394,6 @@ EbErrorType av1_inter_prediction(
                 );
             }
             else
-#endif
             convolve[subpel_x != 0][subpel_y != 0][is_compound](
                 src_ptr,
                 src_stride,
@@ -4921,10 +4897,8 @@ static const int32_t filter_sets[DUAL_FILTER_SET_SIZE][2] = {
         candidate_buffer_ptr->candidate_ptr->ref_frame_type,
         &mv_unit,
         0,
-#if COMP_MODE
         candidate_buffer_ptr->candidate_ptr->compound_idx,
         &candidate_buffer_ptr->candidate_ptr->interinter_comp,
-#endif
 #if II_COMP_FLAG
         &md_context_ptr->sb_ptr->tile_info,
         md_context_ptr->luma_recon_neighbor_array,
@@ -5009,10 +4983,8 @@ static const int32_t filter_sets[DUAL_FILTER_SET_SIZE][2] = {
                         candidate_buffer_ptr->candidate_ptr->ref_frame_type,
                         &mv_unit,
                         0,
-#if COMP_MODE
                         candidate_buffer_ptr->candidate_ptr->compound_idx,
                         &candidate_buffer_ptr->candidate_ptr->interinter_comp,
-#endif
 #if II_COMP_FLAG
                         &md_context_ptr->sb_ptr->tile_info,
                         md_context_ptr->luma_recon_neighbor_array,
@@ -5096,10 +5068,8 @@ static const int32_t filter_sets[DUAL_FILTER_SET_SIZE][2] = {
                         candidate_buffer_ptr->candidate_ptr->ref_frame_type,
                         &mv_unit,
                         0,
-#if COMP_MODE
                         candidate_buffer_ptr->candidate_ptr->compound_idx,
                         &candidate_buffer_ptr->candidate_ptr->interinter_comp,
-#endif
 #if II_COMP_FLAG
                         &md_context_ptr->sb_ptr->tile_info,
                         md_context_ptr->luma_recon_neighbor_array,
@@ -5185,10 +5155,8 @@ static const int32_t filter_sets[DUAL_FILTER_SET_SIZE][2] = {
                         candidate_buffer_ptr->candidate_ptr->ref_frame_type,
                         &mv_unit,
                         0,
-#if COMP_MODE
                         candidate_buffer_ptr->candidate_ptr->compound_idx,
                         &candidate_buffer_ptr->candidate_ptr->interinter_comp,
-#endif
 #if II_COMP_FLAG
                         &md_context_ptr->sb_ptr->tile_info,
                         md_context_ptr->luma_recon_neighbor_array,
@@ -5297,10 +5265,8 @@ EbErrorType inter_pu_prediction_av1(
             candidate_buffer_ptr->candidate_ptr->ref_frame_type,
             &mv_unit,
             1,//use_intrabc
-#if COMP_MODE
             1,//1 for avg
             &candidate_buffer_ptr->candidate_ptr->interinter_comp,
-#endif
 #if II_COMP_FLAG
             NULL,
             NULL,
@@ -5423,10 +5389,8 @@ EbErrorType inter_pu_prediction_av1(
             candidate_buffer_ptr->candidate_ptr->ref_frame_type,
             &mv_unit,
             candidate_buffer_ptr->candidate_ptr->use_intrabc,
-#if COMP_MODE
             candidate_buffer_ptr->candidate_ptr->compound_idx,
             &candidate_buffer_ptr->candidate_ptr->interinter_comp,
-#endif
 #if II_COMP_FLAG
             &md_context_ptr->sb_ptr->tile_info,
             md_context_ptr->luma_recon_neighbor_array,

@@ -54,13 +54,6 @@ extern "C" {
 #define ENABLE_CDF_UPDATE                 1 // Add the support for end of frame CDF update
 #define ALTREF_TF_EIGHTH_PEL_SEARCH       1 // Add 1/8 sub-pel search/compensation @ Temporal Filtering
 #define ALTREF_TF_ADAPTIVE_WINDOW_SIZE    1 // Add the ability to use dynamic/asymmetric window for AltRef temporal filtering, add the ability to derive the activity within past and future frames @ picture decision, and add a logic to derive window size from activity
-#define TF_KEY                            1 // Temporal Filtering  for Key frames. OFF for Screen Content.
-#define TFK_ALTREF_DYNAMIC_WINDOW         1 // Applying Dynamic window to key frame temporal filtering
-#define TFK_QPS_TUNING                    1 // QP scaling tuning of temporally filtered key frames.
-#define COMP_MODE                         1 // Add inter-inter compound modes
-
-
-
 
 //FOR DEBUGGING - Do not remove
 #define NO_ENCDEC                         0 // bypass encDec to test cmpliance of MD. complained achieved when skip_flag is OFF. Port sample code from VCI-SW_AV1_Candidate1 branch
@@ -400,9 +393,7 @@ typedef struct ConvolveParams
     int32_t use_jnt_comp_avg;
     int32_t fwd_offset;
     int32_t bck_offset;
-#if COMP_MODE
     int32_t use_dist_wtd_comp_avg;
-#endif
 } ConvolveParams;
 
 // texture component type
@@ -1041,25 +1032,14 @@ typedef enum ATTRIBUTE_PACKED
 
 typedef enum
 {
-#if COMP_MODE
     COMPOUND_AVERAGE,
     COMPOUND_DISTWTD,
     COMPOUND_WEDGE,
     COMPOUND_DIFFWTD,
     COMPOUND_TYPES,
     MASKED_COMPOUND_TYPES = 2,
-#else
-    COMPOUND_AVERAGE,
-    COMPOUND_DISTWTD,
-    COMPOUND_WEDGE,
-    COMPOUND_DIFFWTD,
-    COMPOUND_INTRA,
-    COMPOUND_TYPES = 3,
-    MASKED_COMPOUND_TYPES = 2,
-#endif
 } CompoundType;
 
-#if COMP_MODE
 #define   COMPOUND_INTRA  4//just for the decoder
 #define AOM_BLEND_A64_ROUND_BITS 6
 #define AOM_BLEND_A64_MAX_ALPHA (1 << AOM_BLEND_A64_ROUND_BITS)  // 64
@@ -1102,7 +1082,6 @@ typedef struct {
     DIFFWTD_MASK_TYPE mask_type;
     COMPOUND_TYPE type;
 } INTERINTER_COMPOUND_DATA;
-#endif
 
 #if II_COMP_FLAG
 #define AOM_BLEND_A64(a, v0, v1)                                          \

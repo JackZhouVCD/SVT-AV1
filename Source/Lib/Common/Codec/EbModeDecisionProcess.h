@@ -24,16 +24,7 @@ extern "C" {
     /**************************************
      * Defines
      **************************************/
-#if COMP_MODE
 #define MODE_DECISION_CANDIDATE_MAX_COUNT               1855
-#else
-#define IBC_CAND 2 //two intra bc candidates
-#if EIGTH_PEL_MV
-#define MODE_DECISION_CANDIDATE_MAX_COUNT               (470+IBC_CAND )
-#else
-#define MODE_DECISION_CANDIDATE_MAX_COUNT               (486 +IBC_CAND)
-#endif
-#endif
 #define DEPTH_ONE_STEP   21
 #define DEPTH_TWO_STEP    5
 #define DEPTH_THREE_STEP  1
@@ -246,14 +237,12 @@ extern "C" {
         int16_t                         best_spatial_pred_mv[2][4][2];
         int8_t                          valid_refined_mv[2][4];
         EbPictureBufferDesc            *input_sample16bit_buffer;
-#if COMP_MODE
         DECLARE_ALIGNED(16, uint8_t, pred0[2 * MAX_SB_SQUARE]);
         DECLARE_ALIGNED(16, uint8_t, pred1[2 * MAX_SB_SQUARE]);
         DECLARE_ALIGNED(32, int16_t, residual1[MAX_SB_SQUARE]);
         DECLARE_ALIGNED(32, int16_t, diff10[MAX_SB_SQUARE]);
     unsigned int prediction_mse ;
     EbBool      variance_ready;
-#endif
     MD_STAGE                            md_stage;
 
     uint32_t                            cand_buff_indices[CAND_CLASS_TOTAL][MAX_NFL_BUFF];

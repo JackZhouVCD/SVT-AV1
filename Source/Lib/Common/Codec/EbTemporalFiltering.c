@@ -753,10 +753,8 @@ EbErrorType av1_inter_prediction(
     uint8_t                              ref_frame_type,
     MvUnit                               *mv_unit,
     uint8_t                              use_intrabc,
-#if COMP_MODE
     uint8_t                              compound_idx,
     INTERINTER_COMPOUND_DATA             *interinter_comp,
-#endif
 #if II_COMP_FLAG
     TileInfo                                * tile,
     NeighborArrayUnit                       *luma_recon_neighbor_array,
@@ -866,10 +864,8 @@ void tf_inter_prediction(
                             0,//ref_frame_type,
                             &mv_unit,
                             0,//use_intrabc,
-#if COMP_MODE
                             1,//compound_idx not used
                             NULL,// interinter_comp not used
-#endif
 #if II_COMP_FLAG
                             NULL,
                             NULL,
@@ -919,10 +915,8 @@ void tf_inter_prediction(
                     0,//ref_frame_type,
                     &mv_unit,
                     0,//use_intrabc,
-#if COMP_MODE
                     1,//compound_idx not used
                     NULL,// interinter_comp not used
-#endif
 #if II_COMP_FLAG
                     NULL,
                     NULL,
@@ -953,10 +947,8 @@ void tf_inter_prediction(
                     0,//ref_frame_type,
                     &mv_unit,
                     0,//use_intrabc,
-#if COMP_MODE
                     1,//compound_idx not used
                     NULL,// interinter_comp not used
-#endif
 #if II_COMP_FLAG
                     NULL,
                     NULL,
