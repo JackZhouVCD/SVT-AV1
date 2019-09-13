@@ -1833,14 +1833,6 @@ int32_t av1_quantize_inv_quantize(
 #if !ADD_DELTA_QP_SUPPORT
     (void) qp;
 #endif
-#if !MD_STAGING
-    uint32_t i;
-    for (i = 0; i < height; i++)
-    {
-        memset(quant_coeff + i * width, 0, width * sizeof(int32_t));
-        memset(recon_coeff + i * width, 0, width * sizeof(int32_t));
-    }
-#endif
     MacroblockPlane      candidate_plane ;
 
     const QmVal *qMatrix = picture_control_set_ptr->parent_pcs_ptr->gqmatrix[NUM_QM_LEVELS - 1][0][txsize];
@@ -1926,11 +1918,7 @@ int32_t av1_quantize_inv_quantize(
 
 
     EbBool is_inter = (pred_mode >= NEARESTMV);
-#if MD_STAGING // RDOQ
     EbBool perform_rdoq = ((md_context->md_staging_skip_rdoq == EB_FALSE || is_encode_pass) && md_context->trellis_quant_coeff_optimization && component_type == COMPONENT_LUMA && !is_intra_bc);
-#else
-    EbBool perform_rdoq = (md_context->trellis_quant_coeff_optimization && component_type == COMPONENT_LUMA && !is_intra_bc);
-#endif
     perform_rdoq = perform_rdoq && !picture_control_set_ptr->hbd_mode_decision && !bit_increment;
 
     // Hsan: set to FALSE until adding x86 quantize_fp
@@ -3768,7 +3756,6 @@ uint32_t d2_inter_depth_block_decision(
 
     return lastCuIndex;
 }
-#if MD_EXIT
 void   compute_depth_costs_md_skip(
     ModeDecisionContext *context_ptr,
     SequenceControlSet  *sequence_control_set_ptr,
@@ -3841,4 +3828,3 @@ void   compute_depth_costs_md_skip(
     *curr_depth_cost +=
         above_split_rate;
 }
-#endif

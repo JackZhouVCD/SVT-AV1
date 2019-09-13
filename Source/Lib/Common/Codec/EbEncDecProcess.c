@@ -1161,53 +1161,7 @@ EbErrorType signal_derivation_enc_dec_kernel_oq(
     PictureControlSet     *picture_control_set_ptr,
     ModeDecisionContext   *context_ptr) {
     EbErrorType return_error = EB_ErrorNone;
-#if !MD_STAGING
-    // NFL Level MD       Settings
-    // 0                  MAX_NFL 40
-    // 1                  30
-    // 2                  12
-    // 3                  10
-    // 4                  8
-    // 5                  6
-    // 6                  4
-    // 7                  3
-    if (picture_control_set_ptr->parent_pcs_ptr->sc_content_detected)
-        if (picture_control_set_ptr->enc_mode <= ENC_M1)
-            if (picture_control_set_ptr->parent_pcs_ptr->is_used_as_reference_flag)
-                context_ptr->nfl_level = (sequence_control_set_ptr->input_resolution <= INPUT_SIZE_576p_RANGE_OR_LOWER) ? 0 : 1;
-            else
-                context_ptr->nfl_level = 2;
-        else
-            if (picture_control_set_ptr->parent_pcs_ptr->slice_type == I_SLICE)
-                context_ptr->nfl_level = 5;
-            else if (picture_control_set_ptr->parent_pcs_ptr->is_used_as_reference_flag)
-                context_ptr->nfl_level = 6;
-            else
-                context_ptr->nfl_level = 7;
-    else
-    if (picture_control_set_ptr->enc_mode <= ENC_M1)
-        if (picture_control_set_ptr->parent_pcs_ptr->is_used_as_reference_flag)
-            context_ptr->nfl_level = (sequence_control_set_ptr->input_resolution <= INPUT_SIZE_576p_RANGE_OR_LOWER) ? 0 : 1;
-        else
-            context_ptr->nfl_level = 2;
-    else if(picture_control_set_ptr->enc_mode <= ENC_M3)
-        if (picture_control_set_ptr->parent_pcs_ptr->is_used_as_reference_flag)
-            context_ptr->nfl_level = 2;
-        else
-            context_ptr->nfl_level = 4;
-    else if (picture_control_set_ptr->enc_mode <= ENC_M6)
-        if (picture_control_set_ptr->parent_pcs_ptr->is_used_as_reference_flag)
-            context_ptr->nfl_level = 4;
-        else
-            context_ptr->nfl_level = 5;
-    else
-        if (picture_control_set_ptr->parent_pcs_ptr->slice_type == I_SLICE)
-            context_ptr->nfl_level = 5;
-        else if (picture_control_set_ptr->parent_pcs_ptr->is_used_as_reference_flag)
-            context_ptr->nfl_level = 6;
-        else
-            context_ptr->nfl_level = 7;
-#endif
+
     // Set Chroma Mode
     // Level                Settings
     // CHROMA_MODE_0  0     Full chroma search @ MD
@@ -1349,7 +1303,6 @@ EbErrorType signal_derivation_enc_dec_kernel_oq(
     else
         context_ptr->bipred3x3_injection = 0;
 
-#if PREDICTIVE_ME
     // Level                Settings
     // 0                    Level 0: OFF
     // 1                    Level 1: 7x5 full-pel search + sub-pel refinement off
@@ -1366,9 +1319,7 @@ EbErrorType signal_derivation_enc_dec_kernel_oq(
             context_ptr->predictive_me_level = 0;
     else
         context_ptr->predictive_me_level = 0;
-#endif
 
-#if MD_STAGING
     // Derive md_staging_mode
     //
     // MD_STAGING_MODE_1
@@ -1460,7 +1411,6 @@ EbErrorType signal_derivation_enc_dec_kernel_oq(
     // 0                    OFF
     // 1                    ON
     context_ptr->combine_class12 = (picture_control_set_ptr->enc_mode == ENC_M0) ? 0 : 1;
-#endif
 
     // Set interpolation filter search blk size
     // Level                Settings

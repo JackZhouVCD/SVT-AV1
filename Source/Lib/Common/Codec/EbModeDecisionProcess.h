@@ -25,11 +25,7 @@ extern "C" {
      * Defines
      **************************************/
 #if COMP_MODE
-#if PREDICTIVE_ME
 #define MODE_DECISION_CANDIDATE_MAX_COUNT               1855
-#else
-#define MODE_DECISION_CANDIDATE_MAX_COUNT               1800
-#endif
 #else
 #define IBC_CAND 2 //two intra bc candidates
 #if EIGTH_PEL_MV
@@ -161,13 +157,8 @@ extern "C" {
         MdEncPassCuData               *md_ep_pipe_sb;
         uint8_t                         pu_itr;
         uint8_t                         cu_size_log2;
-#if MD_STAGING
         uint32_t                         best_candidate_index_array[MAX_NFL_BUFF];
         uint32_t                         sorted_candidate_index_array[MAX_NFL];
-#else
-        uint8_t                         best_candidate_index_array[MAX_NFL + 2];
-        uint8_t                         sorted_candidate_index_array[MAX_NFL];
-#endif
         uint16_t                        cu_origin_x;
         uint16_t                        cu_origin_y;
         uint8_t                         sb_sz;
@@ -180,9 +171,6 @@ extern "C" {
         uint16_t                        pu_width;
         uint16_t                        pu_height;
         EbPfMode                        pf_md_mode;
-#if !MD_STAGING // renaming
-        uint32_t                        full_recon_search_count;
-#endif
         EbBool                          cu_use_ref_src_flag;
         EbBool                          hbd_mode_decision;
         uint16_t                        qp_index;
@@ -224,10 +212,8 @@ extern "C" {
         uint8_t                         tx_depth;
         uint8_t                         txb_itr;
         uint32_t                        me_sb_addr;
-#if PREDICTIVE_ME
         uint32_t                        geom_offset_x;
         uint32_t                        geom_offset_y;
-#endif
         int16_t                         luma_txb_skip_context;
         int16_t                         luma_dc_sign_context;
         int16_t                         cb_txb_skip_context;
@@ -235,11 +221,6 @@ extern "C" {
         int16_t                         cr_txb_skip_context;
         int16_t                         cr_dc_sign_context;
         // Multi-modes signal(s)
-#if !MD_STAGING
-        uint8_t                         nfl_level;
-        uint8_t                         skip_interpolation_search;
-#endif
-
         uint8_t                         parent_sq_type[MAX_PARENT_SQ];
         uint8_t                         parent_sq_has_coeff[MAX_PARENT_SQ];
         uint8_t                         parent_sq_pred_mode[MAX_PARENT_SQ];
@@ -254,9 +235,7 @@ extern "C" {
         uint8_t                         warped_motion_injection;
         uint8_t                         unipred3x3_injection;
         uint8_t                         bipred3x3_injection;
-#if PREDICTIVE_ME
         uint8_t                         predictive_me_level;
-#endif
         uint8_t                         interpolation_filter_search_blk_size;
         uint8_t                         redundant_blk;
         uint8_t                         *cfl_temp_luma_recon;
@@ -264,10 +243,8 @@ extern "C" {
         EbBool                          spatial_sse_full_loop;
         EbBool                          blk_skip_decision;
         EbBool                          trellis_quant_coeff_optimization;
-#if PREDICTIVE_ME
         int16_t                         best_spatial_pred_mv[2][4][2];
         int8_t                          valid_refined_mv[2][4];
-#endif
         EbPictureBufferDesc            *input_sample16bit_buffer;
 #if COMP_MODE
         DECLARE_ALIGNED(16, uint8_t, pred0[2 * MAX_SB_SQUARE]);
@@ -277,7 +254,6 @@ extern "C" {
     unsigned int prediction_mse ;
     EbBool      variance_ready;
 #endif
-#if MD_STAGING // classes
     MD_STAGE                            md_stage;
 
     uint32_t                            cand_buff_indices[CAND_CLASS_TOTAL][MAX_NFL_BUFF];
@@ -311,7 +287,6 @@ extern "C" {
     EbBool                              md_staging_tx_search; // 0: skip, 1: use ref cost, 2: no shortcuts
     EbBool                              md_staging_skip_full_chroma;
     EbBool                              md_staging_skip_rdoq;
-#endif
 
 #if II_COMP_FLAG
    DECLARE_ALIGNED(16, uint8_t,        intrapred_buf[INTERINTRA_MODES][32 * 32]); //MAX block size for inter intra is 32x32

@@ -853,55 +853,6 @@ EbBool mrp_is_already_injected_mv_bipred(
     return(EB_FALSE);
 }
 
-#if !MD_STAGING
-void sort_fast_loop_candidates(
-    struct ModeDecisionContext   *context_ptr,
-    uint32_t                        buffer_total_count,
-    ModeDecisionCandidateBuffer **buffer_ptr_array,
-    uint8_t                        *best_candidate_index_array,
-    uint8_t                        *sorted_candidate_index_array,
-    uint64_t                       *ref_fast_cost) {
-    uint32_t fullReconCandidateCount = context_ptr->full_recon_search_count;
-
-    //  move the scratch candidates (MAX_CU_COST) to the last spots (if any)
-    uint32_t best_candidate_start_index = 0;
-    uint32_t best_candidate_end_index = buffer_total_count - 1;
-    for (uint8_t full_buffer_index = 0; full_buffer_index < buffer_total_count; full_buffer_index++) {
-        if (*(buffer_ptr_array[full_buffer_index]->fast_cost_ptr) == MAX_CU_COST)
-            best_candidate_index_array[best_candidate_end_index--] = full_buffer_index;
-        else
-            best_candidate_index_array[best_candidate_start_index++] = full_buffer_index;
-    }
-
-    // fl escape: inter then intra
-    uint32_t i, j, index;
-    for (i = 0; i < fullReconCandidateCount - 1; ++i) {
-        for (j = i + 1; j < fullReconCandidateCount; ++j) {
-            if ((buffer_ptr_array[best_candidate_index_array[i]]->candidate_ptr->type == INTRA_MODE) &&
-                (buffer_ptr_array[best_candidate_index_array[j]]->candidate_ptr->type == INTER_MODE)) {
-                index = best_candidate_index_array[i];
-                best_candidate_index_array[i] = (uint8_t)best_candidate_index_array[j];
-                best_candidate_index_array[j] = (uint8_t)index;
-            }
-        }
-    }
-
-    // fl escape level 2: inter then intra
-    for (i = 0; i < fullReconCandidateCount; ++i)
-        sorted_candidate_index_array[i] = best_candidate_index_array[i];
-    for (i = 0; i < fullReconCandidateCount - 1; ++i) {
-        for (j = i + 1; j < fullReconCandidateCount; ++j) {
-            if (*(buffer_ptr_array[sorted_candidate_index_array[j]]->fast_cost_ptr) < *(buffer_ptr_array[sorted_candidate_index_array[i]]->fast_cost_ptr)) {
-                index = sorted_candidate_index_array[i];
-                sorted_candidate_index_array[i] = (uint8_t)sorted_candidate_index_array[j];
-                sorted_candidate_index_array[j] = (uint8_t)index;
-            }
-        }
-    }
-    // tx search
-    *ref_fast_cost = *(buffer_ptr_array[sorted_candidate_index_array[0]]->fast_cost_ptr);
-}
-#endif
 #define BIPRED_3x3_REFINMENT_POSITIONS 8
 
 int8_t ALLOW_REFINEMENT_FLAG[BIPRED_3x3_REFINMENT_POSITIONS] = {  1, 0, 1, 0, 1,  0,  1, 0 };
@@ -3043,7 +2994,6 @@ void inject_new_candidates(
     // update the total number of candidates injected
     (*candidateTotalCnt) = canTotalCnt;
         }
-#if PREDICTIVE_ME // inject them
         void inject_predictive_me_candidates(
             //const SequenceControlSet   *sequence_control_set_ptr,
             struct ModeDecisionContext *context_ptr,
@@ -3304,7 +3254,6 @@ void inject_new_candidates(
 
             (*candidateTotalCnt) = canTotalCnt;
         }
-#endif
 
 void  inject_inter_candidates(
     PictureControlSet            *picture_control_set_ptr,
@@ -3318,34 +3267,8 @@ void  inject_inter_candidates(
 
     FrameHeader *frm_hdr = &picture_control_set_ptr->parent_pcs_ptr->frm_hdr;
     uint32_t                   canTotalCnt = *candidateTotalCnt;
-#if !PREDICTIVE_ME
-    const uint32_t             lcuAddr = sb_ptr->index;
-#endif
     ModeDecisionCandidate    *candidateArray = context_ptr->fast_candidate_array;
     EbBool isCompoundEnabled = (frm_hdr->reference_mode == SINGLE_REFERENCE) ? 0 : 1;
-#if !PREDICTIVE_ME
-    uint32_t geom_offset_x = 0;
-    uint32_t geom_offset_y = 0;
-
-    if (sequence_control_set_ptr->seq_header.sb_size == BLOCK_128X128) {
-        uint32_t me_sb_size = sequence_control_set_ptr->sb_sz;
-        uint32_t me_pic_width_in_sb = (sequence_control_set_ptr->seq_header.max_frame_width + sequence_control_set_ptr->sb_sz - 1) / me_sb_size;
-        uint32_t me_sb_x = (context_ptr->cu_origin_x / me_sb_size);
-        uint32_t me_sb_y = (context_ptr->cu_origin_y / me_sb_size);
-        context_ptr->me_sb_addr = me_sb_x + me_sb_y * me_pic_width_in_sb;
-        geom_offset_x = (me_sb_x & 0x1) * me_sb_size;
-        geom_offset_y = (me_sb_y & 0x1) * me_sb_size;
-    }
-    else
-        context_ptr->me_sb_addr = lcuAddr;
-    uint32_t max_number_of_pus_per_sb;
-
-    max_number_of_pus_per_sb = picture_control_set_ptr->parent_pcs_ptr->max_number_of_pus_per_sb;
-    context_ptr->me_block_offset =
-        (context_ptr->blk_geom->bwidth == 4 || context_ptr->blk_geom->bheight == 4 || context_ptr->blk_geom->bwidth == 128 || context_ptr->blk_geom->bheight == 128) ?
-            0 :
-            get_me_info_index(max_number_of_pus_per_sb, context_ptr->blk_geom, geom_offset_x, geom_offset_y);
-#endif
     MeLcuResults *me_results = picture_control_set_ptr->parent_pcs_ptr->me_results[context_ptr->me_sb_addr];
 
     EbBool use_close_loop_me = picture_control_set_ptr->parent_pcs_ptr->enable_in_loop_motion_estimation_flag &&
@@ -3369,18 +3292,6 @@ void  inject_inter_candidates(
 #endif
 #if II_COMP_FLAG
     BlockSize bsize = context_ptr->blk_geom->bsize;                       // bloc size
-#endif
-#if !PREDICTIVE_ME
-    generate_av1_mvp_table(
-        &sb_ptr->tile_info,
-        context_ptr,
-        context_ptr->cu_ptr,
-        context_ptr->blk_geom,
-        context_ptr->cu_origin_x,
-        context_ptr->cu_origin_y,
-        picture_control_set_ptr->parent_pcs_ptr->ref_frame_type_arr,
-        picture_control_set_ptr->parent_pcs_ptr->tot_ref_frame_types,
-        picture_control_set_ptr);
 #endif
     uint32_t mi_row = context_ptr->cu_origin_y >> MI_SIZE_LOG2;
     uint32_t mi_col = context_ptr->cu_origin_x >> MI_SIZE_LOG2;
@@ -3458,20 +3369,12 @@ void  inject_inter_candidates(
                 uint32_t bheight_to_search = context_ptr->blk_geom->bheight + bheight_offset_to_8;
 
                 // Align parent block has origin inherited by current block
-#if PREDICTIVE_ME
                 uint32_t x_to_search = context_ptr->blk_geom->origin_x - (context_ptr->geom_offset_x + ((context_ptr->blk_geom->origin_x & 0x7) ? 4 : 0));
                 uint32_t y_to_search = context_ptr->blk_geom->origin_y - (context_ptr->geom_offset_y + ((context_ptr->blk_geom->origin_y & 0x7) ? 4 : 0));
-#else
-                uint32_t x_to_search = context_ptr->blk_geom->origin_x - (geom_offset_x + ((context_ptr->blk_geom->origin_x & 0x7) ? 4 : 0));
-                uint32_t y_to_search = context_ptr->blk_geom->origin_y - (geom_offset_y + ((context_ptr->blk_geom->origin_y & 0x7) ? 4 : 0));
-#endif
+
                 // Search the me_info_index of the parent block
                 uint32_t me_info_index = 0;
-#if PREDICTIVE_ME
                 for (uint32_t block_index = 0; block_index < picture_control_set_ptr->parent_pcs_ptr->max_number_of_pus_per_sb; block_index++) {
-#else
-                for (uint32_t block_index = 0; block_index < max_number_of_pus_per_sb; block_index++) {
-#endif
 
                     if (
                         (bwidth_to_search == partition_width[block_index]) &&
@@ -3770,7 +3673,6 @@ void  inject_inter_candidates(
             }
 #endif
 
-#if PREDICTIVE_ME
         if (context_ptr->predictive_me_level)
             inject_predictive_me_candidates(
                 context_ptr,
@@ -3780,7 +3682,6 @@ void  inject_inter_candidates(
                 isCompoundEnabled,
                 allow_bipred,
                 &canTotalCnt);
-#endif
 // update the total number of candidates injected
 (*candidateTotalCnt) = canTotalCnt;
 
@@ -4065,9 +3966,6 @@ void  intra_bc_search(
     PictureControlSet            *pcs,
     ModeDecisionContext          *context_ptr,
     const SequenceControlSet     *scs,
-#if !PREDICTIVE_ME
-    LargestCodingUnit            *sb_ptr,
-#endif
     CodingUnit                   *cu_ptr,
     MV                             *dv_cand,
     uint8_t                        *num_dv_cand)
@@ -4088,18 +3986,6 @@ void  intra_bc_search(
     FrameHeader *frm_hdr = &pcs->parent_pcs_ptr->frm_hdr;
     const Av1Common *const cm = pcs->parent_pcs_ptr->av1_cm;
     MvReferenceFrame ref_frame = INTRA_FRAME;
-#if !PREDICTIVE_ME
-    generate_av1_mvp_table(
-        &sb_ptr->tile_info,
-        context_ptr,
-        context_ptr->cu_ptr,
-        context_ptr->blk_geom,
-        context_ptr->cu_origin_x,
-        context_ptr->cu_origin_y,
-        &ref_frame,
-        1,
-        pcs);
-#endif
     const int num_planes = 3;
     MacroBlockD * xd = cu_ptr->av1xd;
     const TileInfo *tile = &xd->tile;
@@ -4244,9 +4130,6 @@ void  inject_intra_bc_candidates(
     PictureControlSet            *picture_control_set_ptr,
     ModeDecisionContext          *context_ptr,
     const SequenceControlSet     *sequence_control_set_ptr,
-#if !PREDICTIVE_ME
-    LargestCodingUnit            *sb_ptr,
-#endif
     CodingUnit                   *cu_ptr,
     uint32_t                       *cand_cnt)
 {
@@ -4258,9 +4141,6 @@ void  inject_intra_bc_candidates(
         picture_control_set_ptr,
         context_ptr,
         sequence_control_set_ptr,
-#if !PREDICTIVE_ME
-        sb_ptr,
-#endif
         cu_ptr,
         dv_cand,
         &num_dv_cand);
@@ -4607,7 +4487,7 @@ void  inject_intra_candidates(
 
     return;
 }
-#if MD_STAGING // classes
+
 EbErrorType generate_md_stage_0_cand(
     LargestCodingUnit   *sb_ptr,
     ModeDecisionContext *context_ptr,
@@ -4615,25 +4495,7 @@ EbErrorType generate_md_stage_0_cand(
     uint32_t            *candidate_total_count_ptr,
     PictureControlSet   *picture_control_set_ptr)
 {
-#else
-/***************************************
-* ProductGenerateMdCandidatesCu
-*   Creates list of initial modes to
-*   perform fast cost search on.
-***************************************/
-EbErrorType ProductGenerateMdCandidatesCu(
 
-    LargestCodingUnit   *sb_ptr,
-    ModeDecisionContext *context_ptr,
-    SsMeContext         *ss_mecontext,
-    const uint32_t       lcuAddr,
-    uint32_t            *candidateTotalCountPtr,
-    EbPtr                interPredContextPtr,
-    PictureControlSet   *picture_control_set_ptr)
-{
-    (void)lcuAddr;
-    (void)interPredContextPtr;
-#endif
     FrameHeader *frm_hdr = &picture_control_set_ptr->parent_pcs_ptr->frm_hdr;
     const SequenceControlSet *sequence_control_set_ptr = (SequenceControlSet*)picture_control_set_ptr->sequence_control_set_wrapper_ptr->object_ptr;
     const EB_SLICE slice_type = picture_control_set_ptr->slice_type;
@@ -4677,9 +4539,6 @@ EbErrorType ProductGenerateMdCandidatesCu(
             picture_control_set_ptr,
             context_ptr,
             sequence_control_set_ptr,
-#if !PREDICTIVE_ME
-            sb_ptr,
-#endif
             context_ptr->cu_ptr,
             &canTotalCnt
         );
@@ -4698,8 +4557,6 @@ EbErrorType ProductGenerateMdCandidatesCu(
                 &canTotalCnt);
     }
 
-
-#if MD_STAGING // classes
     *candidate_total_count_ptr = canTotalCnt;
     CAND_CLASS  cand_class_it;
     memset(context_ptr->md_stage_0_count, 0, CAND_CLASS_TOTAL * sizeof(uint32_t));
@@ -4756,9 +4613,6 @@ EbErrorType ProductGenerateMdCandidatesCu(
         fast_accum += context_ptr->md_stage_0_count[cand_class_it];
     }
     assert(fast_accum == canTotalCnt);
-#else
-    *candidateTotalCountPtr = canTotalCnt;
-#endif
 
     return EB_ErrorNone;
 }
@@ -4766,7 +4620,6 @@ EbErrorType ProductGenerateMdCandidatesCu(
 /***************************************
 * Full Mode Decision
 ***************************************/
-#if MD_STAGING
 uint32_t product_full_mode_decision(
     struct ModeDecisionContext   *context_ptr,
     CodingUnit                   *cu_ptr,
@@ -4810,24 +4663,7 @@ uint32_t product_full_mode_decision(
             }
         }
     }
-#else
-uint8_t product_full_mode_decision(
-    struct ModeDecisionContext   *context_ptr,
-    CodingUnit                   *cu_ptr,
-    uint8_t                           bwidth,
-    uint8_t                           bheight,
-    ModeDecisionCandidateBuffer **buffer_ptr_array,
-    uint32_t                          candidate_total_count,
-    uint8_t                          *best_candidate_index_array,
-    uint32_t                           *best_intra_mode)
-{
-    UNUSED(bwidth);
-    UNUSED(bheight);
-    uint8_t                   candidateIndex;
-    uint64_t                  lowestCost = 0xFFFFFFFFFFFFFFFFull;
-    uint64_t                  lowestIntraCost = 0xFFFFFFFFFFFFFFFFull;
-    uint8_t                   lowestCostIndex = 0;
-#endif
+
 
     PredictionUnit       *pu_ptr;
     uint32_t                   i;

@@ -1773,17 +1773,7 @@ EbErrorType av1_tu_estimate_coeff_bits(
 
     return return_error;
 }
-#if !MD_STAGING
-uint64_t estimate_tx_size_bits(
-    PictureControlSet       *pcsPtr,
-    uint32_t                 cu_origin_x,
-    uint32_t                 cu_origin_y,
-    CodingUnit               *cu_ptr,
-    const BlockGeom          *blk_geom,
-    NeighborArrayUnit        *txfm_context_array,
-    uint8_t                   tx_depth,
-    MdRateEstimationContext  *md_rate_estimation_ptr);
-#endif
+
 /*********************************************************************************
 * av1_intra_full_cost function is used to estimate the cost of an intra candidate mode
 * for full mode decisoion module.
@@ -1873,23 +1863,9 @@ EbErrorType Av1FullCost(
     totalDistortion = luma_sse + chromaSse;
 
     rate = lumaRate + chromaRate + coeffRate;
-#if MD_STAGING
-    // To do: estimate the cost of tx size = tx_size_bits
-#else
-    if (candidate_buffer_ptr->candidate_ptr->block_has_coeff) {
-        uint64_t tx_size_bits = estimate_tx_size_bits(
-            picture_control_set_ptr,
-            context_ptr->cu_origin_x,
-            context_ptr->cu_origin_y,
-            context_ptr->cu_ptr,
-            context_ptr->blk_geom,
-            context_ptr->txfm_context_array,
-            candidate_buffer_ptr->candidate_ptr->tx_depth,
-            context_ptr->md_rate_estimation_ptr);
 
-        rate += tx_size_bits;
-    }
-#endif
+    // To do: estimate the cost of tx size = tx_size_bits
+
     // Assign full cost
     *(candidate_buffer_ptr->full_cost_ptr) = RDCOST(lambda, rate, totalDistortion);
 
@@ -1998,23 +1974,9 @@ EbErrorType  Av1MergeSkipFullCost(
     mergeRate += candidate_buffer_ptr->candidate_ptr->fast_chroma_rate;
 
     mergeRate += coeffRate;
-#if MD_STAGING
-    // To do: estimate the cost of tx size = tx_size_bits
-#else
-    if (candidate_buffer_ptr->candidate_ptr->block_has_coeff) {
-        uint64_t tx_size_bits = estimate_tx_size_bits(
-            picture_control_set_ptr,
-            context_ptr->cu_origin_x,
-            context_ptr->cu_origin_y,
-            context_ptr->cu_ptr,
-            context_ptr->blk_geom,
-            context_ptr->txfm_context_array,
-            candidate_buffer_ptr->candidate_ptr->tx_depth,
-            context_ptr->md_rate_estimation_ptr);
 
-        mergeRate += tx_size_bits;
-    }
-#endif
+    // To do: estimate the cost of tx size = tx_size_bits
+
     mergeDistortion = (mergeLumaSse + mergeChromaSse);
 
     //merge_cost = mergeDistortion + (((lambda * coeffRate + lambda * mergeLumaRate + lambda_chroma * mergeChromaRate) + MD_OFFSET) >> MD_SHIFT);

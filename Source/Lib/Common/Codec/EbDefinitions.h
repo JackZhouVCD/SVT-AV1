@@ -58,9 +58,6 @@ extern "C" {
 #define TFK_ALTREF_DYNAMIC_WINDOW         1 // Applying Dynamic window to key frame temporal filtering
 #define TFK_QPS_TUNING                    1 // QP scaling tuning of temporally filtered key frames.
 #define COMP_MODE                         1 // Add inter-inter compound modes
-#define PREDICTIVE_ME                     1 // Perform ME search around MVP @ MD
-#define MD_STAGING                        1
-#define MD_EXIT                           1
 
 
 
@@ -69,10 +66,6 @@ extern "C" {
 #define NO_ENCDEC                         0 // bypass encDec to test cmpliance of MD. complained achieved when skip_flag is OFF. Port sample code from VCI-SW_AV1_Candidate1 branch
 
 #define ADP_STATS_PER_LAYER                             0
-#if !MD_STAGING
-#define NFL_TX_TH                                       12 // To be tuned
-#define NFL_IT_TH                                       2 // To be tuned
-#endif
 #define NSQ_TAB_SIZE                                    6
 #define AOM_INTERP_EXTEND                               4
 #define OPTIMISED_EX_SUBPEL                             1
@@ -144,16 +137,12 @@ enum {
 #define BLOCK_MAX_COUNT_SB_128                    4421  // TODO: reduce alloction for 64x64
 #define BLOCK_MAX_COUNT_SB_64                     1101  // TODO: reduce alloction for 64x64
 #define MAX_TXB_COUNT                             4 // Maximum number of transform blocks.
-#if MD_STAGING // classes
 #if II_COMP_FLAG
 #define MAX_NFL                                  80
 #else
 #define MAX_NFL                                   65
 #endif
 #define MAX_NFL_BUFF                              (MAX_NFL + CAND_CLASS_TOTAL)  //need one extra temp buffer for each fast loop call
-#else
-#define MAX_NFL                                   40
-#endif
 #define MAX_LAD                                   120 // max lookahead-distance 2x60fps
 #define ROUND_UV(x) (((x)>>3)<<3)
 #define AV1_PROB_COST_SHIFT 9
@@ -460,7 +449,6 @@ static INLINE uint16_t clip_pixel_highbd(int32_t val, int32_t bd) {
 #endif
 #endif /* ATTRIBUTE_PACKED */
 
-#if MD_STAGING // classes
 typedef enum CAND_CLASS {
     CAND_CLASS_0,
     CAND_CLASS_1,
@@ -489,7 +477,6 @@ typedef enum MD_STAGE {
 #define INTER_NEW_NFL       16
 #define INTER_PRED_NFL      16
 
-#endif
 
 #define BEST_CANDIDATE_COUNT 4
 #define MAX_REF_TYPE_CAND   30
@@ -2820,9 +2807,6 @@ static const uint8_t intra_area_th_class_1[MAX_HIERARCHICAL_LEVEL][MAX_TEMPORAL_
 #define PF_N2   1
 #define PF_N4   2
 #define STAGE uint8_t
-#if !MD_STAGING // renaming
-#define MD_STAGE  0      // MD stage
-#endif
 #define ED_STAGE  1      // ENCDEC stage
 
 #define EB_TRANS_COEFF_SHAPE uint8_t
