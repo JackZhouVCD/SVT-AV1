@@ -383,15 +383,8 @@ const EbAv1LambdaAssignFunc av1_lambda_assignment_function_table[4] = {
 void reset_mode_decision(
     ModeDecisionContext   *context_ptr,
     PictureControlSet     *picture_control_set_ptr,
-#if !ENABLE_CDF_UPDATE
-    SequenceControlSet    *sequence_control_set_ptr,
-#endif
     uint32_t                   segment_index)
 {
-#if !ENABLE_CDF_UPDATE
-    EB_SLICE                     slice_type;
-    MdRateEstimationContext   *md_rate_estimation_array;
-#endif
     FrameHeader *frm_hdr = &picture_control_set_ptr->parent_pcs_ptr->frm_hdr;
 
     // QP
@@ -413,7 +406,6 @@ void reset_mode_decision(
         (uint8_t)picture_control_set_ptr->parent_pcs_ptr->enhanced_picture_ptr->bit_depth,
         context_ptr->qp_index,
         picture_control_set_ptr->hbd_mode_decision);
-#if ENABLE_CDF_UPDATE
     // Reset MD rate Estimation table to initial values by copying from md_rate_estimation_array
     if (context_ptr->is_md_rate_estimation_ptr_owner) {
         context_ptr->is_md_rate_estimation_ptr_owner = EB_FALSE;
@@ -423,34 +415,7 @@ void reset_mode_decision(
     uint32_t  candidateIndex;
     for (candidateIndex = 0; candidateIndex < MODE_DECISION_CANDIDATE_MAX_COUNT; ++candidateIndex)
         context_ptr->fast_candidate_ptr_array[candidateIndex]->md_rate_estimation_ptr = context_ptr->md_rate_estimation_ptr;
-#else
-    // Slice Type
-    slice_type =
-        (picture_control_set_ptr->parent_pcs_ptr->idr_flag == EB_TRUE) ? I_SLICE :
-        picture_control_set_ptr->slice_type;
 
-    // Increment the MD Rate Estimation array pointer to point to the right address based on the QP and slice type
-
-    /* Note(CHKN) : Rate estimation will use FrameQP even when Qp modulation is ON */
-
-    md_rate_estimation_array = (MdRateEstimationContext*)sequence_control_set_ptr->encode_context_ptr->md_rate_estimation_array;
-#if ADD_DELTA_QP_SUPPORT
-    md_rate_estimation_array += slice_type * TOTAL_NUMBER_OF_QP_VALUES + picture_control_set_ptr->picture_qp;
-#else
-    md_rate_estimation_array += slice_type * TOTAL_NUMBER_OF_QP_VALUES + context_ptr->qp;
-#endif
-
-    // Reset MD rate Estimation table to initial values by copying from md_rate_estimation_array
-    if (context_ptr->is_md_rate_estimation_ptr_owner) {
-        context_ptr->is_md_rate_estimation_ptr_owner = EB_FALSE;
-        EB_FREE_ARRAY(context_ptr->md_rate_estimation_ptr);
-    }
-
-    context_ptr->md_rate_estimation_ptr = md_rate_estimation_array;
-    uint32_t  candidateIndex;
-    for (candidateIndex = 0; candidateIndex < MODE_DECISION_CANDIDATE_MAX_COUNT; ++candidateIndex)
-        context_ptr->fast_candidate_ptr_array[candidateIndex]->md_rate_estimation_ptr = md_rate_estimation_array;
-#endif
     // Reset CABAC Contexts
     context_ptr->coeff_est_entropy_coder_ptr = picture_control_set_ptr->coeff_est_entropy_coder_ptr;
 

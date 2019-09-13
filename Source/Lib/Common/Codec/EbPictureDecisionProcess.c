@@ -1223,7 +1223,6 @@ EbErrorType signal_derivation_multi_processes_oq(
         else
             picture_control_set_ptr->compound_types_to_try = MD_COMP_AVG;
 
-#if ENABLE_CDF_UPDATE
         // Set frame end cdf update mode      Settings
         // 0                                     OFF
         // 1                                     ON
@@ -1231,7 +1230,6 @@ EbErrorType signal_derivation_multi_processes_oq(
             picture_control_set_ptr->frame_end_cdf_update_mode = 1;
         else
             picture_control_set_ptr->frame_end_cdf_update_mode = 0;
-#endif
         if (picture_control_set_ptr->sc_content_detected || picture_control_set_ptr->enc_mode == ENC_M0 || picture_control_set_ptr->enc_mode >= ENC_M4)
             picture_control_set_ptr->prune_unipred_at_me = 0;
         else
@@ -3416,7 +3414,6 @@ void* picture_decision_kernel(void *input_ptr)
                                 actual_past_pics = actual_future_pics;
                                 actual_past_pics += (altref_nframes + 1) & 0x1;
 
-#if ALTREF_TF_ADAPTIVE_WINDOW_SIZE
                                 int index_center = (uint8_t)(picture_control_set_ptr->sequence_control_set_ptr->static_config.altref_nframes / 2);
                                 int pic_itr;
                                 int ahd;
@@ -3458,12 +3455,7 @@ void* picture_decision_kernel(void *input_ptr)
                                 }
                                 picture_control_set_ptr->future_altref_nframes = pic_itr - index_center;
                                 //printf("\nPOC %d\t PAST %d\t FUTURE %d\n", picture_control_set_ptr->picture_number, picture_control_set_ptr->past_altref_nframes, picture_control_set_ptr->future_altref_nframes);
-#else
-                                //get the final number of pictures to use for the temporal filtering
-                                altref_nframes = (uint8_t)(actual_past_pics + 1 + actual_future_pics);
 
-                                picture_control_set_ptr->altref_nframes = (uint8_t)altref_nframes;
-#endif
                                 // adjust the temporal filtering pcs buffer to remove unused past pictures
                                 if(actual_past_pics != num_past_pics) {
 

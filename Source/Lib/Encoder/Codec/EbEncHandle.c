@@ -1253,7 +1253,6 @@ EB_API EbErrorType eb_init_encoder(EbComponentType *svt_enc_component)
     // Picture Demux Results
     {
         PictureResultInitData pictureResultInitData;
-#if ENABLE_CDF_UPDATE
         EB_NEW(
             enc_handle_ptr->picture_demux_results_resource_ptr,
             eb_system_resource_ctor,
@@ -1267,20 +1266,6 @@ EB_API EbErrorType eb_init_encoder(EbComponentType *svt_enc_component)
             &pictureResultInitData,
             NULL);
 
-#else
-        EB_NEW(
-            enc_handle_ptr->picture_demux_results_resource_ptr,
-            eb_system_resource_ctor,
-            enc_handle_ptr->sequence_control_set_instance_array[0]->sequence_control_set_ptr->picture_demux_fifo_init_count,
-            enc_handle_ptr->sequence_control_set_instance_array[0]->sequence_control_set_ptr->source_based_operations_process_init_count + enc_handle_ptr->sequence_control_set_instance_array[0]->sequence_control_set_ptr->rest_process_init_count,
-            EB_PictureManagerProcessInitCount,
-            &enc_handle_ptr->picture_demux_results_producer_fifo_ptr_array,
-            &enc_handle_ptr->picture_demux_results_consumer_fifo_ptr_array,
-            EB_TRUE,
-            picture_results_creator,
-            &pictureResultInitData,
-            NULL);
-#endif
     }
 
     // Rate Control Tasks
@@ -1652,7 +1637,6 @@ EB_API EbErrorType eb_init_encoder(EbComponentType *svt_enc_component)
     }
 
     // Packetization Context
-#if ENABLE_CDF_UPDATE
     EB_NEW(
         enc_handle_ptr->packetization_context_ptr,
         packetization_context_ctor,
@@ -1661,14 +1645,6 @@ EB_API EbErrorType eb_init_encoder(EbComponentType *svt_enc_component)
         , enc_handle_ptr->picture_demux_results_producer_fifo_ptr_array[enc_handle_ptr->sequence_control_set_instance_array[0]->sequence_control_set_ptr->source_based_operations_process_init_count +
         enc_handle_ptr->sequence_control_set_instance_array[0]->sequence_control_set_ptr->enc_dec_process_init_count]
     );
-#else
-    EB_NEW(
-        enc_handle_ptr->packetization_context_ptr,
-        packetization_context_ctor,
-        enc_handle_ptr->entropy_coding_results_consumer_fifo_ptr_array[0],
-        enc_handle_ptr->rate_control_tasks_producer_fifo_ptr_array[RateControlPortLookup(RATE_CONTROL_INPUT_PORT_PACKETIZATION, 0)]
-    );
-#endif
 
     /************************************
     * Thread Handles

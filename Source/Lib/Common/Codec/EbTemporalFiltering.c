@@ -785,11 +785,9 @@ void tf_inter_prediction(
     MeContext* context_ptr,
     EbPictureBufferDesc *pic_ptr_ref,
     EbByte *pred,
-#if ALTREF_TF_EIGHTH_PEL_SEARCH
     int* stride_pred,
     EbByte* src,
     int* stride_src,
-#endif
     uint32_t sb_origin_x,
     uint32_t sb_origin_y,
     int* use_16x16_subblocks,
@@ -844,7 +842,6 @@ void tf_inter_prediction(
                 //AV1 MVs are always in 1/8th pel precision.
                 mv_unit.mv->x = mv_unit.mv->x << 1;
                 mv_unit.mv->y = mv_unit.mv->y << 1;
-#if ALTREF_TF_EIGHTH_PEL_SEARCH
                 uint64_t best_distortion = (uint64_t)~0;
                 signed short best_mv_x = 0;
                 signed short best_mv_y = 0;
@@ -939,38 +936,7 @@ void tf_inter_prediction(
                     1,//perform_chroma,
                     asm_type);
 
-#else
-                av1_inter_prediction(
-                    NULL,  //picture_control_set_ptr,
-                    (uint32_t)interp_filters,
-                    &cu_ptr,
-                    0,//ref_frame_type,
-                    &mv_unit,
-                    0,//use_intrabc,
-                    1,//compound_idx not used
-                    NULL,// interinter_comp not used
-#if II_COMP_FLAG
-                    NULL,
-                    NULL,
-                    NULL,
-                    NULL,
-                    0,
-                    0,
-                    0,
-                    0,
-#endif
-                    pu_origin_x,
-                    pu_origin_y,
-                    bsize,
-                    bsize,
-                    pic_ptr_ref,
-                    NULL,//ref_pic_list1,
-                    &prediction_ptr,
-                    local_origin_x,
-                    local_origin_y,
-                    1,//perform_chroma,
-                    asm_type);
-#endif
+
             }
         }
     }
@@ -1247,11 +1213,7 @@ void uni_motion_compensation(MeContext* context_ptr,
 static EbErrorType produce_temporally_filtered_pic(PictureParentControlSet **list_picture_control_set_ptr,
                                             EbPictureBufferDesc **list_input_picture_ptr,
                                             uint8_t altref_strength,
-#if ALTREF_TF_ADAPTIVE_WINDOW_SIZE
                                             uint8_t index_center,
-#else
-                                            uint8_t altref_nframes,
-#endif
                                             uint8_t **alt_ref_buffer,
 #if QPS_TUNING
                                             uint64_t *filtered_sse,
@@ -1266,9 +1228,6 @@ static EbErrorType produce_temporally_filtered_pic(PictureParentControlSet **lis
     uint32_t *accum[COLOR_CHANNELS] = { accumulator, accumulator + BLK_PELS, accumulator + (BLK_PELS<<1) };
     uint16_t *count[COLOR_CHANNELS] = { counter, counter + BLK_PELS, counter + (BLK_PELS<<1) };
     EbByte pred[COLOR_CHANNELS] = { predictor, predictor + BLK_PELS, predictor + (BLK_PELS<<1) };
-#if !ALTREF_TF_ADAPTIVE_WINDOW_SIZE
-    int index_center;
-#endif
     uint32_t blk_row, blk_col;
     int stride_pred[COLOR_CHANNELS] = {BW, BW_CH, BW_CH};
     uint16_t blk_width_ch = BW_CH;
@@ -1279,10 +1238,6 @@ static EbErrorType produce_temporally_filtered_pic(PictureParentControlSet **lis
 
     PictureParentControlSet *picture_control_set_ptr_central;
     EbPictureBufferDesc *input_picture_ptr_central;
-#if !ALTREF_TF_ADAPTIVE_WINDOW_SIZE
-    // index of the center frame
-    index_center = (uint8_t)(altref_nframes / 2);
-#endif
     picture_control_set_ptr_central = list_picture_control_set_ptr[index_center];
     input_picture_ptr_central = list_input_picture_ptr[index_center];
     EbAsm asm_type = picture_control_set_ptr_central->sequence_control_set_ptr->encode_context_ptr->asm_type;
@@ -1354,11 +1309,7 @@ static EbErrorType produce_temporally_filtered_pic(PictureParentControlSet **lis
             populate_list_with_value(blk_fw, 16, INIT_WEIGHT);
 
             // for every frame to filter
-#if ALTREF_TF_ADAPTIVE_WINDOW_SIZE
             for (frame_index = 0; frame_index < (picture_control_set_ptr_central->past_altref_nframes + picture_control_set_ptr_central->future_altref_nframes + 1); frame_index++) {
-#else
-            for (frame_index = 0; frame_index < altref_nframes; frame_index++) {
-#endif
                 // first position of the frame buffer according to frame index
                 src_frame_index[C_Y] = list_input_picture_ptr[frame_index]->buffer_y +
                         list_input_picture_ptr[frame_index]->origin_y*list_input_picture_ptr[frame_index]->stride_y +
@@ -1433,11 +1384,9 @@ static EbErrorType produce_temporally_filtered_pic(PictureParentControlSet **lis
                         context_ptr,
                         list_input_picture_ptr[frame_index],
                         pred,
-#if ALTREF_TF_EIGHTH_PEL_SEARCH
                         stride_pred,
                         src_altref_index,
                         stride,
-#endif
                         (uint32_t)blk_col*BW,
                         (uint32_t)blk_row*BH,
                         use_16x16_subblocks,
@@ -1807,24 +1756,12 @@ void init_temporal_filtering(PictureParentControlSet **list_picture_control_set_
                                     PictureParentControlSet *picture_control_set_ptr_central,
                                     MotionEstimationContext_t *me_context_ptr,
                                     int32_t segment_index) {
-#if ALTREF_TF_ADAPTIVE_WINDOW_SIZE
     uint8_t *altref_strength_ptr, index_center;
-#else
-    uint8_t *altref_strength_ptr, *altref_nframes_ptr, index_center;
-#endif
     EbPictureBufferDesc *input_picture_ptr;
     uint8_t *alt_ref_buffer[COLOR_CHANNELS];
-#if !ALTREF_TF_ADAPTIVE_WINDOW_SIZE
-    // number of frames to filter
-    altref_nframes_ptr = &(picture_control_set_ptr_central->altref_nframes);
-#endif
     altref_strength_ptr = &(picture_control_set_ptr_central->altref_strength);
     // index of the central source frame
-#if ALTREF_TF_ADAPTIVE_WINDOW_SIZE
     index_center = picture_control_set_ptr_central->past_altref_nframes;
-#else
-    index_center = (uint8_t)(*altref_nframes_ptr / 2);
-#endif
     // source central frame picture buffer
     input_picture_ptr = picture_control_set_ptr_central->enhanced_picture_ptr;
 
@@ -1838,11 +1775,7 @@ void init_temporal_filtering(PictureParentControlSet **list_picture_control_set_
         adjust_filter_params(input_picture_ptr, altref_strength_ptr);
 
         // Pad chroma reference samples - once only per picture
-#if ALTREF_TF_ADAPTIVE_WINDOW_SIZE
         for (int i = 0 ; i < (picture_control_set_ptr_central->past_altref_nframes + picture_control_set_ptr_central->future_altref_nframes + 1); i++) {
-#else
-        for (int i = 0; i < *altref_nframes_ptr; i++) {
-#endif
             EbPictureBufferDesc *pic_ptr_ref = list_picture_control_set_ptr[i]->enhanced_picture_ptr;
 
             generate_padding(pic_ptr_ref->buffer_cb,
@@ -1873,11 +1806,7 @@ void init_temporal_filtering(PictureParentControlSet **list_picture_control_set_
 
     // populate source frames picture buffer list
     EbPictureBufferDesc *list_input_picture_ptr[ALTREF_MAX_NFRAMES] = { NULL };
-#if ALTREF_TF_ADAPTIVE_WINDOW_SIZE
     for (int i = 0; i < (picture_control_set_ptr_central->past_altref_nframes + picture_control_set_ptr_central->future_altref_nframes + 1); i++)
-#else
-    for(int i = 0; i < *altref_nframes_ptr; i++)
-#endif
         list_input_picture_ptr[i] = list_picture_control_set_ptr[i]->enhanced_picture_ptr;
 
     alt_ref_buffer[C_Y] = picture_control_set_ptr_central->enhanced_picture_ptr->buffer_y +
@@ -1891,11 +1820,7 @@ void init_temporal_filtering(PictureParentControlSet **list_picture_control_set_
                           (picture_control_set_ptr_central->enhanced_picture_ptr->origin_y / 2)*picture_control_set_ptr_central->enhanced_picture_ptr->stride_cr;
 #if QPS_TUNING
     uint64_t filtered_sse, filtered_sse_uv;
-#if ALTREF_TF_ADAPTIVE_WINDOW_SIZE
     produce_temporally_filtered_pic(list_picture_control_set_ptr, list_input_picture_ptr, *altref_strength_ptr, index_center, alt_ref_buffer, &filtered_sse, &filtered_sse_uv, (MotionEstimationContext_t *)me_context_ptr, segment_index);
-#else
-    produce_temporally_filtered_pic(list_picture_control_set_ptr, list_input_picture_ptr, *altref_strength_ptr, *altref_nframes_ptr, alt_ref_buffer, &filtered_sse, &filtered_sse_uv, (MotionEstimationContext_t *)me_context_ptr, segment_index);
-#endif
 #else
     produce_temporally_filtered_pic(list_picture_control_set_ptr, list_input_picture_ptr, *altref_strength_ptr, *altref_nframes_ptr, alt_ref_buffer, (MotionEstimationContext_t *) me_context_ptr,segment_index);
 #endif

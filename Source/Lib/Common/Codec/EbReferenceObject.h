@@ -34,10 +34,8 @@ typedef struct EbReferenceObject
     aom_film_grain_t                film_grain_params; //Film grain parameters for a reference frame
     uint32_t                        cdef_frame_strength;
     int8_t                          sg_frame_ep;
-#if ENABLE_CDF_UPDATE
     FRAME_CONTEXT                   frame_context;
     EbWarpedMotionParams            global_motion[TOTAL_REFS_PER_FRAME];
-#endif
     MV_REF                         *mvs;
     FrameType                       frame_type;
     uint32_t                        order_hint;
