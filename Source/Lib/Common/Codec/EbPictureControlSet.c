@@ -257,11 +257,7 @@ EbErrorType picture_control_set_ctor(
     EbPictureBufferDescInitData coeffBufferDescInitData;
 
     // Max/Min CU Sizes
-#if QPM
     const uint32_t maxCuSize = initDataPtr->sb_size_pix;
-#else
-    const uint32_t maxCuSize = initDataPtr->sb_sz;
-#endif
     // LCUs
     const uint16_t pictureLcuWidth = (uint16_t)((initDataPtr->picture_width + initDataPtr->sb_sz - 1) / initDataPtr->sb_sz);
     const uint16_t pictureLcuHeight = (uint16_t)((initDataPtr->picture_height + initDataPtr->sb_sz - 1) / initDataPtr->sb_sz);
@@ -1022,7 +1018,6 @@ EbErrorType picture_control_set_ctor(
         object_ptr->mi_grid_base[miIdx] = object_ptr->mip + miIdx;
     object_ptr->mi_stride = pictureLcuWidth * (BLOCK_SIZE_64 / 4);
 #endif
-#if MFMV_SUPPORT
     if (initDataPtr->mfmv)
     {
         //MFMV: map is 8x8 based.
@@ -1032,7 +1027,6 @@ EbErrorType picture_control_set_ctor(
         EB_MALLOC_ALIGNED_ARRAY(object_ptr->tpl_mvs, mem_size);
         memset(object_ptr->tpl_mvs, 0, sizeof(TPL_MV_REF)*mem_size);
     }
-#endif
     object_ptr->hash_table.p_lookup_table = NULL;
     av1_hash_table_create(&object_ptr->hash_table);
     return EB_ErrorNone;

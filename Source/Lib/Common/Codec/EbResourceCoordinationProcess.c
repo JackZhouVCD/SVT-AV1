@@ -92,11 +92,7 @@ EbErrorType signal_derivation_pre_analysis_oq(
 
     // Derive HME Flag
     if (sequence_control_set_ptr->static_config.use_default_me_hme) {
-#if HME_ME_TUNING
         picture_control_set_ptr->enable_hme_flag = enable_hme_flag[0][input_resolution][hme_me_level] || enable_hme_flag[1][input_resolution][hme_me_level];
-#else
-        picture_control_set_ptr->enable_hme_flag = EB_TRUE;
-#endif
         picture_control_set_ptr->enable_hme_level0_flag = enable_hme_level0_flag[0][input_resolution][hme_me_level] || enable_hme_level0_flag[1][input_resolution][hme_me_level];
         picture_control_set_ptr->enable_hme_level1_flag = enable_hme_level1_flag[0][input_resolution][hme_me_level] || enable_hme_level1_flag[1][input_resolution][hme_me_level];
         picture_control_set_ptr->enable_hme_level2_flag = enable_hme_level2_flag[0][input_resolution][hme_me_level] || enable_hme_level2_flag[1][input_resolution][hme_me_level];
@@ -107,11 +103,7 @@ EbErrorType signal_derivation_pre_analysis_oq(
         picture_control_set_ptr->enable_hme_level1_flag = sequence_control_set_ptr->static_config.enable_hme_level1_flag;
         picture_control_set_ptr->enable_hme_level2_flag = sequence_control_set_ptr->static_config.enable_hme_level2_flag;
     }
-#if HME_ME_TUNING
     picture_control_set_ptr->tf_enable_hme_flag = tf_enable_hme_flag[0][input_resolution][hme_me_level] || tf_enable_hme_flag[1][input_resolution][hme_me_level];
-#else
-    picture_control_set_ptr->tf_enable_hme_flag = EB_TRUE;
-#endif
     picture_control_set_ptr->tf_enable_hme_level0_flag = tf_enable_hme_level0_flag[0][input_resolution][hme_me_level] || tf_enable_hme_level0_flag[1][input_resolution][hme_me_level];
     picture_control_set_ptr->tf_enable_hme_level1_flag = tf_enable_hme_level1_flag[0][input_resolution][hme_me_level] || tf_enable_hme_level1_flag[1][input_resolution][hme_me_level];
     picture_control_set_ptr->tf_enable_hme_level2_flag = tf_enable_hme_level2_flag[0][input_resolution][hme_me_level] || tf_enable_hme_level2_flag[1][input_resolution][hme_me_level];
@@ -315,10 +307,6 @@ void ResetPcsAv1(
     frm_hdr->quantization_params.qm_y = 5;
     frm_hdr->quantization_params.qm_u = 5;
     frm_hdr->quantization_params.qm_v = 5;
-#if ! MFMV_SUPPORT
-    // Whether to use previous frame's motion vectors for prediction.
-    frm_hdr->use_ref_frame_mvs = 0;
-#endif
     frm_hdr->is_motion_mode_switchable = 0;
     // Flag signaling how frame contexts should be updated at the end of
     // a frame decode

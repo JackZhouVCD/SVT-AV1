@@ -3510,7 +3510,6 @@ static int adaptive_qindex_calc(
 
     return q;
 }
-#if QPM
 // Calculates the QP per SB based on the non moving index. For now, only active for I Slice.
 static void sb_qp_derivation(
     PictureControlSet         *picture_control_set_ptr) {
@@ -3614,7 +3613,6 @@ static void sb_qp_derivation(
         }
     }
 }
-#endif
 void* rate_control_kernel(void *input_ptr)
 {
     // Context
@@ -3778,14 +3776,10 @@ void* rate_control_kernel(void *input_ptr)
                                 (int32_t)quantizer_to_qindex[sequence_control_set_ptr->static_config.max_qp_allowed],
                                 (int32_t)(qindex + delta_qindex));
                     }
-#if QPM
                     picture_control_set_ptr->picture_qp =
                         (uint8_t)CLIP3((int32_t)sequence_control_set_ptr->static_config.min_qp_allowed,
                                        (int32_t)sequence_control_set_ptr->static_config.max_qp_allowed,
                                        (frm_hdr->quantization_params.base_q_idx + 2) >> 2);
-#else
-                    picture_control_set_ptr->picture_qp = (uint8_t)CLIP3((int32_t)sequence_control_set_ptr->static_config.min_qp_allowed, (int32_t)sequence_control_set_ptr->static_config.max_qp_allowed, frm_hdr->quantization_params.base_q_idx >> 2);
-#endif
                 }
 
                 else if (picture_control_set_ptr->parent_pcs_ptr->qp_on_the_fly == EB_TRUE) {
@@ -3865,23 +3859,8 @@ void* rate_control_kernel(void *input_ptr)
                     }
                 }
             }
-#if QPM
             sb_qp_derivation(picture_control_set_ptr);
-#else
-            picture_control_set_ptr->parent_pcs_ptr->average_qp = 0;
-            LargestCodingUnit         *sb_ptr;
-            uint32_t                       lcuCodingOrder;
-            for (lcuCodingOrder = 0; lcuCodingOrder < sequence_control_set_ptr->sb_tot_cnt; ++lcuCodingOrder) {
-                sb_ptr = picture_control_set_ptr->sb_ptr_array[lcuCodingOrder];
-#if ADD_DELTA_QP_SUPPORT
 
-                sb_ptr->qp = quantizer_to_qindex[picture_control_set_ptr->picture_qp];
-#else
-                sb_ptr->qp = (uint8_t)picture_control_set_ptr->picture_qp;
-#endif
-                picture_control_set_ptr->parent_pcs_ptr->average_qp += sb_ptr->qp;
-            }
-#endif
             // Get Empty Rate Control Results Buffer
             eb_get_empty_object(
                 context_ptr->rate_control_output_results_fifo_ptr,

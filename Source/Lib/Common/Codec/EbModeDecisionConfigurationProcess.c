@@ -711,11 +711,6 @@ void PerformEarlyLcuPartitionning(
     // SB Loop : Partitionnig Decision
     for (sb_index = 0; sb_index < picture_control_set_ptr->sb_total_count; ++sb_index) {
         sb_ptr = picture_control_set_ptr->sb_ptr_array[sb_index];
-#if !QPM
-        {
-            sb_ptr->qp = (uint8_t)picture_control_set_ptr->parent_pcs_ptr->picture_qp;
-        }
-#endif
         early_mode_decision_lcu(
             sequence_control_set_ptr,
             picture_control_set_ptr,
@@ -733,11 +728,6 @@ void PerformEarlyLcuPartitionningLcu(
 
     // SB Loop : Partitionnig Decision
     sb_ptr = picture_control_set_ptr->sb_ptr_array[sb_index];
-#if !QPM
-    {
-        sb_ptr->qp = (uint8_t)picture_control_set_ptr->parent_pcs_ptr->picture_qp;
-    }
-#endif
     early_mode_decision_lcu(
         sequence_control_set_ptr,
         picture_control_set_ptr,
@@ -1703,7 +1693,6 @@ void forward_all_c_blocks_to_md(
 
     picture_control_set_ptr->parent_pcs_ptr->average_qp = (uint8_t)picture_control_set_ptr->parent_pcs_ptr->picture_qp;
 }
-#if MFMV_SUPPORT
 void av1_set_ref_frame(MvReferenceFrame *rf,
     int8_t ref_frame_type);
 
@@ -1918,7 +1907,6 @@ void av1_setup_motion_field(
 
     if (ref_stamp >= 0) motion_field_projection(cm, picture_control_set_ptr, LAST2_FRAME, 2);
 }
-#endif
 /******************************************************
  * Mode Decision Configuration Kernel
  ******************************************************/
@@ -1946,10 +1934,8 @@ void* mode_decision_configuration_kernel(void *input_ptr)
         rateControlResultsPtr = (RateControlResults*)rateControlResultsWrapperPtr->object_ptr;
         picture_control_set_ptr = (PictureControlSet*)rateControlResultsPtr->picture_control_set_wrapper_ptr->object_ptr;
         sequence_control_set_ptr = (SequenceControlSet*)picture_control_set_ptr->sequence_control_set_wrapper_ptr->object_ptr;
-#if MFMV_SUPPORT
         if (picture_control_set_ptr->parent_pcs_ptr->frm_hdr.use_ref_frame_mvs)
             av1_setup_motion_field(picture_control_set_ptr->parent_pcs_ptr->av1_cm, picture_control_set_ptr);
-#endif
 
         frm_hdr = &picture_control_set_ptr->parent_pcs_ptr->frm_hdr;
 

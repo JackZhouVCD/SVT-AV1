@@ -95,11 +95,9 @@ void eb_av1_setup_skip_mode_allowed(PictureParentControlSet  *parent_pcs_ptr) {
     skip_mode_info->skip_mode_allowed = 0;
     skip_mode_info->ref_frame_idx_0 = INVALID_IDX;
     skip_mode_info->ref_frame_idx_1 = INVALID_IDX;
-#if MFMV_SUPPORT
     parent_pcs_ptr->cur_order_hint = parent_pcs_ptr->picture_number % (uint64_t)(1 << (parent_pcs_ptr->sequence_control_set_ptr->seq_header.order_hint_info.order_hint_bits));
     for (uint8_t i = 0; i < 7; ++i)
         parent_pcs_ptr->ref_order_hint[i] = (uint32_t)ref_frame_arr_single[i].poc;
-#endif
     if (/*!order_hint_info->enable_order_hint ||*/ parent_pcs_ptr->slice_type == I_SLICE /*frame_is_intra_only(cm)*/ ||
         frm_hdr->reference_mode == SINGLE_REFERENCE)
         return;
@@ -181,11 +179,6 @@ void eb_av1_setup_skip_mode_allowed(PictureParentControlSet  *parent_pcs_ptr) {
     //4 :BWD
     //5 :ALT2
     //6 :ALT
-#if COMP_MODE && !MFMV_SUPPORT
-    parent_pcs_ptr->cur_order_hint = parent_pcs_ptr->picture_number % (uint64_t)(1 << (parent_pcs_ptr->sequence_control_set_ptr->seq_header.order_hint_info.order_hint_bits));
-    for (uint8_t i = 0; i < 7; ++i)
-        parent_pcs_ptr->ref_order_hint[i] = (uint32_t)ref_frame_arr_single[i].poc;
-#endif
 }
 
 uint8_t  circ_dec(uint8_t max, uint8_t off, uint8_t input)
@@ -788,17 +781,13 @@ EbErrorType signal_derivation_multi_processes_oq(
     uint8_t sc_content_detected = picture_control_set_ptr->sc_content_detected;
 
 
-#if HME_ME_TUNING
     picture_control_set_ptr->enable_hme_flag = enable_hme_flag[picture_control_set_ptr->sc_content_detected][sequence_control_set_ptr->input_resolution][picture_control_set_ptr->enc_mode];
-#endif
 
     picture_control_set_ptr->enable_hme_level0_flag = enable_hme_level0_flag[picture_control_set_ptr->sc_content_detected][sequence_control_set_ptr->input_resolution][picture_control_set_ptr->enc_mode];
     picture_control_set_ptr->enable_hme_level1_flag = enable_hme_level1_flag[picture_control_set_ptr->sc_content_detected][sequence_control_set_ptr->input_resolution][picture_control_set_ptr->enc_mode];
     picture_control_set_ptr->enable_hme_level2_flag = enable_hme_level2_flag[picture_control_set_ptr->sc_content_detected][sequence_control_set_ptr->input_resolution][picture_control_set_ptr->enc_mode];
 
-#if HME_ME_TUNING
     picture_control_set_ptr->tf_enable_hme_flag = tf_enable_hme_flag[picture_control_set_ptr->sc_content_detected][sequence_control_set_ptr->input_resolution][picture_control_set_ptr->enc_mode];
-#endif
     picture_control_set_ptr->tf_enable_hme_level0_flag = tf_enable_hme_level0_flag[picture_control_set_ptr->sc_content_detected][sequence_control_set_ptr->input_resolution][picture_control_set_ptr->enc_mode];
     picture_control_set_ptr->tf_enable_hme_level1_flag = tf_enable_hme_level1_flag[picture_control_set_ptr->sc_content_detected][sequence_control_set_ptr->input_resolution][picture_control_set_ptr->enc_mode];
     picture_control_set_ptr->tf_enable_hme_level2_flag = tf_enable_hme_level2_flag[picture_control_set_ptr->sc_content_detected][sequence_control_set_ptr->input_resolution][picture_control_set_ptr->enc_mode];
@@ -931,14 +920,7 @@ EbErrorType signal_derivation_multi_processes_oq(
         if (MR_MODE)
             picture_control_set_ptr->interpolation_search_level = IT_SEARCH_FAST_LOOP;
         else if (sc_content_detected)
-#if SC_SETTINGS_TUNING
             picture_control_set_ptr->interpolation_search_level = IT_SEARCH_OFF;
-#else
-            if (picture_control_set_ptr->enc_mode <= ENC_M1)
-                picture_control_set_ptr->interpolation_search_level = IT_SEARCH_FAST_LOOP_UV_BLIND;
-            else
-                picture_control_set_ptr->interpolation_search_level = IT_SEARCH_OFF;
-#endif
         else if (picture_control_set_ptr->enc_mode <= ENC_M1)
             picture_control_set_ptr->interpolation_search_level = IT_SEARCH_FAST_LOOP_UV_BLIND;
         else if (picture_control_set_ptr->enc_mode <= ENC_M3)
@@ -1191,18 +1173,9 @@ EbErrorType signal_derivation_multi_processes_oq(
     picture_control_set_ptr->skip_sub_blks =   0;
 
         if (picture_control_set_ptr->sc_content_detected)
-#if SC_SETTINGS_TUNING
             picture_control_set_ptr->cu8x8_mode = (picture_control_set_ptr->temporal_layer_index > 0) ?
             CU_8x8_MODE_1 :
             CU_8x8_MODE_0;
-#else
-            if (picture_control_set_ptr->enc_mode <= ENC_M1)
-                picture_control_set_ptr->cu8x8_mode = CU_8x8_MODE_0;
-            else
-                picture_control_set_ptr->cu8x8_mode = (picture_control_set_ptr->temporal_layer_index > 0) ?
-                CU_8x8_MODE_1 :
-                CU_8x8_MODE_0;
-#endif
         else
         if (picture_control_set_ptr->enc_mode <= ENC_M8)
             picture_control_set_ptr->cu8x8_mode = CU_8x8_MODE_0;
@@ -1285,14 +1258,12 @@ EbErrorType signal_derivation_multi_processes_oq(
             picture_control_set_ptr->prune_unipred_at_me = 0;
         else
             picture_control_set_ptr->prune_unipred_at_me = 1;
-#if MFMV_SUPPORT
         //CHKN: Temporal MVP should be disabled for pictures beloning to 4L MiniGop preceeded by 5L miniGOP. in this case the RPS is wrong(known issue). check RPS construction for more info.
         if ((sequence_control_set_ptr->static_config.hierarchical_levels == 4 && picture_control_set_ptr->hierarchical_levels == 3) ||
             picture_control_set_ptr->slice_type == I_SLICE)
             picture_control_set_ptr->frm_hdr.use_ref_frame_mvs = 0;
         else
             picture_control_set_ptr->frm_hdr.use_ref_frame_mvs = sequence_control_set_ptr->mfmv_enabled;
-#endif
     return return_error;
 }
 

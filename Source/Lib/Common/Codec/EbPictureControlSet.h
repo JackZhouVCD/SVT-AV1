@@ -13762,11 +13762,6 @@ extern "C" {
         uint8_t                              *qp_array;
         uint16_t                              qp_array_stride;
         uint32_t                              qp_array_size;
-        // QP Assignment
-#if !QPM
-        uint8_t                               prev_coded_qp;
-        uint8_t                               prev_quant_group_coded_qp;
-#endif
         // EncDec Entropy Coder (for rate estimation)
         EntropyCoder                       *coeff_est_entropy_coder_ptr;
 
@@ -13867,10 +13862,8 @@ extern "C" {
         EbWarpedMotionParams    ref_global_motion[TOTAL_REFS_PER_FRAME];
         struct MdRateEstimationContext *md_rate_estimation_array;
 #endif
-#if MFMV_SUPPORT
         int8_t ref_frame_side[REF_FRAMES];
         TPL_MV_REF  *tpl_mvs;
-#endif
     } PictureControlSet;
 
     // To optimize based on the max input size
@@ -14042,10 +14035,8 @@ extern "C" {
         uint8_t                              *sharp_edge_sb_flag;
         EbBool                                logo_pic_flag;                    // used by EncDecProcess()
         uint16_t                              non_moving_index_average;            // used by ModeDecisionConfigurationProcess()
-#if QPM
         int16_t                               non_moving_index_min_distance;
         int16_t                               non_moving_index_max_distance;
-#endif
         uint16_t                              qp_scaling_average_complexity;
         uint8_t                               grass_percentage_in_picture;
         uint8_t                               percentage_of_edgein_light_background;
@@ -14307,9 +14298,7 @@ extern "C" {
 #if INCOMPLETE_SB_FIX
         uint8_t                            over_boundary_block_mode;
 #endif
-#if MFMV_SUPPORT
         uint8_t                            mfmv;
-#endif
     } PictureControlSetInitData;
 
     typedef struct Av1Comp
