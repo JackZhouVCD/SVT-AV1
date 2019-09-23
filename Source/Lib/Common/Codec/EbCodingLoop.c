@@ -66,7 +66,6 @@ typedef void(*EB_AV1_ENCODE_LOOP_FUNC_PTR)(
     EbAsm                 asm_type,
     uint32_t                  *count_non_zero_coeffs,
     uint32_t                 component_mask,
-    uint32_t                   use_delta_qp,
     uint32_t                 dZoffset,
     uint16_t                 *eob,
     MacroblockPlane       *candidate_plane);
@@ -419,7 +418,6 @@ void encode_pass_tx_search(
     EbAsm                          asm_type,
     uint32_t                       *count_non_zero_coeffs,
     uint32_t                       component_mask,
-    uint32_t                       use_delta_qp,
     uint32_t                       dZoffset,
     uint16_t                       *eob,
     MacroblockPlane                *candidate_plane);
@@ -458,12 +456,10 @@ static void Av1EncodeLoop(
     EbAsm                 asm_type,
     uint32_t                  *count_non_zero_coeffs,
     uint32_t                 component_mask,
-    uint32_t                   use_delta_qp,
     uint32_t                 dZoffset,
     uint16_t                 *eob,
     MacroblockPlane       *candidate_plane){
     (void)dZoffset;
-    (void)use_delta_qp;
     (void)cb_qp;
 
     //    uint32_t                 chroma_qp = cb_qp;
@@ -528,7 +524,6 @@ static void Av1EncodeLoop(
                     asm_type,
                     count_non_zero_coeffs,
                     component_mask,
-                    use_delta_qp,
                     dZoffset,
                     eob,
                     candidate_plane);
@@ -843,7 +838,6 @@ void encode_pass_tx_search_hbd(
     EbAsm                          asm_type,
     uint32_t                       *count_non_zero_coeffs,
     uint32_t                       component_mask,
-    uint32_t                       use_delta_qp,
     uint32_t                       dZoffset,
     uint16_t                       *eob,
     MacroblockPlane                *candidate_plane);
@@ -882,13 +876,11 @@ static void Av1EncodeLoop16bit(
     EbAsm                 asm_type,
     uint32_t                  *count_non_zero_coeffs,
     uint32_t                 component_mask,
-    uint32_t                   use_delta_qp,
     uint32_t                 dZoffset,
     uint16_t                 *eob,
     MacroblockPlane       *candidate_plane)
 
 {
-    (void)use_delta_qp;
     (void)dZoffset;
     (void)cb_qp;
 
@@ -949,7 +941,6 @@ static void Av1EncodeLoop16bit(
                         asm_type,
                         count_non_zero_coeffs,
                         component_mask,
-                        use_delta_qp,
                         dZoffset,
                         eob,
                         candidate_plane);
@@ -1653,7 +1644,6 @@ void perform_intra_coding_loop(
             asm_type,
             count_non_zero_coeffs,
             PICTURE_BUFFER_DESC_LUMA_MASK,
-            0,
             cu_ptr->delta_qp > 0 ? 0 : dZoffset,
             eobs[context_ptr->txb_itr],
             cuPlane);
@@ -1920,7 +1910,6 @@ void perform_intra_coding_loop(
             asm_type,
             count_non_zero_coeffs,
             PICTURE_BUFFER_DESC_CHROMA_MASK,
-            0,
             cu_ptr->delta_qp > 0 ? 0 : dZoffset,
             eobs[context_ptr->txb_itr],
             cuPlane);
@@ -2171,7 +2160,6 @@ EB_EXTERN void av1_encode_pass(
     else  // non ref pictures
         recon_buffer = is16bit ? picture_control_set_ptr->recon_picture16bit_ptr : picture_control_set_ptr->recon_picture_ptr;
 
-    EbBool useDeltaQpSegments = EB_FALSE;
 
     // DeriveZeroLumaCbf
     EbBool  highIntraRef = EB_FALSE;
@@ -2742,7 +2730,6 @@ EB_EXTERN void av1_encode_pass(
                                     asm_type,
                                     count_non_zero_coeffs,
                                     blk_geom->has_uv ? PICTURE_BUFFER_DESC_FULL_MASK : PICTURE_BUFFER_DESC_LUMA_MASK,
-                                    useDeltaQpSegments,
                                     cu_ptr->delta_qp > 0 ? 0 : dZoffset,
                                     eobs[context_ptr->txb_itr],
                                     cuPlane);
@@ -3155,7 +3142,6 @@ EB_EXTERN void av1_encode_pass(
                                     asm_type,
                                     count_non_zero_coeffs,
                                     context_ptr->blk_geom->has_uv && uv_pass ? PICTURE_BUFFER_DESC_FULL_MASK : PICTURE_BUFFER_DESC_LUMA_MASK,
-                                    useDeltaQpSegments,
                                     cu_ptr->delta_qp > 0 ? 0 : dZoffset,
                                     eobs[context_ptr->txb_itr],
                                     cuPlane);
@@ -3466,7 +3452,6 @@ EB_EXTERN void av1_encode_pass(
                                 asm_type,
                                 count_non_zero_coeffs,
                                 context_ptr->blk_geom->has_uv && uv_pass ? PICTURE_BUFFER_DESC_FULL_MASK : PICTURE_BUFFER_DESC_LUMA_MASK,
-                                useDeltaQpSegments,
                                 cu_ptr->delta_qp > 0 ? 0 : dZoffset,
                                 eobs[context_ptr->txb_itr],
                                 cuPlane);
