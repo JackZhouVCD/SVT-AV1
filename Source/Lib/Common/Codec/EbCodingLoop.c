@@ -2171,9 +2171,8 @@ EB_EXTERN void av1_encode_pass(
     else  // non ref pictures
         recon_buffer = is16bit ? picture_control_set_ptr->recon_picture16bit_ptr : picture_control_set_ptr->recon_picture_ptr;
 
-    EbBool use_delta_qp = (EbBool)sequence_control_set_ptr->static_config.improve_sharpness;
-    EbBool oneSegment = (sequence_control_set_ptr->enc_dec_segment_col_count_array[picture_control_set_ptr->temporal_layer_index] == 1) && (sequence_control_set_ptr->enc_dec_segment_row_count_array[picture_control_set_ptr->temporal_layer_index] == 1);
-    EbBool useDeltaQpSegments = oneSegment ? 0 : (EbBool)sequence_control_set_ptr->static_config.improve_sharpness;
+    EbBool use_delta_qp = EB_FALSE;
+    EbBool useDeltaQpSegments = EB_FALSE;
 
     // DeriveZeroLumaCbf
     EbBool  highIntraRef = EB_FALSE;
@@ -2919,9 +2918,7 @@ EB_EXTERN void av1_encode_pass(
                     //EbBool doLumaMC = EB_TRUE;
                     EbBool doMVpred = EB_TRUE;
                     //if QP M and Segments are used, First Cu in SB row should have at least one coeff.
-                    EbBool isFirstCUinRow = (use_delta_qp == 1) &&
-                        !oneSegment &&
-                        (context_ptr->cu_origin_x == 0 && context_ptr->cu_origin_y == sb_origin_y) ? EB_TRUE : EB_FALSE;
+                    EbBool isFirstCUinRow = EB_FALSE;
                     zeroLumaCbfMD = (EbBool)(checkZeroLumaCbf && ((&cu_ptr->prediction_unit_array[0])->merge_flag == EB_FALSE && cu_ptr->block_has_coeff == 0 && isFirstCUinRow == EB_FALSE));
                     zeroLumaCbfMD = EB_FALSE;
 
@@ -3757,8 +3754,8 @@ EB_EXTERN void no_enc_dec_pass(
                 CodingUnit            *cu_ptr = context_ptr->cu_ptr = &context_ptr->md_context->md_cu_arr_nsq[d1_itr];
 
                 cu_ptr->delta_qp = 0;
-                cu_ptr->qp = (sequence_control_set_ptr->static_config.improve_sharpness) ? context_ptr->qpm_qp : picture_control_set_ptr->picture_qp;
-                sb_ptr->qp = (sequence_control_set_ptr->static_config.improve_sharpness) ? context_ptr->qpm_qp : picture_control_set_ptr->picture_qp;
+                cu_ptr->qp = picture_control_set_ptr->picture_qp;
+                sb_ptr->qp = picture_control_set_ptr->picture_qp;
                 cu_ptr->org_delta_qp = cu_ptr->delta_qp;
 
                 {
