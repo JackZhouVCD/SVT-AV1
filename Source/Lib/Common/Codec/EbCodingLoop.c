@@ -2171,7 +2171,6 @@ EB_EXTERN void av1_encode_pass(
     else  // non ref pictures
         recon_buffer = is16bit ? picture_control_set_ptr->recon_picture16bit_ptr : picture_control_set_ptr->recon_picture_ptr;
 
-    EbBool use_delta_qp = EB_FALSE;
     EbBool useDeltaQpSegments = EB_FALSE;
 
     // DeriveZeroLumaCbf
