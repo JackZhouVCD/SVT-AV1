@@ -4938,3 +4938,27 @@ void* picture_analysis_kernel(void *input_ptr)
     }
     return EB_NULL;
 }
+
+uint64_t compute_mean_helper(
+    uint8_t *input_samples,
+    uint32_t input_stride,
+    uint32_t input_area_width,
+    uint32_t input_area_height,
+    EbBool  squared) {
+
+    return squared ?
+        compute_mean_of_squared_values8x8_sse2_intrin(input_samples, input_stride, input_area_width, input_area_height) :
+        compute_mean8x8_sse2_intrin(input_samples, input_stride, input_area_width, input_area_height);
+}
+
+uint64_t compute_mean_avx2_helper(
+    uint8_t *input_samples,
+    uint32_t input_stride,
+    uint32_t input_area_width,
+    uint32_t input_area_height,
+    EbBool  squared) {
+
+    return squared ?
+        compute_mean_of_squared_values8x8_sse2_intrin(input_samples, input_stride, input_area_width, input_area_height) :
+        compute_mean8x8_avx2_intrin(input_samples, input_stride, input_area_width, input_area_height);
+}

@@ -139,56 +139,56 @@ extern "C" {
     {
         // NON_AVX2
         {
-            /*0 4xM  */ fast_loop_nx_m_sad_kernel,
-            /*1 8xM  */ fast_loop_nx_m_sad_kernel,
-            /*2 16xM */ fast_loop_nx_m_sad_kernel,
-            /*3 24xM */ fast_loop_nx_m_sad_kernel,
-            /*4 32xM */ fast_loop_nx_m_sad_kernel,
+            /*0 4xM  */ fast_loop_nxm_sad_kernel,
+            /*1 8xM  */ fast_loop_nxm_sad_kernel,
+            /*2 16xM */ fast_loop_nxm_sad_kernel,
+            /*3 24xM */ fast_loop_nxm_sad_kernel,
+            /*4 32xM */ fast_loop_nxm_sad_kernel,
             /*5      */ 0,
-            /*6 48xM */ fast_loop_nx_m_sad_kernel,
+            /*6 48xM */ fast_loop_nxm_sad_kernel,
             /*7      */ 0,
-            /*8 64xM */ fast_loop_nx_m_sad_kernel,
-            0,0,0,0,0,0,0,fast_loop_nx_m_sad_kernel
+            /*8 64xM */ fast_loop_nxm_sad_kernel,
+            0,0,0,0,0,0,0,fast_loop_nxm_sad_kernel
         },
         // AVX2
         {
-            /*0 4xM  */ Compute4xMSadSub_AVX2_INTRIN,
-            /*1 8xM  */ compute8x_m_sad_avx2_intrin,
-            /*2 16xM */ compute16x_m_sad_avx2_intrin,
-            /*3 24xM */ fast_loop_nx_m_sad_kernel,
-            /*4 32xM */ compute32x_m_sad_avx2_intrin,
+            /*0 4xM  */ compute_4xm_sad_sub_avx2_intrin,
+            /*1 8xM  */ compute_8xm_sad_avx2_intrin,
+            /*2 16xM */ compute_16xm_sad_avx2_intrin,
+            /*3 24xM */ fast_loop_nxm_sad_kernel,
+            /*4 32xM */ compute_32xm_sad_avx2_intrin,
             /*5      */ 0,
-            /*6 48xM */ fast_loop_nx_m_sad_kernel,
+            /*6 48xM */ fast_loop_nxm_sad_kernel,
             /*7      */ 0,
-            /*8 64xM */ compute64x_m_sad_avx2_intrin,
-            0,0,0,0,0,0,0,fast_loop_nx_m_sad_kernel
+            /*8 64xM */ compute_64xm_sad_avx2_intrin,
+            0,0,0,0,0,0,0,fast_loop_nxm_sad_kernel
         },
     };
     static EbSadKernelNxMType FUNC_TABLE nxm_sad_kernel_func_ptr_array[ASM_TYPE_TOTAL][9] =   // [asm_type][SAD - block height]
     {
         // NON_AVX2
         {
-            /*0 4xM  */ fast_loop_nx_m_sad_kernel,
-            /*1 8xM  */ fast_loop_nx_m_sad_kernel,
-            /*2 16xM */ fast_loop_nx_m_sad_kernel,
-            /*3 24xM */ fast_loop_nx_m_sad_kernel,
-            /*4 32xM */ fast_loop_nx_m_sad_kernel,
-            /*5      */ fast_loop_nx_m_sad_kernel,  // size not supported in asm
-            /*6 48xM */ fast_loop_nx_m_sad_kernel,
-            /*7      */ fast_loop_nx_m_sad_kernel,  // size not supported in asm
-            /*8 64xM */ fast_loop_nx_m_sad_kernel
+            /*0 4xM  */ fast_loop_nxm_sad_kernel,
+            /*1 8xM  */ fast_loop_nxm_sad_kernel,
+            /*2 16xM */ fast_loop_nxm_sad_kernel,
+            /*3 24xM */ fast_loop_nxm_sad_kernel,
+            /*4 32xM */ fast_loop_nxm_sad_kernel,
+            /*5      */ fast_loop_nxm_sad_kernel,  // size not supported in asm
+            /*6 48xM */ fast_loop_nxm_sad_kernel,
+            /*7      */ fast_loop_nxm_sad_kernel,  // size not supported in asm
+            /*8 64xM */ fast_loop_nxm_sad_kernel
         },
         // AVX2
         {
-            /*0 4xM  */ compute4x_m_sad_avx2_intrin,
-            /*1 8xM  */ compute8x_m_sad_avx2_intrin,
-            /*2 16xM */ compute16x_m_sad_avx2_intrin,//compute16x_m_sad_avx2_intrin is slower than the SSE2 version
-            /*3 24xM */ compute24x_m_sad_avx2_intrin,
-            /*4 32xM */ compute32x_m_sad_avx2_intrin,
+            /*0 4xM  */ compute_4xm_sad_avx2_intrin,
+            /*1 8xM  */ compute_8xm_sad_avx2_intrin,
+            /*2 16xM */ compute_16xm_sad_avx2_intrin,//compute_16xm_sad_avx2_intrin is slower than the SSE2 version
+            /*3 24xM */ compute_24xm_sad_avx2_intrin,
+            /*4 32xM */ compute_32xm_sad_avx2_intrin,
             /*5      */ nxm_sad_kernel_void_func,
-            /*6 48xM */ compute48x_m_sad_avx2_intrin,
+            /*6 48xM */ compute_48xm_sad_avx2_intrin,
             /*7      */ nxm_sad_kernel_void_func,
-            /*8 64xM */ compute64x_m_sad_avx2_intrin,
+            /*8 64xM */ compute_64xm_sad_avx2_intrin,
         },
     };
 
@@ -208,15 +208,15 @@ extern "C" {
         },
         // AVX2
         {
-            /*0 4xM  */     combined_averaging4x_msad_sse2_intrin,
-            /*1 8xM  */     combined_averaging8x_msad_avx2_intrin,
-            /*2 16xM */     combined_averaging16x_msad_avx2_intrin,
-            /*3 24xM */     combined_averaging24x_msad_avx2_intrin,
-            /*4 32xM */     combined_averaging32x_msad_avx2_intrin,
+            /*0 4xM  */     combined_averaging_4xm_sad_sse2_intrin,
+            /*1 8xM  */     combined_averaging_8xm_sad_avx2_intrin,
+            /*2 16xM */     combined_averaging_16xm_sad_avx2_intrin,
+            /*3 24xM */     combined_averaging_24xm_sad_avx2_intrin,
+            /*4 32xM */     combined_averaging_32xm_sad_avx2_intrin,
             /*5      */     nxm_sad_avg_kernel_void_func,
-            /*6 48xM */     combined_averaging48x_msad_avx2_intrin,
+            /*6 48xM */     combined_averaging_48xm_sad_avx2_intrin,
             /*7      */     nxm_sad_avg_kernel_void_func,
-            /*8 64xM */     combined_averaging64x_msad_avx2_intrin
+            /*8 64xM */     combined_averaging_64xm_sad_avx2_intrin
         },
     };
 

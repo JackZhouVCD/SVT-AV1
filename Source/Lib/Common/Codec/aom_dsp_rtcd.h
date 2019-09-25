@@ -165,6 +165,38 @@ extern "C" {
     struct ConvolveParams;
     struct InterpFilterParams;
 
+    uint64_t compute_mean_helper(uint8_t *input_samples, uint32_t input_stride, uint32_t input_area_width, uint32_t input_area_height, EbBool  squared);
+    uint64_t compute_mean_avx2_helper(uint8_t *input_samples, uint32_t input_stride, uint32_t input_area_width, uint32_t input_area_height, EbBool squared);
+    RTCD_EXTERN uint64_t(*compute_mean)(uint8_t *input_samples, uint32_t input_stride, uint32_t input_area_width, uint32_t input_area_height, EbBool squared);
+
+    void unpack_8bit_helper_c(uint16_t *in16_bit_buffer, uint32_t  in_stride, uint8_t  *out8_bit_buffer, uint32_t  out8_stride, uint32_t  width, uint32_t  height, EbBool    block_size_multiple_four);
+    void unpack_8bit_helper_avx2(uint16_t *in16_bit_buffer, uint32_t  in_stride, uint8_t  *out8_bit_buffer, uint32_t  out8_stride, uint32_t  width, uint32_t  height, EbBool    block_size_multiple_four);
+    RTCD_EXTERN void(*unpack_8bit)(uint16_t *in16_bit_buffer, uint32_t  in_stride, uint8_t  *out8_bit_buffer, uint32_t  out8_stride, uint32_t  width, uint32_t  height, EbBool    block_size_multiple_four);
+
+    void pack2d_16_bit_src_helper(uint8_t     *in8_bit_buffer, uint32_t in8_stride, uint8_t *inn_bit_buffer, uint16_t *out16_bit_buffer, uint32_t inn_stride, uint32_t out_stride, uint32_t width, uint32_t height, EbBool block_size_multiple_four);
+    void pack2d_16_bit_src_avx2_helper(uint8_t     *in8_bit_buffer, uint32_t in8_stride, uint8_t *inn_bit_buffer, uint16_t *out16_bit_buffer, uint32_t inn_stride, uint32_t out_stride, uint32_t width, uint32_t height, EbBool block_size_multiple_four);
+    RTCD_EXTERN void(*pack2d_16_bit_src)(uint8_t     *in8_bit_buffer, uint32_t in8_stride, uint8_t *inn_bit_buffer, uint16_t *out16_bit_buffer, uint32_t inn_stride, uint32_t out_stride, uint32_t width, uint32_t height, EbBool block_size_multiple_four);
+
+    void unpack2d_array_16bit_helper(uint16_t *in16_bit_buffer, uint32_t  in_stride, uint8_t  *out8_bit_buffer, uint8_t  *outn_bit_buffer, uint32_t  out8_stride, uint32_t  outn_stride, uint32_t  width, uint32_t  height, EbBool    block_size_multiple_four);
+    RTCD_EXTERN void(*unpack2d_array_16bit)(uint16_t *in16_bit_buffer, uint32_t  in_stride, uint8_t  *out8_bit_buffer, uint8_t  *outn_bit_buffer, uint32_t  out8_stride, uint32_t  outn_stride, uint32_t  width, uint32_t  height, EbBool    block_size_multiple_four);
+
+    void avc_style_luma_interpolation_filter_ssse3_helper(EbByte ref_pic, uint32_t src_stride, EbByte dst, uint32_t dst_stride, uint32_t pu_width, uint32_t pu_height, EbByte temp_buf, EbBool skip, uint32_t frac_pos, uint8_t fractional_position);
+    RTCD_EXTERN void(*avc_style_luma_interpolation_filter)(EbByte ref_pic, uint32_t src_stride, EbByte dst, uint32_t dst_stride, uint32_t pu_width, uint32_t pu_height, EbByte temp_buf, EbBool skip, uint32_t frac_pos, uint8_t fractional_position);
+
+    void picture_addition_kernel_helper(uint8_t  *pred_ptr, uint32_t  pred_stride, int16_t *residual_ptr, uint32_t  residual_stride, uint8_t  *recon_ptr, uint32_t  recon_stride, uint32_t  width, uint32_t  height);
+    RTCD_EXTERN void(*picture_addition_kernel)(uint8_t  *pred_ptr, uint32_t  pred_stride, int16_t *residual_ptr, uint32_t  residual_stride, uint8_t  *recon_ptr, uint32_t  recon_stride, uint32_t  width, uint32_t  height);
+
+    uint32_t nxm_sad_kernel_helper(const uint8_t  *src, uint32_t  src_stride, const uint8_t  *ref, uint32_t  ref_stride, uint32_t  height, uint32_t  width);
+    uint32_t nxm_sad_kernel_sub_sampled_avx2_helper(const uint8_t  *src, uint32_t  src_stride, const uint8_t  *ref, uint32_t  ref_stride, uint32_t  height, uint32_t  width);
+    RTCD_EXTERN uint32_t(*nxm_sad_kernel_sub_sampled)(const uint8_t  *src, uint32_t  src_stride, const uint8_t  *ref, uint32_t  ref_stride, uint32_t  height, uint32_t  width);
+
+    uint32_t nxm_sad_kernel_avx2_helper(const uint8_t  *src, uint32_t  src_stride, const uint8_t  *ref, uint32_t  ref_stride, uint32_t  height, uint32_t  width);
+    RTCD_EXTERN uint32_t(*nxm_sad_kernel)(const uint8_t  *src, uint32_t  src_stride, const uint8_t  *ref, uint32_t  ref_stride, uint32_t  height, uint32_t  width);
+
+    uint32_t nxm_sad_avg_kernel_helper(uint8_t  *src, uint32_t  src_stride, uint8_t  *ref1, uint32_t  ref1_stride, uint8_t  *ref2, uint32_t  ref2_stride, uint32_t  height, uint32_t  width);
+    uint32_t nxm_sad_avg_kernel_avx2_helper(uint8_t  *src, uint32_t  src_stride, uint8_t  *ref1, uint32_t  ref1_stride, uint8_t  *ref2, uint32_t  ref2_stride, uint32_t  height, uint32_t  width);
+    RTCD_EXTERN uint32_t(*nxm_sad_avg_kernel)(uint8_t  *src, uint32_t     src_stride, uint8_t  *ref1, uint32_t  ref1_stride, uint8_t  *ref2, uint32_t  ref2_stride, uint32_t  height, uint32_t  width);
+
     void eb_apply_selfguided_restoration_c(const uint8_t *dat, int32_t width, int32_t height, int32_t stride, int32_t eps, const int32_t *xqd, uint8_t *dst, int32_t dst_stride, int32_t *tmpbuf, int32_t bit_depth, int32_t highbd);
     void eb_apply_selfguided_restoration_avx2(const uint8_t *dat, int32_t width, int32_t height, int32_t stride, int32_t eps, const int32_t *xqd, uint8_t *dst, int32_t dst_stride, int32_t *tmpbuf, int32_t bit_depth, int32_t highbd);
     RTCD_EXTERN void(*eb_apply_selfguided_restoration)(const uint8_t *dat, int32_t width, int32_t height, int32_t stride, int32_t eps, const int32_t *xqd, uint8_t *dst, int32_t dst_stride, int32_t *tmpbuf, int32_t bit_depth, int32_t highbd);
@@ -2660,6 +2692,32 @@ extern "C" {
         //    flags = ~HAS_AVX2;
 
         //to use C: flags=0
+
+        compute_mean = compute_mean_helper;
+        if (flags & HAS_AVX2) compute_mean = compute_mean_avx2_helper;
+
+        unpack_8bit = unpack_8bit_helper_c;
+        if (flags & HAS_AVX2) unpack_8bit = unpack_8bit_helper_avx2;
+
+        pack2d_16_bit_src = pack2d_16_bit_src_helper;
+        if (flags & HAS_AVX2) pack2d_16_bit_src = pack2d_16_bit_src_avx2_helper;
+
+        unpack2d_array_16bit = unpack2d_array_16bit_helper;
+
+        avc_style_luma_interpolation_filter = avc_style_luma_interpolation_filter_ssse3_helper;
+
+        picture_addition_kernel = picture_addition_kernel_helper;
+
+        nxm_sad_kernel_sub_sampled = nxm_sad_kernel_helper;
+        if (flags & HAS_AVX2) nxm_sad_kernel_sub_sampled = nxm_sad_kernel_sub_sampled_avx2_helper;
+
+        nxm_sad_kernel = nxm_sad_kernel_helper;
+        if (flags & HAS_AVX2) nxm_sad_kernel = nxm_sad_kernel_avx2_helper;
+
+        nxm_sad_avg_kernel = nxm_sad_avg_kernel_helper;
+        if (flags & HAS_AVX2) nxm_sad_avg_kernel = nxm_sad_avg_kernel_avx2_helper;
+
+
 
         eb_apply_selfguided_restoration = eb_apply_selfguided_restoration_c;
         if (flags & HAS_AVX2) eb_apply_selfguided_restoration = eb_apply_selfguided_restoration_avx2;

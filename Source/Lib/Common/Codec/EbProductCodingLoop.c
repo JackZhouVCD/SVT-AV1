@@ -1052,7 +1052,7 @@ static INLINE uint16_t highbd_clip_pixel_add(uint16_t dest, TranHigh trans,
 /*********************************
 * Picture Single Channel Kernel
 *********************************/
-void picture_addition_kernel(
+void picture_addition_kernel_c(
     uint8_t  *pred_ptr,
     uint32_t  pred_stride,
     int32_t *residual_ptr,
@@ -6655,7 +6655,7 @@ static EbSadKernelNxMType FUNC_TABLE compute4x4SAD_funcPtrArray[ASM_TYPE_TOTAL] 
     // C_DEFAULT
     Compute4x4SAD_Kernel,
     // SSE2
-    compute4x_m_sad_avx2_intrin,
+    compute_4xm_sad_avx2_intrin,
 };
 
 static uint32_t tab4x4[256] = {

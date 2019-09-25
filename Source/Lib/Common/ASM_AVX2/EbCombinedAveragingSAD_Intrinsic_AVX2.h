@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-    uint32_t combined_averaging8x_msad_avx2_intrin(
+    uint32_t combined_averaging_8xm_sad_avx2_intrin(
         uint8_t  *src,
         uint32_t  src_stride,
         uint8_t  *ref1,
@@ -20,7 +20,7 @@ extern "C" {
         uint32_t  height,
         uint32_t  width);
 
-    uint32_t combined_averaging16x_msad_avx2_intrin(
+    uint32_t combined_averaging_16xm_sad_avx2_intrin(
         uint8_t  *src,
         uint32_t  src_stride,
         uint8_t  *ref1,
@@ -30,7 +30,7 @@ extern "C" {
         uint32_t  height,
         uint32_t  width);
 
-    uint32_t combined_averaging24x_msad_avx2_intrin(
+    uint32_t combined_averaging_24xm_sad_avx2_intrin(
         uint8_t  *src,
         uint32_t  src_stride,
         uint8_t  *ref1,
@@ -40,7 +40,7 @@ extern "C" {
         uint32_t  height,
         uint32_t  width);
 
-    uint32_t combined_averaging32x_msad_avx2_intrin(
+    uint32_t combined_averaging_32xm_sad_avx2_intrin(
         uint8_t  *src,
         uint32_t  src_stride,
         uint8_t  *ref1,
@@ -50,7 +50,7 @@ extern "C" {
         uint32_t  height,
         uint32_t  width);
 
-    uint32_t combined_averaging48x_msad_avx2_intrin(
+    uint32_t combined_averaging_48xm_sad_avx2_intrin(
         uint8_t  *src,
         uint32_t  src_stride,
         uint8_t  *ref1,
@@ -60,7 +60,7 @@ extern "C" {
         uint32_t  height,
         uint32_t  width);
 
-    uint32_t combined_averaging64x_msad_avx2_intrin(
+    uint32_t combined_averaging_64xm_sad_avx2_intrin(
         uint8_t  *src,
         uint32_t  src_stride,
         uint8_t  *ref1,

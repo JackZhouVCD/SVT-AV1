@@ -19,7 +19,7 @@ extern "C" {
         uint32_t area_height,
         uint32_t bytes_per_sample);
 
-    extern void picture_addition_kernel(
+    extern void picture_addition_kernel_c(
         uint8_t *pred_ptr,
         uint32_t pred_stride,
         int32_t *residual_ptr,

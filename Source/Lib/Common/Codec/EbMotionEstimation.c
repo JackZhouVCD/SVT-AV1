@@ -15856,3 +15856,160 @@ EbErrorType open_loop_intra_search_sb(
     }
     return return_error;
 }
+
+uint32_t nxm_sad_kernel_helper(
+    const uint8_t  *src,
+    uint32_t  src_stride,
+    const uint8_t  *ref,
+    uint32_t  ref_stride,
+    uint32_t  height,
+    uint32_t  width) {
+    uint32_t nxm_sad = 0;
+
+    switch (width) {
+    case 4:
+    case 8:
+    case 16:
+    case 24:
+    case 32:
+    case 48:
+    case 64:
+    case 128:
+        nxm_sad = fast_loop_nxm_sad_kernel(src, src_stride, ref, ref_stride, height, width); break;
+    default:
+        assert(0);
+    }
+
+    return nxm_sad;
+};
+
+uint32_t nxm_sad_kernel_sub_sampled_avx2_helper(
+    const uint8_t  *src,
+    uint32_t  src_stride,
+    const uint8_t  *ref,
+    uint32_t  ref_stride,
+    uint32_t  height,
+    uint32_t  width) {
+    uint32_t nxm_sad = 0;
+
+    switch (width) {
+    case 4:
+        nxm_sad = compute_4xm_sad_sub_avx2_intrin(src, src_stride, ref, ref_stride, height, width); break;
+    case 8:
+        nxm_sad = compute_8xm_sad_avx2_intrin(src, src_stride, ref, ref_stride, height, width); break;
+    case 16:
+        nxm_sad = compute_16xm_sad_avx2_intrin(src, src_stride, ref, ref_stride, height, width); break;
+    case 24:
+        nxm_sad = fast_loop_nxm_sad_kernel(src, src_stride, ref, ref_stride, height, width); break;
+    case 32:
+        nxm_sad = compute_32xm_sad_avx2_intrin(src, src_stride, ref, ref_stride, height, width); break;
+    case 48:
+        nxm_sad = fast_loop_nxm_sad_kernel(src, src_stride, ref, ref_stride, height, width); break;
+    case 64:
+        nxm_sad = compute_64xm_sad_avx2_intrin(src, src_stride, ref, ref_stride, height, width); break;
+    case 128:
+        nxm_sad = fast_loop_nxm_sad_kernel(src, src_stride, ref, ref_stride, height, width); break;
+    default:
+        assert(0);
+    }
+
+    return nxm_sad;
+
+};
+
+
+uint32_t nxm_sad_kernel_avx2_helper(
+    const uint8_t  *src,
+    uint32_t  src_stride,
+    const uint8_t  *ref,
+    uint32_t  ref_stride,
+    uint32_t  height,
+    uint32_t  width) {
+
+    uint32_t nxm_sad = 0;
+
+    switch (width) {
+    case 4:
+        nxm_sad = compute_4xm_sad_avx2_intrin(src, src_stride, ref, ref_stride, height, width); break;
+    case 8:
+        nxm_sad = compute_8xm_sad_avx2_intrin(src, src_stride, ref, ref_stride, height, width); break;
+    case 16:
+        nxm_sad = compute_16xm_sad_avx2_intrin(src, src_stride, ref, ref_stride, height, width); break;
+    case 24:
+        nxm_sad = compute_24xm_sad_avx2_intrin(src, src_stride, ref, ref_stride, height, width); break;
+    case 32:
+        nxm_sad = compute_32xm_sad_avx2_intrin(src, src_stride, ref, ref_stride, height, width); break;
+    case 48:
+        nxm_sad = compute_48xm_sad_avx2_intrin(src, src_stride, ref, ref_stride, height, width); break;
+    case 64:
+    case 128:
+        nxm_sad = compute_64xm_sad_avx2_intrin(src, src_stride, ref, ref_stride, height, width); break;
+    default:
+        assert(0);
+    }
+
+    return nxm_sad;
+}
+
+uint32_t nxm_sad_avg_kernel_helper(
+    uint8_t  *src,
+    uint32_t  src_stride,
+    uint8_t  *ref1,
+    uint32_t  ref1_stride,
+    uint8_t  *ref2,
+    uint32_t  ref2_stride,
+    uint32_t  height,
+    uint32_t  width) {
+
+    uint32_t nxm_sad_avg = 0;
+
+    switch (width) {
+    case 4:
+    case 8:
+    case 16:
+    case 24:
+    case 32:
+    case 48:
+    case 64:
+        nxm_sad_avg = combined_averaging_sad(src, src_stride, ref1, ref1_stride, ref2, ref2_stride, height, width); break;
+    default:
+        assert(0);
+    }
+
+    return nxm_sad_avg;
+
+}
+
+uint32_t nxm_sad_avg_kernel_avx2_helper(
+    uint8_t  *src,
+    uint32_t  src_stride,
+    uint8_t  *ref1,
+    uint32_t  ref1_stride,
+    uint8_t  *ref2,
+    uint32_t  ref2_stride,
+    uint32_t  height,
+    uint32_t  width) {
+
+    uint32_t nxm_sad_avg = 0;
+
+    switch (width) {
+    case 4:
+        nxm_sad_avg = combined_averaging_4xm_sad_sse2_intrin(src, src_stride, ref1, ref1_stride, ref2, ref2_stride, height, width); break;
+    case 8:
+        nxm_sad_avg = combined_averaging_8xm_sad_avx2_intrin(src, src_stride, ref1, ref1_stride, ref2, ref2_stride, height, width); break;
+    case 16:
+        nxm_sad_avg = combined_averaging_16xm_sad_avx2_intrin(src, src_stride, ref1, ref1_stride, ref2, ref2_stride, height, width); break;
+    case 24:
+        nxm_sad_avg = combined_averaging_24xm_sad_avx2_intrin(src, src_stride, ref1, ref1_stride, ref2, ref2_stride, height, width); break;
+    case 32:
+        nxm_sad_avg = combined_averaging_32xm_sad_avx2_intrin(src, src_stride, ref1, ref1_stride, ref2, ref2_stride, height, width); break;
+    case 48:
+        nxm_sad_avg = combined_averaging_48xm_sad_avx2_intrin(src, src_stride, ref1, ref1_stride, ref2, ref2_stride, height, width); break;
+    case 64:
+        nxm_sad_avg = combined_averaging_64xm_sad_avx2_intrin(src, src_stride, ref1, ref1_stride, ref2, ref2_stride, height, width); break;
+    default:
+        assert(0);
+    }
+
+    return nxm_sad_avg;
+}

@@ -3315,7 +3315,7 @@ void sad_loop_kernel_avx2_intrin(
 /*******************************************************************************
 * Requirement: height % 4 = 0
 *******************************************************************************/
-uint32_t compute4x_m_sad_avx2_intrin(
+uint32_t compute_4xm_sad_avx2_intrin(
     const uint8_t  *src,   // input parameter, source samples Ptr
     uint32_t  src_stride,  // input parameter, source stride
     const uint8_t  *ref,   // input parameter, reference samples Ptr
@@ -3345,7 +3345,7 @@ uint32_t compute4x_m_sad_avx2_intrin(
 /*******************************************************************************
 * Requirement: height % 4 = 0
 *******************************************************************************/
-uint32_t compute8x_m_sad_avx2_intrin(
+uint32_t compute_8xm_sad_avx2_intrin(
     const uint8_t  *src,   // input parameter, source samples Ptr
     uint32_t  src_stride,  // input parameter, source stride
     const uint8_t  *ref,   // input parameter, reference samples Ptr
@@ -3373,7 +3373,7 @@ uint32_t compute8x_m_sad_avx2_intrin(
     return (uint32_t)_mm_cvtsi128_si32(xmm0);
 }
 
-uint32_t Compute4xMSadSub_AVX2_INTRIN(
+uint32_t compute_4xm_sad_sub_avx2_intrin(
     const uint8_t  *src,  // input parameter, source samples Ptr
     uint32_t  src_stride, // input parameter, source stride
     const uint8_t  *ref,  // input parameter, reference samples Ptr
@@ -3424,7 +3424,7 @@ static __m256i Compute16x2Sad_Kernel(const uint8_t *const src,
 /*******************************************************************************
 * Requirement: height % 4 = 0
 *******************************************************************************/
-uint32_t compute16x_m_sad_avx2_intrin(
+uint32_t compute_16xm_sad_avx2_intrin(
     const uint8_t  *src,        // input parameter, source samples Ptr
     uint32_t  src_stride,  // input parameter, source stride
     const uint8_t  *ref,        // input parameter, reference samples Ptr
@@ -3456,7 +3456,7 @@ uint32_t compute16x_m_sad_avx2_intrin(
 /*******************************************************************************
 * Requirement: height % 2 = 0
 *******************************************************************************/
-uint32_t compute24x_m_sad_avx2_intrin(
+uint32_t compute_24xm_sad_avx2_intrin(
     const uint8_t  *src,        // input parameter, source samples Ptr
     uint32_t  src_stride,  // input parameter, source stride
     const uint8_t  *ref,        // input parameter, reference samples Ptr
@@ -3485,7 +3485,7 @@ uint32_t compute24x_m_sad_avx2_intrin(
 /*******************************************************************************
 * Requirement: height % 2 = 0
 *******************************************************************************/
-uint32_t compute32x_m_sad_avx2_intrin(
+uint32_t compute_32xm_sad_avx2_intrin(
     const uint8_t  *src,   // input parameter, source samples Ptr
     uint32_t  src_stride,  // input parameter, source stride
     const uint8_t  *ref,   // input parameter, reference samples Ptr
@@ -3514,7 +3514,7 @@ uint32_t compute32x_m_sad_avx2_intrin(
 /*******************************************************************************
 * Requirement: height % 2 = 0
 *******************************************************************************/
-uint32_t compute48x_m_sad_avx2_intrin(
+uint32_t compute_48xm_sad_avx2_intrin(
     const uint8_t  *src,   // input parameter, source samples Ptr
     uint32_t  src_stride,  // input parameter, source stride
     const uint8_t  *ref,   // input parameter, reference samples Ptr
@@ -3547,7 +3547,7 @@ uint32_t compute48x_m_sad_avx2_intrin(
 /*******************************************************************************
 * Requirement: height % 2 = 0
 *******************************************************************************/
-uint32_t compute64x_m_sad_avx2_intrin(
+uint32_t compute_64xm_sad_avx2_intrin(
     const uint8_t  *src,   // input parameter, source samples Ptr
     uint32_t  src_stride,  // input parameter, source stride
     const uint8_t  *ref,   // input parameter, reference samples Ptr
@@ -4905,126 +4905,126 @@ void sad_loop_kernel_avx2_hme_l0_intrin(
 
 uint32_t eb_aom_sad4x4_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return Compute4xMSadSub_AVX2_INTRIN(src_ptr, src_stride, ref_ptr,
+    return compute_4xm_sad_sub_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 4, 4);
 }
 
 uint32_t eb_aom_sad4x8_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return Compute4xMSadSub_AVX2_INTRIN(src_ptr, src_stride, ref_ptr,
+    return compute_4xm_sad_sub_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 8, 4);
 }
 
 uint32_t eb_aom_sad4x16_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return Compute4xMSadSub_AVX2_INTRIN(src_ptr, src_stride, ref_ptr,
+    return compute_4xm_sad_sub_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 16, 4);
 }
 
 uint32_t eb_aom_sad8x4_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute8x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_8xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 4, 8);
 }
 
 uint32_t eb_aom_sad8x8_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute8x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_8xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 8, 8);
 }
 
 uint32_t eb_aom_sad8x16_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute8x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_8xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 16, 8);
 }
 
 uint32_t eb_aom_sad8x32_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute8x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_8xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 32, 8);
 }
 
 uint32_t eb_aom_sad16x4_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute16x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_16xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 4, 16);
 }
 
 uint32_t eb_aom_sad16x8_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute16x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_16xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 8, 16);
 }
 
 uint32_t eb_aom_sad16x16_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute16x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_16xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 16, 16);
 }
 
 uint32_t eb_aom_sad16x32_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute16x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_16xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 32, 16);
 }
 
 uint32_t eb_aom_sad16x64_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute16x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_16xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 64, 16);
 }
 
 uint32_t eb_aom_sad32x8_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute32x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_32xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 8, 32);
 }
 
 uint32_t eb_aom_sad32x16_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute32x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_32xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 16, 32);
 }
 
 uint32_t eb_aom_sad32x32_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute32x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_32xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 32, 32);
 }
 
 uint32_t eb_aom_sad32x64_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute32x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_32xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 64, 32);
 }
 
 uint32_t eb_aom_sad64x16_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute64x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_64xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 16, 64);
 }
 
 uint32_t eb_aom_sad64x32_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute64x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_64xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 32, 64);
 }
 
 uint32_t eb_aom_sad64x64_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
-    return compute64x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    return compute_64xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 64, 64);
 }
 
 uint32_t eb_aom_sad128x64_avx2(const uint8_t *src_ptr, int src_stride,
     const uint8_t *ref_ptr, int ref_stride) {
     unsigned int half_width = 64;
-    uint32_t sum = compute64x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    uint32_t sum = compute_64xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 64, 64);
     src_ptr += half_width;
     ref_ptr += half_width;
-    sum += compute64x_m_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
+    sum += compute_64xm_sad_avx2_intrin(src_ptr, src_stride, ref_ptr,
         ref_stride, 64, 64);
     return sum;
 }

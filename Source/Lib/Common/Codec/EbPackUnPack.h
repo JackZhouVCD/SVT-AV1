@@ -139,12 +139,12 @@ extern "C" {
     EbEncUnPack8BitDataType unpack8_bit_func_ptr_array_16_bit[2][ASM_TYPE_TOTAL] =
     {
         {
-           un_pack8_bit_data,
-           un_pack8_bit_data,
+           un_pack8_bit_data_c,
+           un_pack8_bit_data_c,
         },
         {
             // NON_AVX2
-            un_pack8_bit_data,
+            un_pack8_bit_data_c,
             // AVX2
             eb_enc_un_pack8_bit_data_avx2_intrin,
         }
@@ -161,7 +161,7 @@ extern "C" {
     EbEncUnPack8BitDataSubType unpack8_bit_safe_sub_func_ptr_array_16_bit[ASM_TYPE_TOTAL] =
     {
         // NON_AVX2
-        un_pack8_bit_data,
+        un_pack8_bit_data_c,
         // AVX2
         eb_enc_un_pack8_bit_data_avx2_intrin,
     };

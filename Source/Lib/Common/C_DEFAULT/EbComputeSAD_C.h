@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-    uint32_t fast_loop_nx_m_sad_kernel(
+    uint32_t fast_loop_nxm_sad_kernel(
         const uint8_t  *src,            // input parameter, source samples Ptr
         uint32_t  src_stride,           // input parameter, source stride
         const uint8_t  *ref,            // input parameter, reference samples Ptr

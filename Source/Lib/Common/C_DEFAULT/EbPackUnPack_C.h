@@ -49,7 +49,7 @@ extern "C" {
         uint32_t  width,
         uint32_t  height);
 
-    void un_pack8_bit_data(
+    void un_pack8_bit_data_c(
         uint16_t *in16_bit_buffer,
         uint32_t  in_stride,
         uint8_t  *out8_bit_buffer,

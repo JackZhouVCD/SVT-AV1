@@ -10,7 +10,7 @@
 #define _mm256_set_m128i(/* __m128i */ hi, /* __m128i */ lo) \
     _mm256_insertf128_si256(_mm256_castsi128_si256(lo), (hi), 0x1)
 
-uint32_t combined_averaging8x_msad_avx2_intrin(
+uint32_t combined_averaging_8xm_sad_avx2_intrin(
     uint8_t  *src,
     uint32_t  src_stride,
     uint8_t  *ref1,
@@ -56,7 +56,7 @@ static INLINE __m256i CombinedAveragingSad16x2_AVX2(const uint8_t *const src,
     return _mm256_add_epi32(sum, sad);
 }
 
-uint32_t combined_averaging16x_msad_avx2_intrin(
+uint32_t combined_averaging_16xm_sad_avx2_intrin(
     uint8_t  *src,
     uint32_t  src_stride,
     uint8_t  *ref1,
@@ -97,7 +97,7 @@ static INLINE __m256i CombinedAveragingSad24_AVX2(const uint8_t *const src,
     return _mm256_add_epi32(sum, sad);
 }
 
-uint32_t combined_averaging24x_msad_avx2_intrin(
+uint32_t combined_averaging_24xm_sad_avx2_intrin(
     uint8_t  *src,
     uint32_t  src_stride,
     uint8_t  *ref1,
@@ -140,7 +140,7 @@ static INLINE __m256i CombinedAveragingSad32_AVX2(const uint8_t *const src,
     return _mm256_add_epi32(sum, sad);
 }
 
-uint32_t combined_averaging32x_msad_avx2_intrin(
+uint32_t combined_averaging_32xm_sad_avx2_intrin(
     uint8_t  *src,
     uint32_t  src_stride,
     uint8_t  *ref1,
@@ -172,7 +172,7 @@ uint32_t combined_averaging32x_msad_avx2_intrin(
     return _mm_cvtsi128_si32(sad);
 }
 
-uint32_t combined_averaging48x_msad_avx2_intrin(
+uint32_t combined_averaging_48xm_sad_avx2_intrin(
     uint8_t  *src,
     uint32_t  src_stride,
     uint8_t  *ref1,
@@ -207,7 +207,7 @@ uint32_t combined_averaging48x_msad_avx2_intrin(
     return _mm_cvtsi128_si32(sad);
 }
 
-uint32_t combined_averaging64x_msad_avx2_intrin(
+uint32_t combined_averaging_64xm_sad_avx2_intrin(
     uint8_t  *src,
     uint32_t  src_stride,
     uint8_t  *ref1,
