@@ -8891,6 +8891,16 @@ BlockSize av1_predict_max_partition(
 
     aom_clear_system_state();
     av1_nn_predict(features, nn_config, 1, scores);
+
+    int i;
+    printf("\n");
+    for( i = 0; i < FEATURE_SIZE_MAX_MIN_PART_PRED; i++)
+        printf("%.6f\t",features[i]);
+    printf("||\t");
+    for (i = 0; i < MAX_NUM_CLASSES_MAX_MIN_PART_PRED; i++)
+        printf("%.6f\t",scores[i]);
+    printf("\n");
+
     av1_nn_softmax(scores, probs, MAX_NUM_CLASSES_MAX_MIN_PART_PRED);
 
     int result = MAX_NUM_CLASSES_MAX_MIN_PART_PRED - 1;

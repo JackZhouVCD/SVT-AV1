@@ -380,6 +380,9 @@ EbErrorType load_default_buffer_configuration_settings(
     encDecSegW = 1;
 #endif
 
+    encDecSegH = 1;
+    encDecSegW = 1;
+
     uint32_t meSegH     = (((sequence_control_set_ptr->max_input_luma_height + 32) / BLOCK_SIZE_64) < 6) ? 1 : 6;
     uint32_t meSegW     = (((sequence_control_set_ptr->max_input_luma_width + 32) / BLOCK_SIZE_64) < 10) ? 1 : 10;
 
