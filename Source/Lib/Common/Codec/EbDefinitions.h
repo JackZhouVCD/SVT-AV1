@@ -1,18 +1,18 @@
 /*
-* Copyright(c) 2019 Intel Corporation
-* SPDX - License - Identifier: BSD - 2 - Clause - Patent
-*/
+ * Copyright(c) 2019 Intel Corporation
+ * SPDX - License - Identifier: BSD - 2 - Clause - Patent
+ */
 
 /*
-* Copyright (c) 2016, Alliance for Open Media. All rights reserved
-*
-* This source code is subject to the terms of the BSD 2 Clause License and
-* the Alliance for Open Media Patent License 1.0. If the BSD 2 Clause License
-* was not distributed with this source code in the LICENSE file, you can
-* obtain it at www.aomedia.org/license/software. If the Alliance for Open
-* Media Patent License 1.0 was not distributed with this source code in the
-* PATENTS file, you can obtain it at www.aomedia.org/license/patent.
-*/
+ * Copyright (c) 2016, Alliance for Open Media. All rights reserved
+ *
+ * This source code is subject to the terms of the BSD 2 Clause License and
+ * the Alliance for Open Media Patent License 1.0. If the BSD 2 Clause License
+ * was not distributed with this source code in the LICENSE file, you can
+ * obtain it at www.aomedia.org/license/software. If the Alliance for Open
+ * Media Patent License 1.0 was not distributed with this source code in the
+ * PATENTS file, you can obtain it at www.aomedia.org/license/patent.
+ */
 
 #ifndef EbDefinitions_h
 #define EbDefinitions_h
@@ -32,121 +32,176 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define TX_SIZE_EARLY_EXIT          1 // Exit TX size search when all coefficients are zero.
+#define TX_SIZE_EARLY_EXIT \
+    1  // Exit TX size search when all coefficients are zero.
 
-#define   SINGLE_CORE_ENCODE   1
+#define SINGLE_CORE_ENCODE 1
 #if SINGLE_CORE_ENCODE
-#define SERIAL_MODE                  1 // Change ressource allocations  to optimize single core operating mode
-#define OUT_ALLOC                    1 // Output bitsream allocation at run time for both single/multi core
-#define PAREF_OUT                    1 // Disconnect pa ref  from input for both single/multi core
-#define NO_THREAD_PIN                1 // Adding the ability to not pin the -lp 1 use case to core 0
+#define SERIAL_MODE \
+    1  // Change ressource allocations  to optimize single core operating mode
+#define OUT_ALLOC \
+    1  // Output bitsream allocation at run time for both single/multi core
+#define PAREF_OUT 1  // Disconnect pa ref  from input for both single/multi core
+#define NO_THREAD_PIN \
+    1  // Adding the ability to not pin the -lp 1 use case to core 0
 #endif
-#define INIT_GM_FIX           1 // initilize global motion to be OFF for all references frames.
-#define REVERT_ALTREF_FIX     1 // put back padding r2r fix for altref
+#define INIT_GM_FIX \
+    1  // initilize global motion to be OFF for all references frames.
+#define REVERT_ALTREF_FIX 1  // put back padding r2r fix for altref
 
-#define ENHANCED_M0_SETTINGS         1 // Updated M0 settings(optimized independent chroma search for all layers, conservative coeff - based NSQ cands reduction, shut coeff - based skip tx size search, warped for all layers, SUB - SAD as ME search method for non - SC only)
-#define MULTI_PASS_PD                1 // Multi-Pass Partitioning Depth (Multi-Pass PD) performs multiple PD stages for the same SB towards 1 final Partitioning Structure. As we go from PDn to PDn + 1, the prediction accuracy of the MD feature(s) increases while the number of block(s) decreases
-#define RATE_ESTIMATION_UPDATE       1 // Adding the rate estimation updates used in MD for missing syntax elements
-#define HBD_CLEAN_UP                 1
+#define ENHANCED_M0_SETTINGS \
+    1  // Updated M0 settings(optimized independent chroma search for all
+       // layers, conservative coeff - based NSQ cands reduction, shut coeff -
+       // based skip tx size search, warped for all layers, SUB - SAD as ME
+       // search method for non - SC only)
+#define MULTI_PASS_PD \
+    1  // Multi-Pass Partitioning Depth (Multi-Pass PD) performs multiple PD
+       // stages for the same SB towards 1 final Partitioning Structure. As we
+       // go from PDn to PDn + 1, the prediction accuracy of the MD feature(s)
+       // increases while the number of block(s) decreases
+#define RATE_ESTIMATION_UPDATE \
+    1  // Adding the rate estimation updates used in MD for missing syntax
+       // elements
+#define HBD_CLEAN_UP 1
 
-#define HBD2_COMP                    1 // Inter-Inter compound mode HBD2
-#define HBD2_PME                     1 // Predictive ME (PME) HBD2
-#define HBD2_OBMC                    1 // OBMC semi-lossless for HBD1 & HBD2
+#define HBD2_COMP 1  // Inter-Inter compound mode HBD2
+#define HBD2_PME 1   // Predictive ME (PME) HBD2
+#define HBD2_OBMC 1  // OBMC semi-lossless for HBD1 & HBD2
 
-#define IFS_8BIT_MD                  1
+#define IFS_8BIT_MD 1
 
-#define COMP_HBD                     1
-#define INTERINTRA_HBD               1
-#define ATB_HBD                      1
-#define ATB_FIX                      1
+#define COMP_HBD 1
+#define INTERINTRA_HBD 1
+#define ATB_HBD 1
+#define ATB_FIX 1
 
-#define M0_OPT                       1
-#define PRESETS_TUNE                 1
-#define PRESETS_OPT                  1
+#define M0_OPT 1
+#define PRESETS_TUNE 1
+#define PRESETS_OPT 1
 
 /* Note: shutting the macro PAL_SUP will not give SS as pcs->palette_mode = 0
    rate estimation is changed for I frame + enabled sc for P (rate estimation
    is a result changed for P frames)
 */
-#define PAL_SUP                      1 //Palette prediction support.
+#define PAL_SUP 1  // Palette prediction support.
 #if PAL_SUP
-#define PAL_CLASS   1
+#define PAL_CLASS 1
 #endif
 
-#define AUTO_MAX_PARTITION           1 // Shortcut to skip search depths depending on motion estimation info and statistics
+#define AUTO_MAX_PARTITION \
+    1  // Shortcut to skip search depths depending on motion estimation info and
+       // statistics
 
-#define LESS_RECTANGULAR_CHECK_LEVEL 1 // Shortcut to skip a/b shapes depending on SQ/H/V shape costs
+#define LESS_RECTANGULAR_CHECK_LEVEL \
+    1  // Shortcut to skip a/b shapes depending on SQ/H/V shape costs
 
-#define INTER_INTRA_CLASS_PRUNING    1
+#define INTER_INTRA_CLASS_PRUNING 1
 
-#define FIX_ALTREF                   1 // Address ALTREF mismatch between rtime-m0-test and master: fixed actual_future_pics derivation, shut padding of the central frame, fixed end past frame index prior to window shrinking
-#define FIX_NEAREST_NEW              1 // Address NEAREST_NEW mismatch between rtime-m0-test and master: fixed injection and fixed settings
-#define FIX_ESTIMATE_INTRA           1 // Address ESTIMATE_INTRA mismatch between rtime-m0-test and master: fixed settings
-#define FIX_SKIP_REDUNDANT_BLOCK     1 // Address SKIP_REDUNDANT_BLOCK mismatch between rtime-m0-test and master: fixed the action to bypass MD
-#define FIX_COEF_BASED_ATB_SKIP      1 // Address COEF_BASED_ATB_SKIP mismatch between rtime-m0-test and master: reset coeff_based_skip_atb @ each SB
-#define FIX_WM_SETTINGS              1 // Address WM_SETTINGS mismatch between rtime-m0-test and master: fixed settings
-#define FIX_ENABLE_CDF_UPDATE        1 // Address ENABLE_CDF_UPDATE mismatch between rtime-m0-test and master: removed useless update
-#define FIX_SORTING_METHOD           1 // Address SORTING mismatch between rtime-m0-test and master: used same method
-#define FIX_SETTINGS_RESET           1 // Address SEGMENT_RESET mismatch between rtime-m0-test and master: only @ 1st segment
-#define FIX_COMPOUND                 1 // Address COMPOUND mismatch between rtime-m0-test and master: used block size @ the derivation of compound count
+#define FIX_ALTREF \
+    1  // Address ALTREF mismatch between rtime-m0-test and master: fixed
+       // actual_future_pics derivation, shut padding of the central frame,
+       // fixed end past frame index prior to window shrinking
+#define FIX_NEAREST_NEW \
+    1  // Address NEAREST_NEW mismatch between rtime-m0-test and master: fixed
+       // injection and fixed settings
+#define FIX_ESTIMATE_INTRA \
+    1  // Address ESTIMATE_INTRA mismatch between rtime-m0-test and master:
+       // fixed settings
+#define FIX_SKIP_REDUNDANT_BLOCK \
+    1  // Address SKIP_REDUNDANT_BLOCK mismatch between rtime-m0-test and
+       // master: fixed the action to bypass MD
+#define FIX_COEF_BASED_ATB_SKIP \
+    1  // Address COEF_BASED_ATB_SKIP mismatch between rtime-m0-test and master:
+       // reset coeff_based_skip_atb @ each SB
+#define FIX_WM_SETTINGS \
+    1  // Address WM_SETTINGS mismatch between rtime-m0-test and master: fixed
+       // settings
+#define FIX_ENABLE_CDF_UPDATE \
+    1  // Address ENABLE_CDF_UPDATE mismatch between rtime-m0-test and master:
+       // removed useless update
+#define FIX_SORTING_METHOD \
+    1  // Address SORTING mismatch between rtime-m0-test and master: used same
+       // method
+#define FIX_SETTINGS_RESET \
+    1  // Address SEGMENT_RESET mismatch between rtime-m0-test and master: only
+       // @ 1st segment
+#define FIX_COMPOUND \
+    1  // Address COMPOUND mismatch between rtime-m0-test and master: used block
+       // size @ the derivation of compound count
 
-#define OBMC_FLAG            1 // OBMC motion mode flag
+#define OBMC_FLAG 1  // OBMC motion mode flag
 
-#define INJECT_NEW_NEAR_NEAR_NEW   1   // Inject NEW_NEAR / NEAR_NEW inter prediction
-#define FILTER_INTRA_FLAG    1 // Filter intra prediction
+#define INJECT_NEW_NEAR_NEAR_NEW \
+    1                        // Inject NEW_NEAR / NEAR_NEW inter prediction
+#define FILTER_INTRA_FLAG 1  // Filter intra prediction
 
+#define II_COMP_FLAG 1     // InterIntra compound
+#define PAETH_HBD 1        // Enbale Intra PAETH for 10bit
+#define INTER_INTER_HBD 1  // Upgrade InterInter compound 10bit
+#define INTER_INTRA_HBD 1  // Upgrade InterIntra compound 10bit
+#define ATB_10_BIT 1       // Upgrade ATB  10bit
 
-#define II_COMP_FLAG                 1 // InterIntra compound
-#define PAETH_HBD                    1 // Enbale Intra PAETH for 10bit
-#define INTER_INTER_HBD              1 // Upgrade InterInter compound 10bit
-#define INTER_INTRA_HBD              1 // Upgrade InterIntra compound 10bit
-#define ATB_10_BIT                   1 // Upgrade ATB  10bit
-
-#define PRED_CHANGE                  1 // Change the MRP in 4L Pictures 3, 5 , 7 and 9 use 1 as the reference
-#define PRED_CHANGE_5L               1 // Change the MRP in 5L Pictures 3, 5 , 7 and 9 use 1 as the reference, 11, 13, 15 and 17 use 9 as the reference
-#define PRED_CHANGE_MOD              1 // Reorder the references for MRP
-#define SPEED_OPT                    1 // Speed optimization(s)
-#define GLOBAL_WARPED_MOTION         1 // Global warped motion detection and insertion
-#define GM_OPT                       1 // Perform global motion estimation on a down-sampled version of the input picture
+#define PRED_CHANGE \
+    1  // Change the MRP in 4L Pictures 3, 5 , 7 and 9 use 1 as the reference
+#define PRED_CHANGE_5L \
+    1  // Change the MRP in 5L Pictures 3, 5 , 7 and 9 use 1 as the reference,
+       // 11, 13, 15 and 17 use 9 as the reference
+#define PRED_CHANGE_MOD 1       // Reorder the references for MRP
+#define SPEED_OPT 1             // Speed optimization(s)
+#define GLOBAL_WARPED_MOTION 1  // Global warped motion detection and insertion
+#define GM_OPT \
+    1  // Perform global motion estimation on a down-sampled version of the
+       // input picture
 
 #ifndef NON_AVX512_SUPPORT
 #define NON_AVX512_SUPPORT
 #endif
 
-#define MR_MODE                           0
+#define MR_MODE 0
 
-#define WARP_UPDATE                       1 // Modified Warp settings: ON for MR mode. ON for ref frames in M0
-#define UPDATE_CDEF                       1 // Update bit cost estimation for CDEF filter
-#define EIGTH_PEL_MV                      1
-#define EIGHT_PEL_PREDICTIVE_ME           1
-#define EIGHT_PEL_FIX                     1 // Improve the 8th pel performance by shutting it based on the qindex and bug fixes
-#define HIGH_PRECISION_MV_QTHRESH         150
-#define COMP_INTERINTRA                   1 // InterIntra mode support
+#define WARP_UPDATE \
+    1  // Modified Warp settings: ON for MR mode. ON for ref frames in M0
+#define UPDATE_CDEF 1  // Update bit cost estimation for CDEF filter
+#define EIGTH_PEL_MV 1
+#define EIGHT_PEL_PREDICTIVE_ME 1
+#define EIGHT_PEL_FIX \
+    1  // Improve the 8th pel performance by shutting it based on the qindex and
+       // bug fixes
+#define HIGH_PRECISION_MV_QTHRESH 150
+#define COMP_INTERINTRA 1  // InterIntra mode support
 
-#define ENHANCE_ATB                       1
+#define ENHANCE_ATB 1
 
-#define RDOQ_CHROMA                       1
+#define RDOQ_CHROMA 1
 
+#define TWO_PASS \
+    1  // Two pass encoding. For now, the encoder is called two times and data
+       // transfered using file. Actions in the second pass: Frame and SB QP
+       // assignment and temporal filtering strenght change
+#define TWO_PASS_USE_2NDP_ME_IN_1STP \
+    1  // Add a config parameter to the first pass to use the ME settings of the
+       // second pass
 
-#define TWO_PASS                          1 // Two pass encoding. For now, the encoder is called two times and data transfered using file.
-                                            // Actions in the second pass: Frame and SB QP assignment and temporal filtering strenght change
-#define TWO_PASS_USE_2NDP_ME_IN_1STP      1 // Add a config parameter to the first pass to use the ME settings of the second pass
+#define REMOVE_MD_STAGE_1 1  // Simplified MD Staging; removed md_stage_1
+#define NON_KF_INTRA_TF_FIX \
+    1  // Fix temporal filtering for non-key Intra frames
 
-#define REMOVE_MD_STAGE_1                 1 // Simplified MD Staging; removed md_stage_1
-#define NON_KF_INTRA_TF_FIX               1 // Fix temporal filtering for non-key Intra frames
+#define TWO_PASS_IMPROVEMENT \
+    1  // Tune 2 pass for better Luma by adjusting the reference area and the
+       // actions
+// FOR DEBUGGING - Do not remove
+#define NO_ENCDEC \
+    0  // bypass encDec to test cmpliance of MD. complained achieved when
+       // skip_flag is OFF. Port sample code from VCI-SW_AV1_Candidate1 branch
 
-#define TWO_PASS_IMPROVEMENT              1 // Tune 2 pass for better Luma by adjusting the reference area and the actions
-//FOR DEBUGGING - Do not remove
-#define NO_ENCDEC                         0 // bypass encDec to test cmpliance of MD. complained achieved when skip_flag is OFF. Port sample code from VCI-SW_AV1_Candidate1 branch
-
-#define ADP_STATS_PER_LAYER                             0
-#define AOM_INTERP_EXTEND                               4
-#define OPTIMISED_EX_SUBPEL                             1
+#define ADP_STATS_PER_LAYER 0
+#define AOM_INTERP_EXTEND 4
+#define OPTIMISED_EX_SUBPEL 1
 
 #define AOM_LEFT_TOP_MARGIN_PX(subsampling) \
-  ((AOM_BORDER_IN_PIXELS >> subsampling) - AOM_INTERP_EXTEND)
+    ((AOM_BORDER_IN_PIXELS >> subsampling) - AOM_INTERP_EXTEND)
 #define AOM_LEFT_TOP_MARGIN_SCALED(subsampling) \
-  (AOM_LEFT_TOP_MARGIN_PX(subsampling) << SCALE_SUBPEL_BITS)
+    (AOM_LEFT_TOP_MARGIN_PX(subsampling) << SCALE_SUBPEL_BITS)
 
 #if OPTIMISED_EX_SUBPEL
 #define H_PEL_SEARCH_WIND 3  // 1/2-pel serach window
@@ -154,32 +209,31 @@ extern "C" {
 #define H_PEL_SEARCH_WIND 4  // 1/2-pel serach window
 #endif
 #define Q_PEL_SEARCH_WIND 2  // 1/4-pel serach window
-#define HP_REF_OPT        1  // Remove redundant positions.
+#define HP_REF_OPT 1         // Remove redundant positions.
 typedef enum ME_HP_MODE {
-    EX_HP_MODE = 0,       // Exhaustive  1/2-pel serach mode.
-    REFINMENT_HP_MODE = 1 // Refinement 1/2-pel serach mode.
+    EX_HP_MODE = 0,        // Exhaustive  1/2-pel serach mode.
+    REFINMENT_HP_MODE = 1  // Refinement 1/2-pel serach mode.
 } ME_HP_MODE;
 typedef enum ME_QP_MODE {
-    EX_QP_MODE = 0,       // Exhaustive  1/4-pel serach mode.
-    REFINMENT_QP_MODE = 1 // Refinement 1/4-pel serach mode.
+    EX_QP_MODE = 0,        // Exhaustive  1/4-pel serach mode.
+    REFINMENT_QP_MODE = 1  // Refinement 1/4-pel serach mode.
 } ME_QP_MODE;
 #if GM_OPT
 typedef enum GM_LEVEL {
-    GM_FULL         = 0,       // Exhaustive search mode.
-    GM_DOWN         = 1,       // Downsampled search mode, with a downsampling factor of 2 in each dimension
-    GM_TRAN_ONLY    = 2        // Translation only using ME MV.
+    GM_FULL = 0,  // Exhaustive search mode.
+    GM_DOWN = 1,  // Downsampled search mode, with a downsampling factor of 2 in
+                  // each dimension
+    GM_TRAN_ONLY = 2  // Translation only using ME MV.
 } GM_LEVEL;
 #endif
-struct Buf2D
-{
+struct Buf2D {
     uint8_t *buf;
     uint8_t *buf0;
     int width;
     int height;
     int stride;
 };
-typedef struct MvLimits
-{
+typedef struct MvLimits {
     int col_min;
     int col_max;
     int row_min;
@@ -193,8 +247,8 @@ typedef struct {
 
 /*!\brief force enum to be unsigned 1 byte*/
 #define UENUM1BYTE(enumvar) \
-  ;                         \
-  typedef uint8_t enumvar
+    ;                       \
+    typedef uint8_t enumvar
 
 enum {
     DIAMOND = 0,
@@ -210,72 +264,76 @@ enum {
 /****************** Pre-defined Values ******************/
 /********************************************************/
 
-#define ALTREF_MAX_NFRAMES 10 // maximum number of frames allowed for the Alt-ref picture computation
-                              // this number can be increased by increasing the constant
-                              // FUTURE_WINDOW_WIDTH defined in EbPictureDecisionProcess.c
+#define ALTREF_MAX_NFRAMES \
+    10  // maximum number of frames allowed for the Alt-ref picture computation
+        // this number can be increased by increasing the constant
+        // FUTURE_WINDOW_WIDTH defined in EbPictureDecisionProcess.c
 #define ALTREF_MAX_STRENGTH 6
 
-#define PAD_VALUE                                (128+32)
+#define PAD_VALUE (128 + 32)
 
 /* Use open-loop data to predict the NSQ partitions. */
 #if MULTI_PASS_PD
-#define PREDICT_NSQ_SHAPE                               0 // to set to 0
+#define PREDICT_NSQ_SHAPE 0  // to set to 0
 #else
-#define PREDICT_NSQ_SHAPE                               1
+#define PREDICT_NSQ_SHAPE 1
 #endif
 #if PREDICT_NSQ_SHAPE
-#define NUMBER_OF_DEPTH                                 6
-#define NUMBER_OF_SHAPES                                10
-#define ADD_SAD_FOR_128X128                             1
-#define ADJUST_NSQ_RANK_BASED_ON_NEIGH                  1
-#define COMBINE_MDC_NSQ_TABLE                           1
-#define ADD_SUPPORT_TO_SKIP_PART_N                      1
-#define ADD_MDC_REFINEMENT_LOOP                         1
-#define ADD_MDC_FULL_COST                               1
-#define NSQ_TAB_SIZE                                    8
-#define MAX_MDC_LEVEL                                   8
-#define MDC_ADAPTIVE_LEVEL                              1
+#define NUMBER_OF_DEPTH 6
+#define NUMBER_OF_SHAPES 10
+#define ADD_SAD_FOR_128X128 1
+#define ADJUST_NSQ_RANK_BASED_ON_NEIGH 1
+#define COMBINE_MDC_NSQ_TABLE 1
+#define ADD_SUPPORT_TO_SKIP_PART_N 1
+#define ADD_MDC_REFINEMENT_LOOP 1
+#define ADD_MDC_FULL_COST 1
+#define NSQ_TAB_SIZE 8
+#define MAX_MDC_LEVEL 8
+#define MDC_ADAPTIVE_LEVEL 1
 #else
 #if MULTI_PASS_PD
-#define NSQ_TAB_SIZE                                    8
-#define NUMBER_OF_DEPTH                                 6
-#define NUMBER_OF_SHAPES                                10
+#define NSQ_TAB_SIZE 8
+#define NUMBER_OF_DEPTH 6
+#define NUMBER_OF_SHAPES 10
 #else
-#define NSQ_TAB_SIZE                                    6
+#define NSQ_TAB_SIZE 6
 #endif
 #endif
 
 //  Delta QP support
-#define ADD_DELTA_QP_SUPPORT                      1  // Add delta QP support
-#define BLOCK_MAX_COUNT_SB_128                    4421  // TODO: reduce alloction for 64x64
-#define BLOCK_MAX_COUNT_SB_64                     1101  // TODO: reduce alloction for 64x64
-#define MAX_TXB_COUNT                             4 // Maximum number of transform blocks.
+#define ADD_DELTA_QP_SUPPORT 1       // Add delta QP support
+#define BLOCK_MAX_COUNT_SB_128 4421  // TODO: reduce alloction for 64x64
+#define BLOCK_MAX_COUNT_SB_64 1101   // TODO: reduce alloction for 64x64
+#define MAX_TXB_COUNT 4              // Maximum number of transform blocks.
 #if II_COMP_FLAG
 #if OBMC_FLAG
 #if FILTER_INTRA_FLAG
-#define MAX_NFL                                 125 // Maximum number of candidates MD can support
+#define MAX_NFL 125  // Maximum number of candidates MD can support
 #else
-#define MAX_NFL                                 120 // Maximum number of candidates MD can support
+#define MAX_NFL 120  // Maximum number of candidates MD can support
 #endif
 #else
-#define MAX_NFL                                  95
+#define MAX_NFL 95
 #endif
 #else
-#define MAX_NFL                                   80
+#define MAX_NFL 80
 #endif
-#define MAX_NFL_BUFF                              (MAX_NFL + CAND_CLASS_TOTAL)  //need one extra temp buffer for each fast loop call
-#define MAX_LAD                                   120 // max lookahead-distance 2x60fps
-#define ROUND_UV(x) (((x)>>3)<<3)
+#define MAX_NFL_BUFF \
+    (MAX_NFL +       \
+     CAND_CLASS_TOTAL)  // need one extra temp buffer for each fast loop call
+#define MAX_LAD 120     // max lookahead-distance 2x60fps
+#define ROUND_UV(x) (((x) >> 3) << 3)
 #define AV1_PROB_COST_SHIFT 9
 #define AOMINNERBORDERINPIXELS 160
 #define SWITCHABLE_FILTER_CONTEXTS ((SWITCHABLE_FILTERS + 1) * 4)
-#define MAX_MB_PLANE   3
+#define MAX_MB_PLANE 3
 #define CFL_MAX_BlockSize (BLOCK_32X32)
 #define CFL_BUF_LINE (32)
 #define CFL_BUF_LINE_I128 (CFL_BUF_LINE >> 3)
 #define CFL_BUF_LINE_I256 (CFL_BUF_LINE >> 4)
 #define CFL_BUF_SQUARE (CFL_BUF_LINE * CFL_BUF_LINE)
-/***********************************    AV1_OBU     ********************************/
+/***********************************    AV1_OBU
+ * ********************************/
 #define INVALID_NEIGHBOR_DATA 0xFFu
 #define CONFIG_BITSTREAM_DEBUG 0
 #define CONFIG_BUFFER_MODEL 1
@@ -289,8 +347,8 @@ enum {
 #define MAX_SB_SIZE_LOG2 7
 #define MAX_SB_SIZE (1 << MAX_SB_SIZE_LOG2)
 #define MAX_SB_SQUARE (MAX_SB_SIZE * MAX_SB_SIZE)
-#define SB_STRIDE_Y    MAX_SB_SIZE
-#define SB_STRIDE_UV  (MAX_SB_SIZE>>1)
+#define SB_STRIDE_Y MAX_SB_SIZE
+#define SB_STRIDE_UV (MAX_SB_SIZE >> 1)
 
 // Min superblock size
 #define MIN_SB_SIZE_LOG2 6
@@ -374,7 +432,7 @@ one more than the minimum. */
 // Pad 16 extra bytes to avoid reading overflow in SIMD optimization.
 #define TX_PAD_END 16
 #define TX_PAD_2D \
-((MAX_TX_SIZE + TX_PAD_HOR) * (MAX_TX_SIZE + TX_PAD_VER) + TX_PAD_END)
+    ((MAX_TX_SIZE + TX_PAD_HOR) * (MAX_TX_SIZE + TX_PAD_VER) + TX_PAD_END)
 #define COMPOUND_WEIGHT_MODE DIST
 #define DIST_PRECISION_BITS 4
 #define DIST_PRECISION (1 << DIST_PRECISION_BITS)  // 16
@@ -386,7 +444,7 @@ one more than the minimum. */
 #define PROFILE_BITS 3
 
 // AV1 Loop Filter
-#define AV1_LF                                    1  // AV1 Loop Filter
+#define AV1_LF 1  // AV1 Loop Filter
 #if AV1_LF
 #define LF_SHARPNESS 0
 #endif
@@ -410,24 +468,24 @@ typedef int16_t InterpKernel[SUBPEL_TAPS];
 /***************************************************/
 void aom_reset_mmx_state(void);
 extern void RunEmms();
-#define aom_clear_system_state() RunEmms() //aom_reset_mmx_state()
+#define aom_clear_system_state() RunEmms()  // aom_reset_mmx_state()
 
 /* Shift down with rounding for use when n >= 0, value >= 0 */
-#define ROUND_POWER_OF_TWO(value, n) (((value)+(((1 << (n)) >> 1))) >> (n))
+#define ROUND_POWER_OF_TWO(value, n) (((value) + (((1 << (n)) >> 1))) >> (n))
 
 /* Shift down with rounding for signed integers, for use when n >= 0 */
-#define ROUND_POWER_OF_TWO_SIGNED(value, n)           \
+#define ROUND_POWER_OF_TWO_SIGNED(value, n)             \
     (((value) < 0) ? -ROUND_POWER_OF_TWO(-(value), (n)) \
-                 : ROUND_POWER_OF_TWO((value), (n)))
+                   : ROUND_POWER_OF_TWO((value), (n)))
 
 /* Shift down with rounding for use when n >= 0, value >= 0 for (64 bit) */
 #define ROUND_POWER_OF_TWO_64(value, n) \
     (((value) + ((((int64_t)1 << (n)) >> 1))) >> (n))
 
 /* Shift down with rounding for signed integers, for use when n >= 0 (64 bit) */
-#define ROUND_POWER_OF_TWO_SIGNED_64(value, n)           \
+#define ROUND_POWER_OF_TWO_SIGNED_64(value, n)             \
     (((value) < 0) ? -ROUND_POWER_OF_TWO_64(-(value), (n)) \
-                 : ROUND_POWER_OF_TWO_64((value), (n)))
+                   : ROUND_POWER_OF_TWO_64((value), (n)))
 
 #define IS_POWER_OF_TWO(x) (((x) & ((x)-1)) == 0)
 
@@ -435,14 +493,14 @@ extern void RunEmms();
 #define EB_EXTERN extern "C"
 #else
 #define EB_EXTERN
-#endif // __cplusplus
+#endif  // __cplusplus
 
 #define INLINE __inline
 #define RESTRICT
 #ifdef _WIN32
-#define FOPEN(f,s,m) fopen_s(&f,s,m)
+#define FOPEN(f, s, m) fopen_s(&f, s, m)
 #else
-#define FOPEN(f,s,m) f=fopen(s,m)
+#define FOPEN(f, s, m) f = fopen(s, m)
 #endif
 
 #define IMPLIES(a, b) (!(a) || (b))  //  Logical 'a implies b' (or 'a -> b')
@@ -468,29 +526,29 @@ extern void RunEmms();
 #define AOM_INLINE __inline
 #else
 #define AOM_FORCE_INLINE __inline__ __attribute__((always_inline))
-    // TODO(jbb): Allow a way to force inline off for older compilers.
+// TODO(jbb): Allow a way to force inline off for older compilers.
 #define AOM_INLINE inline
 #endif
 
 #define SIMD_INLINE static AOM_FORCE_INLINE
 
-    //*********************************************************************************************************************//
-    // mem.h
-    /* shift right or left depending on sign of n */
+//*********************************************************************************************************************//
+// mem.h
+/* shift right or left depending on sign of n */
 #define RIGHT_SIGNED_SHIFT(value, n) \
-((n) < 0 ? ((value) << (-(n))) : ((value) >> (n)))
-    //*********************************************************************************************************************//
-    // cpmmom.h
-    // Only need this for fixed-size arrays, for structs just assign.
-#define av1_copy(dest, src)              \
-{                                      \
-    assert(sizeof(dest) == sizeof(src)); \
-    memcpy(dest, src, sizeof(src));      \
-}
+    ((n) < 0 ? ((value) << (-(n))) : ((value) >> (n)))
+//*********************************************************************************************************************//
+// cpmmom.h
+// Only need this for fixed-size arrays, for structs just assign.
+#define av1_copy(dest, src)                  \
+    {                                        \
+        assert(sizeof(dest) == sizeof(src)); \
+        memcpy(dest, src, sizeof(src));      \
+    }
 
-    // mem_ops.h
+// mem_ops.h
 #ifndef MAU_T
-    /* Minimum Access Unit for this target */
+/* Minimum Access Unit for this target */
 #define MAU_T uint8_t
 #endif
 
@@ -521,8 +579,7 @@ static __inline void mem_put_le32(void *vmem, MEM_VALUE_T val) {
 
 typedef uint16_t ConvBufType;
 
-typedef struct ConvolveParams
-{
+typedef struct ConvolveParams {
     int32_t ref;
     int32_t do_average;
     ConvBufType *dst;
@@ -538,15 +595,14 @@ typedef struct ConvolveParams
 } ConvolveParams;
 
 // texture component type
-typedef enum ATTRIBUTE_PACKED
-{
-    COMPONENT_LUMA = 0,            // luma
-    COMPONENT_CHROMA = 1,            // chroma (Cb+Cr)
-    COMPONENT_CHROMA_CB = 2,            // chroma Cb
-    COMPONENT_CHROMA_CR = 3,            // chroma Cr
-    COMPONENT_ALL = 4,            // Y+Cb+Cr
+typedef enum ATTRIBUTE_PACKED {
+    COMPONENT_LUMA = 0,       // luma
+    COMPONENT_CHROMA = 1,     // chroma (Cb+Cr)
+    COMPONENT_CHROMA_CB = 2,  // chroma Cb
+    COMPONENT_CHROMA_CR = 3,  // chroma Cr
+    COMPONENT_ALL = 4,        // Y+Cb+Cr
     COMPONENT_NONE = 15
-}COMPONENT_TYPE;
+} COMPONENT_TYPE;
 
 static INLINE int32_t clamp(int32_t value, int32_t low, int32_t high) {
     return value < low ? low : (value > high ? high : value);
@@ -573,7 +629,7 @@ static INLINE unsigned int negative_to_zero(int value) {
     return value & ~(value >> (sizeof(value) * 8 - 1));
 }
 
-static INLINE int av1_num_planes(EbColorConfig   *color_info) {
+static INLINE int av1_num_planes(EbColorConfig *color_info) {
     return color_info->mono_chrome ? 1 : MAX_MB_PLANE;
 }
 
@@ -626,28 +682,28 @@ typedef enum MD_STAGE {
     MD_STAGE_TOTAL
 } MD_STAGE;
 #if REMOVE_MD_STAGE_1
-#define MD_STAGING_MODE_0    0
-#define MD_STAGING_MODE_1    1
+#define MD_STAGING_MODE_0 0
+#define MD_STAGING_MODE_1 1
 #else
-#define MD_STAGING_MODE_0    0
-#define MD_STAGING_MODE_1    1
-#define MD_STAGING_MODE_2    2
-#define MD_STAGING_MODE_3    3
+#define MD_STAGING_MODE_0 0
+#define MD_STAGING_MODE_1 1
+#define MD_STAGING_MODE_2 2
+#define MD_STAGING_MODE_3 3
 #endif
-#define INTRA_NFL           16
-#define INTER_NEW_NFL       16
-#define INTER_PRED_NFL      16
-
+#define INTRA_NFL 16
+#define INTER_NEW_NFL 16
+#define INTER_PRED_NFL 16
 
 #define BEST_CANDIDATE_COUNT 4
-#define MAX_REF_TYPE_CAND   30
-#define PRUNE_REC_TH         5
-#define PRUNE_REF_ME_TH      2
+#define MAX_REF_TYPE_CAND 30
+#define PRUNE_REC_TH 5
+#define PRUNE_REF_ME_TH 2
 #if !SPEED_OPT
-#define MD_EXIT_THSL         0 // MD_EXIT_THSL -->0 is lossless 100 is maximum. Increase with a step of 10-20.
+#define MD_EXIT_THSL \
+    0  // MD_EXIT_THSL -->0 is lossless 100 is maximum. Increase with a step of
+       // 10-20.
 #endif
-typedef enum
-{
+typedef enum {
     EIGHTTAP_REGULAR,
     EIGHTTAP_SMOOTH,
     MULTITAP_SHARP,
@@ -656,35 +712,32 @@ typedef enum
     SWITCHABLE_FILTERS = BILINEAR,
     SWITCHABLE = SWITCHABLE_FILTERS + 1, /* the last switchable one */
     EXTRA_FILTERS = INTERP_FILTERS_ALL - SWITCHABLE_FILTERS,
-}InterpFilter;
+} InterpFilter;
 #if OBMC_FLAG
 
 #define AV1_COMMON Av1Common
 enum {
-  USE_2_TAPS_ORIG = 0,  // This is used in temporal filtering.
-  USE_2_TAPS,
-  USE_4_TAPS,
-  USE_8_TAPS,
+    USE_2_TAPS_ORIG = 0,  // This is used in temporal filtering.
+    USE_2_TAPS,
+    USE_4_TAPS,
+    USE_8_TAPS,
 } UENUM1BYTE(SUBPEL_SEARCH_TYPE);
 #endif
-typedef struct InterpFilterParams
-{
+typedef struct InterpFilterParams {
     const int16_t *filter_ptr;
     uint16_t taps;
     uint16_t subpel_shifts;
     InterpFilter interp_filter;
 } InterpFilterParams;
 
-typedef enum TxSearchLevel
-{
+typedef enum TxSearchLevel {
     TX_SEARCH_OFF,
     TX_SEARCH_ENC_DEC,
     TX_SEARCH_INTER_DEPTH,
     TX_SEARCH_FULL_LOOP
 } TxSearchLevel;
 
-typedef enum InterpolationSearchLevel
-{
+typedef enum InterpolationSearchLevel {
 #if MULTI_PASS_PD
     IT_SEARCH_OFF,
     IT_SEARCH_FAST_LOOP_UV_BLIND,
@@ -698,8 +751,7 @@ typedef enum InterpolationSearchLevel
 #endif
 } InterpolationSearchLevel;
 
-typedef enum NsqSearchLevel
-{
+typedef enum NsqSearchLevel {
     NSQ_SEARCH_OFF,
     NSQ_SEARCH_LEVEL1,
     NSQ_SEARCH_LEVEL2,
@@ -713,7 +765,7 @@ typedef enum NsqSearchLevel
     NSQ_SEARCH_FULL
 } NsqSearchLevel;
 
-#define MAX_PARENT_SQ     6
+#define MAX_PARENT_SQ 6
 typedef enum CompoundDistWeightMode {
     DIST,
 } CompoundDistWeightMode;
@@ -776,7 +828,8 @@ typedef enum ATTRIBUTE_PACKED {
     PARTITION_INVALID = 255
 } PartitionType;
 
-#define MAX_NUM_BLOCKS_ALLOC  7493  //max number of blocks assuming 128x128-4x4 all partitions.
+#define MAX_NUM_BLOCKS_ALLOC \
+    7493  // max number of blocks assuming 128x128-4x4 all partitions.
 
 typedef enum ATTRIBUTE_PACKED {
     PART_N,
@@ -792,11 +845,9 @@ typedef enum ATTRIBUTE_PACKED {
 } PART;
 
 static const uint8_t mi_size_wide[BlockSizeS_ALL] = {
-    1, 1, 2, 2, 2, 4, 4, 4, 8, 8, 8, 16, 16, 16, 32, 32, 1, 4, 2, 8, 4, 16
-};
+    1, 1, 2, 2, 2, 4, 4, 4, 8, 8, 8, 16, 16, 16, 32, 32, 1, 4, 2, 8, 4, 16};
 static const uint8_t mi_size_high[BlockSizeS_ALL] = {
-    1, 2, 1, 2, 4, 2, 4, 8, 4, 8, 16, 8, 16, 32, 16, 32, 4, 1, 8, 2, 16, 4
-};
+    1, 2, 1, 2, 4, 2, 4, 8, 4, 8, 16, 8, 16, 32, 16, 32, 4, 1, 8, 2, 16, 4};
 
 typedef char PartitionContextType;
 #define PARTITION_PLOFFSET 4  // number of probability models per block size
@@ -841,81 +892,28 @@ typedef enum ATTRIBUTE_PACKED {
 #endif
 static const TxSize tx_depth_to_tx_size[3][BlockSizeS_ALL] = {
     // tx_depth 0
-    {
-        TX_4X4,
-        TX_4X8,
-        TX_8X4,
-        TX_8X8,
-        TX_8X16,
-        TX_16X8,
-        TX_16X16,
-        TX_16X32,
-        TX_32X16,
-        TX_32X32,
-        TX_32X64,
-        TX_64X32,
-        TX_64X64,
-        TX_64X64,//TX_64X128,
-        TX_64X64,//TX_128X64,
-        TX_64X64,//TX_128X128,
-        TX_4X16,
-        TX_16X4,
-        TX_8X32,
-        TX_32X8,
-        TX_16X64,
-        TX_64X16
-    },
+    {TX_4X4,   TX_4X8,   TX_8X4,   TX_8X8,   TX_8X16,  TX_16X8,  TX_16X16,
+     TX_16X32, TX_32X16, TX_32X32, TX_32X64, TX_64X32, TX_64X64,
+     TX_64X64,  // TX_64X128,
+     TX_64X64,  // TX_128X64,
+     TX_64X64,  // TX_128X128,
+     TX_4X16,  TX_16X4,  TX_8X32,  TX_32X8,  TX_16X64, TX_64X16},
     // tx_depth 1:
-    {
-        TX_4X4,
-        TX_4X8,
-        TX_8X4,
-        TX_4X4,
-        TX_8X8,
-        TX_8X8,
-        TX_8X8,
-        TX_16X16,
-        TX_16X16,
-        TX_16X16,
-        TX_32X32,
-        TX_32X32,
-        TX_32X32,
-        TX_64X64,//TX_64X128,
-        TX_64X64,//TX_128X64,
-        TX_64X64,//TX_128X128,
-        TX_4X4,
-        TX_4X4,
-        TX_8X8,
-        TX_8X8,
-        TX_16X16,
-        TX_16X16
-    },
+    {TX_4X4,   TX_4X8,   TX_8X4,   TX_4X4,   TX_8X8,   TX_8X8,   TX_8X8,
+     TX_16X16, TX_16X16, TX_16X16, TX_32X32, TX_32X32, TX_32X32,
+     TX_64X64,  // TX_64X128,
+     TX_64X64,  // TX_128X64,
+     TX_64X64,  // TX_128X128,
+     TX_4X4,   TX_4X4,   TX_8X8,   TX_8X8,   TX_16X16, TX_16X16},
     // tx_depth 2
-    {
-        TX_4X4,
-        TX_4X8,
-        TX_8X4,
-        TX_8X8,
-        TX_4X4,
-        TX_4X4,
-        TX_4X4,
-        TX_8X8,
-        TX_8X8,
-        TX_8X8,
-        TX_16X16,
-        TX_16X16,
-        TX_16X16,
-        TX_64X64,//TX_64X128,
-        TX_64X64,//TX_128X64,
-        TX_64X64,//TX_128X128,
-        TX_4X16, // No depth 2
-        TX_16X4, // No depth 2
-        TX_4X4,
-        TX_4X4,
-        TX_8X8,
-        TX_8X8
-    }
-};
+    {TX_4X4,   TX_4X8, TX_8X4, TX_8X8,   TX_4X4,   TX_4X4,   TX_4X4,
+     TX_8X8,   TX_8X8, TX_8X8, TX_16X16, TX_16X16, TX_16X16,
+     TX_64X64,  // TX_64X128,
+     TX_64X64,  // TX_128X64,
+     TX_64X64,  // TX_128X128,
+     TX_4X16,   // No depth 2
+     TX_16X4,   // No depth 2
+     TX_4X4,   TX_4X4, TX_8X8, TX_8X8}};
 static const int32_t tx_size_wide[TX_SIZES_ALL] = {
     4, 8, 16, 32, 64, 4, 8, 8, 16, 16, 32, 32, 64, 4, 16, 8, 32, 16, 64,
 };
@@ -924,20 +922,18 @@ static const int32_t tx_size_high[TX_SIZES_ALL] = {
     4, 8, 16, 32, 64, 8, 4, 16, 8, 32, 16, 64, 32, 16, 4, 32, 8, 64, 16,
 };
 
- // TranLow  is the datatype used for final transform coefficients.
+// TranLow  is the datatype used for final transform coefficients.
 typedef int32_t TranLow;
 typedef uint8_t QmVal;
 
-typedef enum TxClass
-{
+typedef enum TxClass {
     TX_CLASS_2D = 0,
     TX_CLASS_HORIZ = 1,
     TX_CLASS_VERT = 2,
     TX_CLASSES = 3,
 } TxClass;
 
-static INLINE TxSize av1_get_adjusted_tx_size(TxSize tx_size)
-{
+static INLINE TxSize av1_get_adjusted_tx_size(TxSize tx_size) {
     switch (tx_size) {
     case TX_64X64:
     case TX_64X32:
@@ -958,10 +954,10 @@ static const int32_t tx_size_high_log2[TX_SIZES_ALL] = {
     2, 3, 4, 5, 6, 3, 2, 4, 3, 5, 4, 6, 5, 4, 2, 5, 3, 6, 4,
 };
 #define ALIGN_POWER_OF_TWO(value, n) \
-(((value) + ((1 << (n)) - 1)) & ~((1 << (n)) - 1))
-#define AOM_PLANE_Y 0       /**< Y (Luminance) plane */
-#define AOM_PLANE_U 1       /**< U (Chroma) plane */
-#define AOM_PLANE_V 2       /**< V (Chroma) plane */
+    (((value) + ((1 << (n)) - 1)) & ~((1 << (n)) - 1))
+#define AOM_PLANE_Y 0 /**< Y (Luminance) plane */
+#define AOM_PLANE_U 1 /**< U (Chroma) plane */
+#define AOM_PLANE_V 2 /**< V (Chroma) plane */
 
 #define CONVERT_TO_SHORTPTR(x) ((uint16_t *)(((uintptr_t)(x)) << 1))
 #define CONVERT_TO_BYTEPTR(x) ((uint8_t *)(((uintptr_t)(x)) >> 1))
@@ -970,8 +966,7 @@ static const int32_t tx_size_high_log2[TX_SIZES_ALL] = {
 #define AOMMAX(x, y) (((x) > (y)) ? (x) : (y))
 
 // frame transform mode
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     ONLY_4X4,         // use only 4x4 transform
     TX_MODE_LARGEST,  // transform size is the largest possible for pu size
     TX_MODE_SELECT,   // transform specified for each block
@@ -979,8 +974,7 @@ typedef enum ATTRIBUTE_PACKED
 } TxMode;
 
 // 1D tx types
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     DCT_1D,
     ADST_1D,
     FLIPADST_1D,
@@ -990,8 +984,7 @@ typedef enum ATTRIBUTE_PACKED
     TX_TYPES_1D,
 } TxType1D;
 
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     DCT_DCT,    // DCT  in both horizontal and vertical
     ADST_DCT,   // ADST in vertical, DCT in horizontal
     DCT_ADST,   // DCT  in vertical, ADST in horizontal
@@ -1011,15 +1004,15 @@ typedef enum ATTRIBUTE_PACKED
     TX_TYPES,
 } TxType;
 
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     // DCT only
     EXT_TX_SET_DCTONLY,
     // DCT + Identity only
     EXT_TX_SET_DCT_IDTX,
     // Discrete Trig transforms w/o flip (4) + Identity (1)
     EXT_TX_SET_DTT4_IDTX,
-    // Discrete Trig transforms w/o flip (4) + Identity (1) + 1D Hor/vert DCT (2)
+    // Discrete Trig transforms w/o flip (4) + Identity (1) + 1D Hor/vert DCT
+    // (2)
     EXT_TX_SET_DTT4_IDTX_1DDCT,
     // Discrete Trig transforms w/ flip (9) + Identity (1) + 1D Hor/Ver DCT (2)
     EXT_TX_SET_DTT9_IDTX_1DDCT,
@@ -1028,8 +1021,7 @@ typedef enum ATTRIBUTE_PACKED
     EXT_TX_SET_TYPES
 } TxSetType;
 
-typedef struct TxfmParam
-{
+typedef struct TxfmParam {
     // for both forward and inverse transforms
     TxType tx_type;
     TxSize tx_size;
@@ -1048,15 +1040,13 @@ typedef struct TxfmParam
 #define EXT_TX_SETS_INTER 4  // Sets of transform selections for INTER
 #define EXT_TX_SETS_INTRA 3  // Sets of transform selections for INTRA
 
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     UNIDIR_COMP_REFERENCE,
     BIDIR_COMP_REFERENCE,
     COMP_REFERENCE_TYPES,
 } CompReferenceType;
 
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     PLANE_TYPE_Y,
     PLANE_TYPE_UV,
     PLANE_TYPES
@@ -1068,23 +1058,20 @@ typedef enum ATTRIBUTE_PACKED
 #define CFL_IDX_U(idx) (idx >> CFL_ALPHABET_SIZE_LOG2)
 #define CFL_IDX_V(idx) (idx & (CFL_ALPHABET_SIZE - 1))
 
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     CFL_PRED_U,
     CFL_PRED_V,
     CFL_PRED_PLANES
 } CflPredType;
 
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     CFL_SIGN_ZERO,
     CFL_SIGN_NEG,
     CFL_SIGN_POS,
     CFL_SIGNS
 } CflSignType;
 
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     CFL_DISALLOWED,
     CFL_ALLOWED,
     CFL_ALLOWED_TYPES
@@ -1103,7 +1090,7 @@ typedef enum ATTRIBUTE_PACKED
 #define CFL_CONTEXT_U(js) (js + 1 - CFL_SIGNS)
 // Also, the contexts are symmetric under swapping the planes.
 #define CFL_CONTEXT_V(js) \
-(CFL_SIGN_V(js) * CFL_SIGNS + CFL_SIGN_U(js) - CFL_SIGNS)
+    (CFL_SIGN_V(js) * CFL_SIGNS + CFL_SIGN_U(js) - CFL_SIGNS)
 
 typedef enum ATTRIBUTE_PACKED {
     PALETTE_MAP,
@@ -1121,8 +1108,7 @@ typedef enum ATTRIBUTE_PACKED {
     PALETTE_SIZES
 } PaletteSize;
 
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     PALETTE_COLOR_ONE,
     PALETTE_COLOR_TWO,
     PALETTE_COLOR_THREE,
@@ -1136,8 +1122,7 @@ typedef enum ATTRIBUTE_PACKED
 
 // Note: All directional predictors must be between V_PRED and D67_PRED (both
 // inclusive).
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     DC_PRED,        // Average of above and left pixels
     V_PRED,         // Vertical
     H_PRED,         // Horizontal
@@ -1174,15 +1159,14 @@ typedef enum ATTRIBUTE_PACKED
     COMP_INTER_MODE_START = NEAREST_NEARESTMV,
     COMP_INTER_MODE_END = MB_MODE_COUNT,
     COMP_INTER_MODE_NUM = COMP_INTER_MODE_END - COMP_INTER_MODE_START,
-    INTRA_MODES = PAETH_PRED + 1,  // PAETH_PRED has to be the last intra mode.
+    INTRA_MODES = PAETH_PRED + 1,   // PAETH_PRED has to be the last intra mode.
     INTRA_INVALID = MB_MODE_COUNT,  // For uv_mode in inter blocks
     INTRA_MODE_4x4
 } PredictionMode;
 
 // TODO(ltrudeau) Do we really want to pack this?
 // TODO(ltrudeau) Do we match with PredictionMode?
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     UV_DC_PRED,        // Average of above and left pixels
     UV_V_PRED,         // Vertical
     UV_H_PRED,         // Horizontal
@@ -1201,16 +1185,14 @@ typedef enum ATTRIBUTE_PACKED
     UV_MODE_INVALID,  // For uv_mode in inter blocks
 } UvPredictionMode;
 
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     SIMPLE_TRANSLATION,
     OBMC_CAUSAL,    // 2-sided OBMC
     WARPED_CAUSAL,  // 2-sided WARPED
     MOTION_MODES
 } MotionMode;
 
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     II_DC_PRED,
     II_V_PRED,
     II_H_PRED,
@@ -1218,8 +1200,7 @@ typedef enum ATTRIBUTE_PACKED
     INTERINTRA_MODES
 } InterIntraMode;
 
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     COMPOUND_AVERAGE,
     COMPOUND_DISTWTD,
     COMPOUND_WEDGE,
@@ -1228,13 +1209,13 @@ typedef enum ATTRIBUTE_PACKED
     MASKED_COMPOUND_TYPES = 2,
 } CompoundType;
 
-#define   COMPOUND_INTRA  4//just for the decoder
+#define COMPOUND_INTRA 4  // just for the decoder
 #define AOM_BLEND_A64_ROUND_BITS 6
 #define AOM_BLEND_A64_MAX_ALPHA (1 << AOM_BLEND_A64_ROUND_BITS)  // 64
 
-#define AOM_BLEND_A64(a, v0, v1)                                          \
-  ROUND_POWER_OF_TWO((a) * (v0) + (AOM_BLEND_A64_MAX_ALPHA - (a)) * (v1), \
-                     AOM_BLEND_A64_ROUND_BITS)
+#define AOM_BLEND_A64(a, v0, v1)                                            \
+    ROUND_POWER_OF_TWO((a) * (v0) + (AOM_BLEND_A64_MAX_ALPHA - (a)) * (v1), \
+                       AOM_BLEND_A64_ROUND_BITS)
 #define DIFF_FACTOR_LOG2 4
 #define DIFF_FACTOR (1 << DIFF_FACTOR_LOG2)
 #define AOM_BLEND_AVG(v0, v1) ROUND_POWER_OF_TWO((v0) + (v1), 1)
@@ -1248,10 +1229,10 @@ typedef uint16_t CONV_BUF_TYPE;
 #define MASK_MASTER_SIZE ((MAX_WEDGE_SIZE) << 1)
 #define MASK_MASTER_STRIDE (MASK_MASTER_SIZE)
 typedef struct {
-    int enable_order_hint;           // 0 - disable order hint, and related tools
-    int order_hint_bits_minus_1;     // dist_wtd_comp, ref_frame_mvs,
-    int enable_dist_wtd_comp;        // 0 - disable dist-wtd compound modes
-    int enable_ref_frame_mvs;        // 0 - disable ref frame mvs
+    int enable_order_hint;        // 0 - disable order hint, and related tools
+    int order_hint_bits_minus_1;  // dist_wtd_comp, ref_frame_mvs,
+    int enable_dist_wtd_comp;     // 0 - disable dist-wtd compound modes
+    int enable_ref_frame_mvs;     // 0 - disable ref frame mvs
 } OrderHintInfoEnc;
 enum {
     MD_COMP_AVG,
@@ -1260,7 +1241,7 @@ enum {
     MD_COMP_WEDGE,
     MD_COMP_TYPES,
 } UENUM1BYTE(MD_COMP_TYPE);
-#define COMPOUND_TYPE  CompoundType
+#define COMPOUND_TYPE CompoundType
 #define MAX_DIFFWTD_MASK_BITS 1
 enum {
     DIFFWTD_38 = 0,
@@ -1268,11 +1249,11 @@ enum {
     DIFFWTD_MASK_TYPES,
 } UENUM1BYTE(DIFFWTD_MASK_TYPE);
 typedef struct {
-
     /*!< Specifies how the two predictions should be blended together. */
     CompoundType type;
 
-    /*!< Used to derive the direction and offset of the wedge mask used during blending. */
+    /*!< Used to derive the direction and offset of the wedge mask used during
+     * blending. */
     uint8_t wedge_index;
 
     /*!< Specifies the sign of the wedge blend. */
@@ -1283,10 +1264,9 @@ typedef struct {
 } InterInterCompoundData;
 
 #if II_COMP_FLAG
-#define INTERINTRA_MODE  InterIntraMode
+#define INTERINTRA_MODE InterIntraMode
 #endif
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     FILTER_DC_PRED,
     FILTER_V_PRED,
     FILTER_H_PRED,
@@ -1297,8 +1277,7 @@ typedef enum ATTRIBUTE_PACKED
 
 #if FILTER_INTRA_FLAG
 static const PredictionMode fimode_to_intramode[FILTER_INTRA_MODES] = {
-  DC_PRED, V_PRED, H_PRED, D157_PRED, PAETH_PRED
-};
+    DC_PRED, V_PRED, H_PRED, D157_PRED, PAETH_PRED};
 #endif
 #define DIRECTIONAL_MODES 8
 #define MAX_ANGLE_DELTA 3
@@ -1377,8 +1356,7 @@ typedef uint8_t TXFM_CONTEXT;
 
 #define SINGLE_REFS (FWD_REFS + BWD_REFS)
 
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     LAST_LAST2_FRAMES,      // { LAST_FRAME, LAST2_FRAME }
     LAST_LAST3_FRAMES,      // { LAST_FRAME, LAST3_FRAME }
     LAST_GOLDEN_FRAMES,     // { LAST_FRAME, GOLDEN_FRAME }
@@ -1403,8 +1381,7 @@ typedef enum ATTRIBUTE_PACKED
 //       possible to have a reference pair not listed for explicit signaling.
 #define MODE_CTX_REF_FRAMES (TOTAL_REFS_PER_FRAME + TOTAL_COMP_REFS)
 
-typedef enum ATTRIBUTE_PACKED
-{
+typedef enum ATTRIBUTE_PACKED {
     RESTORE_NONE,
     RESTORE_WIENER,
     RESTORE_SGRPROJ,
@@ -1632,66 +1609,85 @@ static const struct
 
 // Width/height lookup tables in units of various block sizes
 static const uint8_t block_size_wide[BlockSizeS_ALL] = {
-    4, 4, 8, 8, 8, 16, 16, 16, 32, 32, 32,
-    64, 64, 64, 128, 128, 4, 16, 8, 32, 16, 64
-};
+    4,  4,  8,  8,   8,   16, 16, 16, 32, 32, 32,
+    64, 64, 64, 128, 128, 4,  16, 8,  32, 16, 64};
 
 static const uint8_t block_size_high[BlockSizeS_ALL] = {
-    4, 8, 4, 8, 16, 8, 16, 32, 16, 32, 64,
-    32, 64, 128, 64, 128, 16, 4, 32, 8, 64, 16
-};
+    4,  8,  4,   8,  16,  8,  16, 32, 16, 32, 64,
+    32, 64, 128, 64, 128, 16, 4,  32, 8,  64, 16};
 
 // AOMMIN(3, AOMMIN(b_width_log2(bsize), b_height_log2(bsize)))
 static const uint8_t size_group_lookup[BlockSizeS_ALL] = {
-    0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 0, 0, 1, 1, 2, 2
-};
+    0, 0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 0, 0, 1, 1, 2, 2};
 
 static const uint8_t num_pels_log2_lookup[BlockSizeS_ALL] = {
-    4, 5, 5, 6, 7, 7, 8, 9, 9, 10, 11, 11, 12, 13, 13, 14, 6, 6, 8, 8, 10, 10
-};
+    4, 5, 5, 6, 7, 7, 8, 9, 9, 10, 11, 11, 12, 13, 13, 14, 6, 6, 8, 8, 10, 10};
 static const TxSize max_txsize_lookup[BlockSizeS_ALL] = {
     //                   4X4
     TX_4X4,
     // 4X8,    8X4,      8X8
-    TX_4X4, TX_4X4, TX_8X8,
+    TX_4X4,
+    TX_4X4,
+    TX_8X8,
     // 8X16,   16X8,     16X16
-    TX_8X8, TX_8X8, TX_16X16,
+    TX_8X8,
+    TX_8X8,
+    TX_16X16,
     // 16X32,  32X16,    32X32
-    TX_16X16, TX_16X16, TX_32X32,
+    TX_16X16,
+    TX_16X16,
+    TX_32X32,
     // 32X64,  64X32,
-    TX_32X32, TX_32X32,
+    TX_32X32,
+    TX_32X32,
     // 64X64
     TX_64X64,
     // 64x128, 128x64,   128x128
-    TX_64X64, TX_64X64, TX_64X64,
+    TX_64X64,
+    TX_64X64,
+    TX_64X64,
     // 4x16,   16x4,     8x32
-    TX_4X4, TX_4X4, TX_8X8,
+    TX_4X4,
+    TX_4X4,
+    TX_8X8,
     // 32x8,   16x64     64x16
-    TX_8X8, TX_16X16, TX_16X16
-};
+    TX_8X8,
+    TX_16X16,
+    TX_16X16};
 
 static const TxSize max_txsize_rect_lookup[BlockSizeS_ALL] = {
     // 4X4
     TX_4X4,
     // 4X8,    8X4,      8X8
-    TX_4X8, TX_8X4, TX_8X8,
+    TX_4X8,
+    TX_8X4,
+    TX_8X8,
     // 8X16,   16X8,     16X16
-    TX_8X16, TX_16X8, TX_16X16,
+    TX_8X16,
+    TX_16X8,
+    TX_16X16,
     // 16X32,  32X16,    32X32
-    TX_16X32, TX_32X16, TX_32X32,
+    TX_16X32,
+    TX_32X16,
+    TX_32X32,
     // 32X64,  64X32,
-    TX_32X64, TX_64X32,
+    TX_32X64,
+    TX_64X32,
     // 64X64
     TX_64X64,
     // 64x128, 128x64,   128x128
-    TX_64X64, TX_64X64, TX_64X64,
+    TX_64X64,
+    TX_64X64,
+    TX_64X64,
     // 4x16,   16x4,
-    TX_4X16, TX_16X4,
+    TX_4X16,
+    TX_16X4,
     // 8x32,   32x8
-    TX_8X32, TX_32X8,
+    TX_8X32,
+    TX_32X8,
     // 16x64,  64x16
-    TX_16X64, TX_64X16
-};
+    TX_16X64,
+    TX_64X16};
 
 // Transform block width in unit
 static const int32_t tx_size_wide_unit[TX_SIZES_ALL] = {
@@ -1767,22 +1763,19 @@ static const TxSize txsize_vert_map[TX_SIZES_ALL] = {
     TX_16X16,  // TX_64X16
 };
 static const uint8_t mi_size_wide_log2[BlockSizeS_ALL] = {
-    0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 0, 2, 1, 3, 2, 4
-};
+    0, 0, 1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 0, 2, 1, 3, 2, 4};
 static const uint8_t mi_size_high_log2[BlockSizeS_ALL] = {
-    0, 1, 0, 1, 2, 1, 2, 3, 2, 3, 4, 3, 4, 5, 4, 5, 2, 0, 3, 1, 4, 2
-};
+    0, 1, 0, 1, 2, 1, 2, 3, 2, 3, 4, 3, 4, 5, 4, 5, 2, 0, 3, 1, 4, 2};
 
-typedef struct SgrParamsType
-{
+typedef struct SgrParamsType {
     int32_t r[2];  // radii
-    int32_t s[2];  // sgr parameters for r[0] and r[1], based on GenSgrprojVtable()
+    int32_t
+        s[2];  // sgr parameters for r[0] and r[1], based on GenSgrprojVtable()
 } SgrParamsType;
 
 //**********************************************************************************************************************//
 // blockd.h
-typedef enum FrameType
-{
+typedef enum FrameType {
     KEY_FRAME = 0,
     INTER_FRAME = 1,
     INTRA_ONLY_FRAME = 2,  // replaces intra-only
@@ -1795,23 +1788,29 @@ typedef int8_t MvReferenceFrame;
 // Number of transform types in each set type
 
 static const int32_t av1_num_ext_tx_set[EXT_TX_SET_TYPES] = {
-    1, 2, 5, 7, 12, 16,
+    1,
+    2,
+    5,
+    7,
+    12,
+    16,
 };
 
 static const int32_t av1_ext_tx_used[EXT_TX_SET_TYPES][TX_TYPES] = {
-    { 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
-{ 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 },
-{ 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0 },
-{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0 },
-{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    {1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+    {1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+    {1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0},
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0},
+    {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 };
 
 static INLINE TxSetType get_ext_tx_set_type(TxSize tx_size, int32_t is_inter,
-    int32_t use_reduced_set) {
+                                            int32_t use_reduced_set) {
     const TxSize tx_size_sqr_up = txsize_sqr_up_map[tx_size];
 
-    if (tx_size_sqr_up > TX_32X32) return EXT_TX_SET_DCTONLY;
+    if (tx_size_sqr_up > TX_32X32)
+        return EXT_TX_SET_DCTONLY;
     if (tx_size_sqr_up == TX_32X32)
         return is_inter ? EXT_TX_SET_DCT_IDTX : EXT_TX_SET_DCTONLY;
     if (use_reduced_set)
@@ -1819,28 +1818,38 @@ static INLINE TxSetType get_ext_tx_set_type(TxSize tx_size, int32_t is_inter,
     const TxSize tx_size_sqr = txsize_sqr_map[tx_size];
     if (is_inter) {
         return (tx_size_sqr == TX_16X16 ? EXT_TX_SET_DTT9_IDTX_1DDCT
-            : EXT_TX_SET_ALL16);
-    }
-    else {
+                                        : EXT_TX_SET_ALL16);
+    } else {
         return (tx_size_sqr == TX_16X16 ? EXT_TX_SET_DTT4_IDTX
-            : EXT_TX_SET_DTT4_IDTX_1DDCT);
+                                        : EXT_TX_SET_DTT4_IDTX_1DDCT);
     }
 }
 static INLINE int32_t get_ext_tx_types(TxSize tx_size, int32_t is_inter,
-    int32_t use_reduced_set) {
-    const int32_t set_type = get_ext_tx_set_type(tx_size, is_inter, use_reduced_set);
+                                       int32_t use_reduced_set) {
+    const int32_t set_type =
+        get_ext_tx_set_type(tx_size, is_inter, use_reduced_set);
     return av1_num_ext_tx_set[set_type];
 }
 // Maps tx set types to the indices.
 static const int32_t ext_tx_set_index[2][EXT_TX_SET_TYPES] = {
-    { // Intra
-        0, -1, 2, 1, -1, -1 },
-        { // Inter
-            0, 3, -1, -1, 2, 1 },
+    {// Intra
+     0,
+     -1,
+     2,
+     1,
+     -1,
+     -1},
+    {// Inter
+     0,
+     3,
+     -1,
+     -1,
+     2,
+     1},
 };
 
 static INLINE int32_t get_ext_tx_set(TxSize tx_size, int32_t is_inter,
-    int32_t use_reduced_set) {
+                                     int32_t use_reduced_set) {
     const TxSetType set_type =
         get_ext_tx_set_type(tx_size, is_inter, use_reduced_set);
     return ext_tx_set_index[is_inter][set_type];
@@ -1855,8 +1864,7 @@ static INLINE int is_inter_singleref_mode(PredictionMode mode) {
 
 //**********************************************************************************************************************//
 // encoder.h
-typedef enum FrameContextIndex
-{
+typedef enum FrameContextIndex {
     // regular inter frame
     REGULAR_FRAME = 0,
     // alternate reference frame
@@ -1889,7 +1897,7 @@ typedef enum FrameContextIndex
 #define QM_LEVEL_BITS 4
 #define NUM_QM_LEVELS (1 << QM_LEVEL_BITS)
 /* Range of QMS is between first and last value, with offset applied to inter
-* blocks*/
+ * blocks*/
 #define DEFAULT_QM_Y 10
 #define DEFAULT_QM_U 11
 #define DEFAULT_QM_V 12
@@ -1933,15 +1941,13 @@ struct LoopFilter {
 #define SIMD_WIDTH 16
 // Need to align this structure so when it is declared and
 // passed it can be loaded into vector registers.
-typedef struct LoopFilterThresh
-{
+typedef struct LoopFilterThresh {
     DECLARE_ALIGNED(SIMD_WIDTH, uint8_t, mblim[SIMD_WIDTH]);
     DECLARE_ALIGNED(SIMD_WIDTH, uint8_t, lim[SIMD_WIDTH]);
     DECLARE_ALIGNED(SIMD_WIDTH, uint8_t, hev_thr[SIMD_WIDTH]);
 } LoopFilterThresh;
 
-typedef struct LoopFilterInfoN
-{
+typedef struct LoopFilterInfoN {
     LoopFilterThresh lfthr[MAX_LOOP_FILTER + 1];
     uint8_t lvl[MAX_MB_PLANE][MAX_SEGMENTS][2][REF_FRAMES][MAX_MODE_LF_DELTAS];
 } LoopFilterInfoN;
@@ -2001,7 +2007,7 @@ typedef struct LoopFilterInfoN
 #define GM_ROW3HOMO_PREC_BITS 16
 #define GM_ABS_ROW3HOMO_BITS 11
 #define GM_ROW3HOMO_PREC_DIFF \
-(WARPEDMODEL_ROW3HOMO_PREC_BITS - GM_ROW3HOMO_PREC_BITS)
+    (WARPEDMODEL_ROW3HOMO_PREC_BITS - GM_ROW3HOMO_PREC_BITS)
 #define GM_ROW3HOMO_DECODE_FACTOR (1 << GM_ROW3HOMO_PREC_DIFF)
 
 #define GM_TRANS_MAX (1 << GM_ABS_TRANS_BITS)
